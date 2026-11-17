@@ -10,18 +10,21 @@ from app import app
 from datos import CLAVE_PRUEBA
 
 CARPETA_DEMO = os.path.join(base_datos.CARPETA_PROYECTO, "docs")
+MAXIMO_POR_USUARIO = 150
 
 AVISO = (
     '<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;'
     'font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: '
-    'puedes recorrer las páginas, pero las notas no se guardan.</div>'
+    'puedes recorrer las páginas, pero nada se guarda.</div>'
 )
 
 
 def nombre_archivo(usuario, ruta):
     if ruta == "/" or ruta == "/salir":
         return "index.html"
-    texto = ruta[1:].replace("/", "-").replace("?periodo=", "-periodo-")
+    texto = ruta[1:]
+    for letra in "/?=&":
+        texto = texto.replace(letra, "-")
     return usuario + "--" + texto + ".html"
 
 
@@ -30,7 +33,7 @@ def enlaces_internos(html):
     inicio = html.find('href="/')
     while inicio != -1:
         fin = html.find('"', inicio + 6)
-        ruta = html[inicio + 6:fin]
+        ruta = html[inicio + 6:fin].replace("&amp;", "&")
         if not ruta.startswith("/static/") and ruta not in enlaces:
             enlaces.append(ruta)
         inicio = html.find('href="/', fin)
@@ -41,11 +44,9 @@ def adaptar(html, usuario, enlaces):
     html = html.replace('href="/static/', 'href="static/')
     html = html.replace('src="/static/', 'src="static/')
     for ruta in enlaces:
-        html = html.replace('href="' + ruta + '"', 'href="' + nombre_archivo(usuario, ruta) + '"')
-    html = html.replace(
-        '<form method="post" class="tarjeta">',
-        '<form class="tarjeta" onsubmit="alert(\'En la demo no se guardan las notas.\'); return false;">',
-    )
+        original = ruta.replace("&", "&amp;")
+        html = html.replace('href="' + original + '"', 'href="' + nombre_archivo(usuario, ruta) + '"')
+    html = html.replace('<form method="post"', '<form onsubmit="alert(\'En la demo no se guarda nada.\'); return false;"')
     html = html.replace("<body>", "<body>\n" + AVISO, 1)
     return html
 
@@ -58,11 +59,11 @@ def guardar(nombre, html):
 
 def recorrer(usuario):
     cliente = app.test_client()
-    respuesta = cliente.post("/", data={"usuario": usuario, "clave": CLAVE_PRUEBA}, follow_redirects=True)
-    primera = respuesta.request.path
-    pendientes = [primera]
+    cliente.post("/", data={"usuario": usuario, "clave": CLAVE_PRUEBA})
+    pendientes = ["/inicio"]
     hechas = []
-    while len(pendientes) > 0:
+    guardadas = 0
+    while len(pendientes) > 0 and guardadas < MAXIMO_POR_USUARIO:
         ruta = pendientes.pop(0)
         if ruta not in hechas and ruta != "/" and ruta != "/salir":
             hechas.append(ruta)
@@ -73,13 +74,16 @@ def recorrer(usuario):
                 for enlace in enlaces:
                     pendientes.append(enlace)
                 guardar(nombre_archivo(usuario, ruta), adaptar(html, usuario, enlaces))
-    print(usuario + ": " + str(len(hechas)) + " páginas")
-    return nombre_archivo(usuario, primera)
+                guardadas = guardadas + 1
+    print(usuario + ": " + str(guardadas) + " páginas")
+    return nombre_archivo(usuario, "/inicio")
 
 
 def pagina_de_entrada(primeras):
-    html = app.test_client().get("/").get_data(as_text=True)
-    html = adaptar(html, "", [])
+    cliente = app.test_client()
+    html = cliente.get("/").get_data(as_text=True)
+    html = html.replace('href="/static/', 'href="static/').replace('src="/static/', 'src="static/')
+    html = html.replace("<body>", "<body>\n" + AVISO, 1)
     for usuario in primeras:
         html = html.replace(
             '<form method="post" action="/">\n          <input type="hidden" name="usuario" value="' + usuario + '">',
@@ -107,6 +111,18 @@ def pagina_de_entrada(primeras):
     guardar("index.html", html)
 
 
+def usuarios_de_acceso_rapido():
+    usuarios = []
+    roles_vistos = []
+    personas = base_datos.consultar("SELECT * FROM usuarios WHERE colegio_id = 1 AND activo = 1 ORDER BY id", [])
+    for persona in personas:
+        roles = base_datos.roles_de(persona["id"])
+        if len(roles) > 0 and roles[0] not in roles_vistos:
+            roles_vistos.append(roles[0])
+            usuarios.append(persona["usuario"])
+    return usuarios
+
+
 if os.path.exists(CARPETA_DEMO):
     shutil.rmtree(CARPETA_DEMO)
 os.makedirs(CARPETA_DEMO)
@@ -114,11 +130,10 @@ shutil.copytree(os.path.join(base_datos.CARPETA_PROYECTO, "static"), os.path.joi
 guardar(".nojekyll", "")
 
 primeras = {}
-roles_vistos = []
-for persona in base_datos.usuarios_del_colegio(1):
-    if persona["rol"] not in roles_vistos:
-        roles_vistos.append(persona["rol"])
-        primeras[persona["usuario"]] = recorrer(persona["usuario"])
+for usuario in usuarios_de_acceso_rapido():
+    primeras[usuario] = recorrer(usuario)
+if "h.aguirre" not in primeras:
+    primeras["h.aguirre"] = recorrer("h.aguirre")
 
 pagina_de_entrada(primeras)
 os.remove(base_datos.ARCHIVO)

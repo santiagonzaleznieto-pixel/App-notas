@@ -44,4 +44,18 @@ revisar("cambia la contraseña", "Contraseña cambiada" in respuesta.get_data(as
 nuevo = ayuda.app.test_client()
 revisar("entra con la contraseña nueva", destino(nuevo.post("/", data={"usuario": "melany.osorio", "clave": "nuevaclave1"})) == "/inicio")
 
+print("Seguridad")
+ajeno = ayuda.app.test_client()
+respuesta = ajeno.post("/", data={"usuario": "rectora", "clave": "pijao2026"}, headers={"Origin": "https://sitio-malo.com"})
+revisar("rechaza formularios enviados desde otro sitio", respuesta.status_code == 403)
+propio = ayuda.app.test_client()
+respuesta = propio.post("/", data={"usuario": "rectora", "clave": "pijao2026"}, headers={"Origin": "http://localhost"})
+revisar("acepta formularios de la misma plataforma", destino(respuesta) == "/inicio")
+revisar("envía cabeceras de seguridad", respuesta.headers.get("X-Frame-Options") == "SAMEORIGIN")
+intruso = ayuda.app.test_client()
+for i in range(5):
+    intruso.post("/", data={"usuario": "coordinadora", "clave": "adivinando"})
+respuesta = intruso.post("/", data={"usuario": "coordinadora", "clave": "pijao2026"})
+revisar("bloquea el usuario tras 5 intentos fallidos", "demasiados intentos" in respuesta.get_data(as_text=True))
+
 ayuda.terminar()

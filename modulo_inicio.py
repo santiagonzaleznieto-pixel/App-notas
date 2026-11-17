@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from flask import g, render_template, request, redirect, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from nucleo import app, NOMBRES_ROLES, menu_de, registrar
@@ -18,6 +19,15 @@ def accesos_rapidos():
     return accesos
 
 
+def intentos_fallidos_recientes(usuario):
+    desde = (datetime.now() - timedelta(minutes=15)).strftime("%Y-%m-%d %H:%M")
+    fila = base_datos.consultar_uno(
+        "SELECT COUNT(*) AS total FROM registro_accesos WHERE accion = 'Intento fallido de ingreso' AND detalle = ? AND fecha >= ?",
+        [usuario, desde],
+    )
+    return fila["total"]
+
+
 @app.route("/", methods=["GET", "POST"])
 def login():
     if g.yo is not None:
@@ -30,6 +40,8 @@ def login():
         persona = base_datos.buscar_usuario(usuario)
         if usuario == "" or clave == "":
             error = "Escribe tu usuario y tu contraseña."
+        elif intentos_fallidos_recientes(usuario) >= 5:
+            error = "Hubo demasiados intentos fallidos con este usuario. Espera 15 minutos e inténtalo de nuevo."
         elif persona is None or not check_password_hash(persona["clave"], clave):
             error = "El usuario o la contraseña no son correctos."
             registrar("Intento fallido de ingreso", usuario)

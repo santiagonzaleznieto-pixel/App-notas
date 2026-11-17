@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block titulo %}Indicadores{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/tablero.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Indicadores {{ colegio.anio }}</h1>
+  <p>Promedios acumulados del año con los porcentajes de cada período. Pasa el cursor por las barras para ver el detalle.</p>
+</div>
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Estudiantes matriculados</span>
+    <strong>{{ total_estudiantes }}</strong>
+    <small>{{ distribucion|length }} grupos · {{ docentes }} docentes</small>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Promedio general del colegio</span>
+    <strong>{% if promedio_colegio is none %}—{% else %}{{ promedio_colegio }}{% endif %}</strong>
+    <em class="chip {{ desempeno(promedio_colegio) }}">{{ desempeno(promedio_colegio) }}</em>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Estudiantes con promedio en Bajo</span>
+    <strong>{% if porcentaje_bajo is none %}—{% else %}{{ porcentaje_bajo }} %{% endif %}</strong>
+    <small>{{ total_bajo }} de {{ total_estudiantes }}</small>
+  </div>
+</div>
+
+{% if alertas %}
+<div class="tarjeta">
+  <h2>Alertas del colegio</h2>
+  <div class="cifras">
+    {% for alerta in alertas %}
+    <a class="alerta-tablero tarjeta cifra {% if alerta.valor > 0 %}alerta{% endif %}" href="{{ alerta.ruta }}">
+      <strong>{{ alerta.valor }}</strong>
+      <span>{{ alerta.titulo }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div class="tarjeta">
+  <h2>Desempeño de cada grupo</h2>
+  <p class="gris">Cuántos estudiantes de cada grupo están en cada nivel según su promedio general.</p>
+  <ul class="leyenda" aria-label="Niveles de desempeño">
+    {% for nivel in niveles %}<li><span class="muestra n-{{ nivel }}"></span>{{ nivel }}</li>{% endfor %}
+  </ul>
+  <div class="filas-grafica">
+    {% for item in distribucion %}
+    <div class="fila-grafica">
+      <div class="rotulo">{{ item.grupo.nombre }}<small>{{ item.grupo.grado }}</small></div>
+      <div class="apilada" role="img" aria-label="Grupo {{ item.grupo.nombre }}: {% for s in item.segmentos %}{{ s.nivel }} {{ s.cantidad }}{% if not loop.last %}, {% endif %}{% endfor %}">
+        {% for s in item.segmentos %}
+        <div class="segmento consejo n-{{ s.nivel }}" style="flex: {{ s.cantidad }}" tabindex="0"
+             data-consejo="{{ s.nivel }}: {{ s.cantidad }} estudiante{% if s.cantidad != 1 %}s{% endif %} ({{ s.porcentaje }} %)">{% if s.porcentaje >= 15 %}{{ s.cantidad }}{% endif %}</div>
+        {% endfor %}
+      </div>
+      <div class="total">{{ item.total }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  <details class="datos-tabla">
+    <summary>Ver los datos en tabla</summary>
+    <div class="tabla-caja">
+      <table class="tabla simple">
+        <thead><tr><th class="izq">Grupo</th>{% for nivel in niveles %}<th>{{ nivel }}</th>{% endfor %}<th>Total</th></tr></thead>
+        <tbody>
+          {% for item in distribucion %}
+          <tr><td class="izq"><a href="/grupos/{{ item.grupo.id }}">{{ item.grupo.nombre }}</a></td>{% for nivel in niveles %}<td>{{ item.conteo[nivel] }}</td>{% endfor %}<td>{{ item.total }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </details>
+</div>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Promedio por materia</h2>
+    <p class="gris">Todo el colegio, de mayor a menor. La línea marca la nota mínima para aprobar ({{ colegio.limite_basico }}).</p>
+    <div class="eje" aria-hidden="true">{% for marca in marcas %}<span style="left: {{ marca.posicion }}%">{{ marca.valor }}</span>{% endfor %}</div>
+    <div class="filas-grafica">
+      {% for materia in materias %}
+      <div class="fila-grafica">
+        <div class="rotulo">{{ materia.nombre }}</div>
+        <div class="pista">
+          {% for marca in marcas %}<span class="rejilla" style="left: {{ marca.posicion }}%"></span>{% endfor %}
+          <div class="barra-simple consejo" style="width: {{ materia.ancho }}%" tabindex="0"
+               data-consejo="{{ materia.nombre }}: {{ materia.promedio }} · {{ materia.en_bajo }} en Bajo"></div>
+          <span class="aprobacion" style="left: {{ linea_aprobacion }}%"></span>
+        </div>
+        <div class="valor">{{ materia.promedio }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <details class="datos-tabla">
+      <summary>Ver los datos en tabla</summary>
+      <table class="tabla simple">
+        <thead><tr><th class="izq">Materia</th><th>Promedio</th><th>Estudiantes en Bajo</th></tr></thead>
+        <tbody>{% for materia in materias %}<tr><td class="izq">{{ materia.nombre }}</td><td>{{ materia.promedio }}</td><td>{{ materia.en_bajo }}</td></tr>{% endfor %}</tbody>
+      </table>
+    </details>
+  </div>
+
+  <div class="tarjeta">
+    <h2>Promedio del colegio por período</h2>
+    <p class="gris">Promedio general de todos los estudiantes en cada período.</p>
+    <div class="columnas" role="img" aria-label="Promedio por período: {% for e in evolucion %}{{ e.periodo.nombre }} {% if e.promedio is none %}sin notas{% else %}{{ e.promedio }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}">
+      {% for e in evolucion %}
+      <div class="columna">
+        <span class="tapa">{% if e.promedio is none %}—{% else %}{{ e.promedio }}{% endif %}</span>
+        <div class="cuerpo consejo" style="height: {{ e.alto }}%" tabindex="0" data-consejo="{{ e.periodo.nombre }}: {% if e.promedio is none %}sin notas{% else %}{{ e.promedio }}{% endif %}"></div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="columnas-rotulos">{% for e in evolucion %}<span>P{{ e.periodo.numero }}</span>{% endfor %}</div>
+    <p class="nota-eje">Las barras empiezan en 0 y llegan hasta {{ colegio.nota_maxima }}.</p>
+  </div>
+</div>
+{% endblock %}

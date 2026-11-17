@@ -6,6 +6,10 @@ import semilla
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("CLAVE_SECRETA", "solo-para-pruebas-en-mi-computador")
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+if os.environ.get("CLAVE_SECRETA", "") != "":
+    app.config["SESSION_COOKIE_SECURE"] = True
 
 base_datos.crear_tablas(base_datos.TABLAS)
 if base_datos.tabla_vacia("colegios"):
@@ -197,8 +201,20 @@ def numero(texto, minimo, maximo):
     return valor
 
 
+def viene_de_otro_sitio():
+    origen = request.headers.get("Origin", "")
+    if origen == "":
+        origen = request.headers.get("Referer", "")
+    if origen == "":
+        return False
+    propio = request.host_url.rstrip("/")
+    return not (origen == propio or origen.startswith(propio + "/"))
+
+
 @app.before_request
 def cargar_sesion():
+    if request.method == "POST" and viene_de_otro_sitio():
+        return "Solicitud rechazada: el formulario no viene de esta plataforma.", 403
     g.yo = None
     if "usuario_id" in session:
         g.yo = cargar_usuario(session["usuario_id"])
@@ -213,6 +229,14 @@ def cargar_sesion():
         if request.path not in libres and not request.path.startswith("/static/"):
             return redirect("/mi-cuenta")
     return None
+
+
+@app.after_request
+def cabeceras_de_seguridad(respuesta):
+    respuesta.headers["X-Content-Type-Options"] = "nosniff"
+    respuesta.headers["X-Frame-Options"] = "SAMEORIGIN"
+    respuesta.headers["Referrer-Policy"] = "same-origin"
+    return respuesta
 
 
 @app.context_processor
