@@ -25,6 +25,7 @@
       <button class="boton" type="submit">Ingresar</button>
     </form>
 
+    {% if accesos %}
     <div class="accesos">
       <p>Acceso rápido para pruebas · contraseña <code>{{ clave_prueba }}</code></p>
       <div class="accesos-lista">
@@ -40,6 +41,8 @@
         {% endfor %}
       </div>
     </div>
+    {% endif %}
+    <p class="pie-login"><a href="/privacidad">Tratamiento de datos personales</a></p>
   </section>
 </div>
 {% endblock %}

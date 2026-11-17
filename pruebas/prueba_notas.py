@@ -58,4 +58,8 @@ for i in range(5):
 respuesta = intruso.post("/", data={"usuario": "coordinadora", "clave": "pijao2026"})
 revisar("bloquea el usuario tras 5 intentos fallidos", "demasiados intentos" in respuesta.get_data(as_text=True))
 
+publico = ayuda.app.test_client()
+revisar("la política de datos se ve sin iniciar sesión", "Ley 1581" in publico.get("/privacidad").get_data(as_text=True))
+revisar("en modo pruebas se ven los accesos rápidos", "Acceso rápido" in publico.get("/").get_data(as_text=True))
+
 ayuda.terminar()

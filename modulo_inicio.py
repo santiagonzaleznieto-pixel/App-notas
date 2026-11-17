@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from flask import g, render_template, request, redirect, session
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -6,8 +7,16 @@ from datos import CLAVE_PRUEBA
 import base_datos
 
 
+def modo_pruebas():
+    if os.environ.get("MODO_PRUEBAS", "") == "1":
+        return True
+    return os.environ.get("CLAVE_SECRETA", "") == ""
+
+
 def accesos_rapidos():
     accesos = []
+    if not modo_pruebas():
+        return accesos
     roles_vistos = []
     personas = base_datos.consultar("SELECT * FROM usuarios WHERE colegio_id = ? AND activo = 1 ORDER BY id", [g.colegio["id"]])
     for persona in personas:
@@ -55,6 +64,15 @@ def login():
             return redirect("/inicio")
 
     return render_template("login.html", error=error, accesos=accesos_rapidos(), clave_prueba=CLAVE_PRUEBA)
+
+
+@app.route("/privacidad")
+def privacidad():
+    rector = None
+    rectores = base_datos.usuarios_con_rol(g.colegio["id"], "rector")
+    if len(rectores) > 0:
+        rector = rectores[0]
+    return render_template("privacidad.html", activo="", rector=rector)
 
 
 @app.route("/salir")

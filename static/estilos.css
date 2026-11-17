@@ -358,3 +358,12 @@ a { color: var(--azul); }
   .boton-salir { padding: 6px 10px; }
   .tablero { grid-template-columns: 1fr; }
 }
+
+.pie-login { text-align: center; font-size: .8rem; margin: 18px 0 0; }
+.documento { max-width: 760px; }
+.documento h2 { margin-top: 22px; }
+.documento li { margin-bottom: 6px; }
+.publico-simple { max-width: 860px; margin: 0 auto; padding: 32px 20px 60px; }
+.publico-simple .marca { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; text-decoration: none; }
+.publico-simple .marca img { width: 48px; height: 48px; }
+.publico-simple .marca strong { font-family: var(--titulos); color: var(--azul-oscuro); font-size: 1.15rem; }
