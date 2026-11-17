@@ -11,11 +11,13 @@ app.config["SESSION_COOKIE_HTTPONLY"] = True
 if os.environ.get("CLAVE_SECRETA", "") != "":
     app.config["SESSION_COOKIE_SECURE"] = True
 
+CON_DATOS_DE_EJEMPLO = os.environ.get("DATOS_DE_EJEMPLO", "1") == "1"
+
 base_datos.crear_tablas(base_datos.TABLAS)
-if base_datos.tabla_vacia("colegios"):
+if CON_DATOS_DE_EJEMPLO and base_datos.tabla_vacia("colegios"):
     semilla.sembrar()
 
-COLEGIO_PILOTO = 1
+COLEGIO_PILOTO = int(os.environ.get("COLEGIO_PORTADA", "1"))
 
 NOMBRES_ROLES = {
     "administrador": "Administración",
@@ -228,6 +230,8 @@ def cargar_sesion():
         g.colegio = base_datos.buscar_colegio(COLEGIO_PILOTO)
     else:
         g.colegio = base_datos.buscar_colegio(g.yo["colegio_id"])
+    if g.colegio is None:
+        return "Todavía no hay ningún colegio creado. Ejecuta: py crear_colegio.py", 503
     libres = ["/mi-cuenta", "/salir"]
     if g.yo is not None and g.yo["debe_cambiar_clave"] == 1:
         if request.path not in libres and not request.path.startswith("/static/"):

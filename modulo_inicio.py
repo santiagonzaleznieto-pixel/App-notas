@@ -2,12 +2,14 @@ import os
 from datetime import datetime, timedelta
 from flask import g, render_template, request, redirect, session
 from werkzeug.security import check_password_hash, generate_password_hash
-from nucleo import app, NOMBRES_ROLES, menu_de, registrar
+from nucleo import app, NOMBRES_ROLES, menu_de, registrar, CON_DATOS_DE_EJEMPLO
 from datos import CLAVE_PRUEBA
 import base_datos
 
 
 def modo_pruebas():
+    if not CON_DATOS_DE_EJEMPLO:
+        return False
     if os.environ.get("MODO_PRUEBAS", "") == "1":
         return True
     return os.environ.get("CLAVE_SECRETA", "") == ""

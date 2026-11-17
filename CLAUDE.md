@@ -1,6 +1,6 @@
 # Plataforma de gestión escolar
 
-Plataforma web en Python con Flask para manejar todo un colegio colombiano: notas, asistencia, convivencia, horas sociales, familias, pagos y reportes. Se venderá a instituciones públicas y privadas, de Transición a Once. Empezó como un proyecto de clase del SENA con las notas de Décimo de la Institución Educativa Instituto Pijao (Pijao, Quindío), que ahora es el **colegio piloto**.
+Plataforma web en Python con Flask y SQLite para manejar todo un colegio colombiano: notas, asistencia, convivencia, horas sociales, certificados, familias, circulares, orientación, elecciones, tesorería y servicios escolares. Se venderá a instituciones públicas y privadas, de Transición a Once. Empezó como proyecto de clase del SENA con las notas de Décimo de la Institución Educativa Instituto Pijao (Pijao, Quindío), que ahora es el **colegio piloto**.
 
 - Repositorio: https://github.com/santiagonzaleznieto-pixel/App-notas (público, rama `main`)
 - Demo de solo lectura (GitHub Pages, carpeta `docs`): https://santiagonzaleznieto-pixel.github.io/App-notas/
@@ -12,98 +12,79 @@ Este repositorio es solo para la plataforma escolar. El sitio del restaurante Am
 
 - Todo en español: nombres de variables, funciones, rutas, tablas, columnas y textos de la página.
 - No escribir comentarios en el código. Solo lo necesario.
-- Mantenerlo sencillo. En clase se han visto: secuenciales, condicionales (`if`, `elif`, `else`), ciclo `for` y ciclo `while`. También se permiten variables, listas, diccionarios, funciones (`def`), Flask, `sqlite3` (viene con Python) y `werkzeug.security` (viene con Flask).
-- Evitar lo que no se ha visto: clases, `lambda`, listas por comprensión, `try`/`except`, `with`, `sorted` con `key`, decoradores propios, librerías extra.
-- No pensar solo en el Instituto Pijao: todo debe servir para cualquier colegio. Cada tabla lleva `colegio_id` y cada consulta filtra por el colegio del usuario.
-- Lo que cambia de un colegio a otro (escala, períodos, grados, materias, logo) se guarda en la base de datos, no en el código.
+- Mantenerlo sencillo. Se permiten: variables, `if`/`elif`/`else`, `for`, `while`, listas, diccionarios, funciones (`def`), Flask (incluidos sus decoradores como `@app.route`, `@app.before_request`), `sqlite3`, `werkzeug.security` y módulos estándar simples (`os`, `datetime`, `secrets`).
+- Evitar lo que no se ha visto: clases propias, `lambda`, listas por comprensión, `try`/`except`, `with`, operador ternario, `sorted` con `key`, decoradores propios, f-strings (se usa `+` y `str()`), librerías externas.
+- Todo debe servir para cualquier colegio: cada tabla lleva `colegio_id` y cada consulta comprueba que el registro es del colegio del usuario (`g.colegio["id"]`). Nunca confiar en ids que llegan por la URL o el formulario.
+- Lo que cambia de un colegio a otro (escala, períodos, grados, materias, sedes) se guarda en la base de datos, no en el código.
 - Base de datos: SQLite hasta la fase 4 del plan maestro; luego PostgreSQL.
-- Mantener el diseño actual (ver "Diseño").
+- El repositorio es público: nunca escribir claves ni contraseñas reales en el código.
+- Mantener el diseño (ver "Diseño"). Todo debe verse bien en celular.
 - Soy principiante: explica cada cambio con palabras sencillas y dime cómo probarlo.
 
 ## Cómo se ejecuta (Windows, terminal de VS Code)
 
-Desde la carpeta `plataforma_escolar`:
+Desde la carpeta del proyecto:
 
 ```
 py -m pip install flask
 py app.py
 ```
 
-Luego abrir http://127.0.0.1:5000 en el navegador.
+Abrir http://127.0.0.1:5000. La primera vez se crea `plataforma.db` (al lado de `base_datos.py`) con los datos de `datos.py` y los ejemplos de cada módulo. Para volver a empezar: cerrar el programa, borrar `plataforma.db` y abrirlo otra vez. Si cambia la estructura de alguna tabla, también hay que borrar `plataforma.db`.
 
-La primera vez, `app.py` crea el archivo `plataforma.db` (al lado de `base_datos.py`) y lo llena con los datos de `datos.py`. Para volver a los datos iniciales: cerrar el programa, borrar `plataforma.db` y abrirlo otra vez. `plataforma.db` no se sube a GitHub (está en `.gitignore`) porque guarda datos de estudiantes.
+Pruebas automáticas (una por módulo): `py pruebas/prueba_notas.py`, `py pruebas/prueba_admin.py`, etc. Cada una usa una base temporal y no toca `plataforma.db`.
 
-## Estructura
+## Arquitectura
 
-- `app.py`: rutas, permisos por rol y cálculos (promedios, puestos, alertas).
-- `base_datos.py`: todo lo que habla con SQLite. Crea las tablas, carga los datos iniciales y tiene funciones para leer y guardar (`usuarios_del_colegio`, `materias_del_colegio`, `notas_del_colegio`, `guardar_nota`).
-- `datos.py`: datos iniciales del colegio piloto. Solo se usan para llenar la base cuando está vacía.
-- `templates/`: `base.html`, `login.html`, `materias.html`, `calificar.html`, `consolidado.html`, `boletin.html` (plantillas Jinja).
-- `static/`: `estilos.css` y `escudo.png`.
-- `generar_demo.py`: crea la demo de solo lectura en `docs/` para GitHub Pages. Usa una base temporal (`demo.db`) y la borra al terminar. Se vuelve a correr (`py generar_demo.py`) cada vez que cambie el diseño o los datos de prueba.
-- `docs/`: la demo generada. No se edita a mano.
-- `README.md`: portada del repositorio, con los pasos para publicar en PythonAnywhere.
+- `app.py`: arranca la plataforma; solo importa los módulos. El orden de los `import` es el orden del menú.
+- `nucleo.py`: crea la app de Flask, prepara la base, carga la sesión (`g.yo`, `g.colegio`), permisos (`tiene_rol`, `tiene_alguno`, `puede_ver_grupo`, `puede_ver_estudiante`, `puede_anotar_estudiante`, `dicta_en_grupo`), escala (`desempeno`), promedios (`promedio`, `nota_final` con porcentajes), `numero()` para leer números sin `try`, `registrar()` para el registro de accesos, el menú (`agregar_menu`) y la seguridad (formularios de otros sitios, cabeceras, cookies, cambio obligatorio de clave temporal).
+- `base_datos.py`: conexión y funciones del núcleo (`consultar`, `consultar_uno`, `ejecutar`, `crear_tablas`) y tablas del núcleo.
+- `semilla.py` y `datos.py`: datos iniciales del colegio piloto (solo se usan si la base está vacía).
+- `modulo_*.py`: un archivo por módulo con sus tablas (`TABLAS_...` + `crear_tablas`), sus datos de ejemplo (`sembrar_...`), su entrada al menú y sus rutas. Sus plantillas empiezan por el nombre del módulo y su CSS extra va en `static/<modulo>.css`.
+- `templates/base.html`: barra, menú automático según los roles, bloques `contenido` (con sesión), `publico` (sin sesión) y `estilos`.
+- `generar_demo.py`: crea la demo de solo lectura en `docs/` recorriendo la plataforma como cada usuario de acceso rápido. Correrlo (`py generar_demo.py`) después de cambiar diseño, módulos o datos de prueba.
+- `pruebas/`: `ayuda.py` (base temporal, `entrar`, `revisar`) y una prueba por módulo.
 
-## Publicación
+## Tablas del núcleo
 
-- Demo en GitHub Pages: sale de la carpeta `docs/` de la rama `main`. Las páginas son fijas: no se inicia sesión de verdad ni se guardan notas.
-- Plataforma real: PythonAnywhere (pasos en `README.md`).
-- `app.secret_key` se lee de la variable de entorno `CLAVE_SECRETA`. El repositorio es público: nunca escribir claves ni contraseñas reales en el código.
+`colegios` (datos y escala), `sedes`, `grados` (Transición a Once, con `orden`), `usuarios` (clave cifrada, `activo`, `debe_cambiar_clave`), `roles_usuario` (varios roles por persona), `grupos` (por año, con director), `matriculas` (estudiante en grupo por año, `activa` o `retirada`), `acudientes` (acudiente ↔ estudiante con parentesco), `materias`, `asignaciones` (grupo + materia + docente + horas), `periodos` (fechas, porcentaje, abierto o cerrado), `notas` (año, estudiante, materia, período, valor; `NULL` = pendiente), `registro_accesos`.
 
-## Tablas de la base de datos
+## Roles
 
-- `colegios`: nombre, municipio, departamento, año y número de períodos.
-- `usuarios`: colegio, usuario (único), contraseña cifrada, nombre y rol.
-- `materias`: colegio, nombre, nombre corto y profesor (su usuario). El `id` es un número y se usa en `/calificar/<id>`.
-- `notas`: colegio, estudiante, materia, período y valor. Una fila por estudiante, materia y período. `valor` vacío (`NULL`) = nota pendiente.
+`administrador`, `rector`, `coordinador`, `docente`, `secretaria`, `orientador`, `estudiante`, `acudiente`, `tesoreria`, `bibliotecario`, `enfermeria`, `porteria`. `director` no se guarda: se agrega solo cuando el docente dirige un grupo del año. Una persona puede tener varios roles.
 
-En `app.py`, `datos_del_colegio(colegio_id)` reúne todo en un diccionario con `colegio`, `usuarios`, `estudiantes`, `materias`, `notas` (estudiante → id de materia → lista de notas por período) y `periodos`.
+Usuarios de prueba (contraseña `pijao2026`, `CLAVE_PRUEBA` en `datos.py`): `admin`, `rectora`, `coordinadora`, `h.aguirre` (director de 10-A, Sociales y Filosofía), `c.munoz` (Matemáticas), `s.grajales` (directora de 11-A), `secretaria`, `orientadora`, `melany.osorio` y 9 estudiantes más en 10-A, `esteban.ramirez` y 5 más en 11-A, acudientes `gloria.cardenas` (madre de Melany), `jorge.restrepo`, `olga.gomez`, y `tesoreria`, `biblioteca`, `enfermeria`, `porteria`.
 
-## Roles y permisos
-
-Contraseña de prueba para todos: `pijao2026` (`CLAVE_PRUEBA` en `datos.py`). En la base se guarda cifrada.
-
-- `rectora` y `coordinadora`: ven el consolidado del grado (`/consolidado`) y el boletín de cualquier estudiante de su colegio. Solo lectura.
-- `director` (`h.aguirre`, Hernán Darío Aguirre, dicta Filosofía y Ciencias Sociales): califica sus materias y ve el consolidado como "Mi grupo".
-- `profesor`: solo ve y califica sus materias (`/materias`, `/calificar/<id_materia>`).
-- `estudiante`: solo ve su propio boletín (`/boletin/<usuario>`).
-
-Nadie ve datos de otro colegio. 10 estudiantes de prueba, 8 materias, 7 docentes, 4 períodos.
+Los botones de acceso rápido solo aparecen en modo pruebas: sin la variable `CLAVE_SECRETA`, o con `MODO_PRUEBAS=1`.
 
 ## Reglas de las notas
 
-- Escala de 1.0 a 5.0, un decimal.
-- Desempeño: Bajo 1.0–2.9, Básico 3.0–3.9, Alto 4.0–4.5, Superior 4.6–5.0, Pendiente si no hay nota. Es la escala nacional del Decreto 1290 de 2009; más adelante cada colegio configura la suya.
-- Promedio de una materia: promedio de las notas de los períodos que ya existen.
-- Promedio general: promedio de todas las materias.
-- Puesto: 1 + número de compañeros con mejor promedio (los empates comparten puesto).
+- Escala por colegio (en `colegios`): por defecto de 1.0 a 5.0. Desempeño (escala nacional del Decreto 1290 de 2009): Bajo menos de 3.0, Básico desde 3.0, Alto desde 4.0, Superior desde 4.6, Pendiente si no hay nota.
+- Nota final de una materia: promedio ponderado por el porcentaje de cada período, solo con los períodos que tienen nota.
+- Promedio general: promedio de las materias. Puesto: 1 + compañeros con mejor promedio (los empates comparten puesto).
+- Los docentes solo cambian notas de períodos abiertos.
 
 ## Dónde se usa cada tema de clase
 
 - Secuenciales: `datos.py`.
-- `while`: `buscar_usuario` (búsqueda del usuario al iniciar sesión).
-- `if` / `elif` / `else`: `desempeno`, el login, los permisos de cada ruta y el mensaje del boletín.
-- `for`: `promedio`, `tabla_grupo` (puestos), alertas, resumen por materia, guardar notas y cargar los datos iniciales.
-- Funciones: `base_datos.py` (una función por cada consulta).
+- `while`: `enlaces_internos` en `generar_demo.py`, `ordenar_de_mayor_a_menor` en `modulo_tablero.py`, la generación de usuarios y códigos únicos (administración, certificados, recibos).
+- `if` / `elif` / `else`: `desempeno`, el login, los permisos de cada ruta, el mensaje del boletín.
+- `for`: promedios, puestos, alertas, resúmenes, guardar notas, sembrar datos.
+- Funciones: un archivo `modulo_*.py` por módulo, con una función por consulta y por ruta.
 
 ## Diseño
 
 - Colores: azul `#1E3A5F`, azul oscuro `#122844`, verde cafetero `#3F6B4A`, verde oscuro `#2C4E35`, terracota `#BD5B2E`, dorado `#C98A2B`, crema `#FBF8F2`.
 - Fuentes: Fraunces (títulos) e Inter (texto), desde Google Fonts.
 - Montañas del Paisaje Cultural Cafetero en el login y franja bajo la barra superior.
-- El nombre "Instituto Pijao" todavía está escrito en `base.html` y `login.html`. Cuando haya varios colegios, saldrá de la tabla `colegios`.
+- Gráficas de indicadores (`static/tablero.css`): niveles Bajo `#B4532A`, Básico `#D29A2E`, Alto `#53A86E`, Superior `#1B7444`, Pendiente `#D9D3C7` (paleta validada para daltonismo), barras de máximo 24 px, separación de 2 px, leyenda y tabla de datos.
+
+## Publicación
+
+- Demo en GitHub Pages: carpeta `docs/` de la rama `main` (páginas fijas; no se inicia sesión de verdad ni se guarda nada).
+- Plataforma real: PythonAnywhere (pasos en `README.md`). Variables: `CLAVE_SECRETA` (obligatoria en internet) y `MODO_PRUEBAS=1` solo para demos.
+- `/privacidad`: política de tratamiento de datos (borrador para revisión de un abogado).
 
 ## Estado
 
-Fase 1 del plan maestro: base de datos y todo el colegio.
-
-- [x] Notas, usuarios y materias guardados en SQLite, con `colegio_id`.
-- [x] Contraseñas cifradas.
-- [ ] Grados y grupos de Transición a Once (tablas `grados`, `grupos`, `matriculas`, `asignaciones`). Hoy `GRADO` sigue fijo en `datos.py`.
-- [ ] Rol de administrador del colegio que crea usuarios, materias y grupos desde la página.
-- [ ] Escala, períodos y porcentajes configurables por colegio.
-- [ ] Contraseña propia para cada usuario y cambio de contraseña.
-
-Puerta para pasar a la fase 2: el piloto cierra un período completo con las notas en la base de datos.
-
-Siguientes fases: 2 núcleo escolar (asistencia, observador, horas sociales, matrícula, boletines y certificados), 3 familias y comunicación, 4 lista para vender (varios colegios, en internet, seguridad), 5 bienestar e inclusión, 6 administración del colegio, 7 app y modo sin conexión.
+Ver la sección "Avance" del plan maestro y la lista de pendientes del dueño en `PENDIENTES.md`.
