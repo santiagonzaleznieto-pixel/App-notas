@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block contenido %}
+<div class="encabezado">
+  {% if yo.rol == "director" %}
+  <h1>Mi grupo · {{ grado }}</h1>
+  <p>Como director de grupo ves las notas de todas las materias de tus estudiantes.</p>
+  {% else %}
+  <h1>Consolidado de notas · {{ grado }}</h1>
+  <p>Vista general del grado para {% if yo.rol == "rectora" %}rectoría{% else %}coordinación académica{% endif %}.</p>
+  {% endif %}
+</div>
+
+<div class="periodos">
+  <a href="/consolidado?periodo=0" class="{% if periodo == 0 %}activo{% endif %}">Acumulado</a>
+  {% for p in range(1, periodos + 1) %}
+  <a href="/consolidado?periodo={{ p }}" class="{% if periodo == p %}activo{% endif %}">Período {{ p }}</a>
+  {% endfor %}
+</div>
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Estudiantes</span>
+    <strong>{{ filas|length }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Promedio del grupo</span>
+    <strong>{% if promedio_grupo is none %}—{% else %}{{ promedio_grupo }}{% endif %}</strong>
+    <em class="chip {{ desempeno(promedio_grupo) }}">{{ desempeno(promedio_grupo) }}</em>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Mejor promedio</span>
+    {% if mejor %}
+    <strong>{{ mejor.promedio }}</strong>
+    <small>{{ mejor.estudiante.nombre }}</small>
+    {% else %}
+    <strong>—</strong>
+    {% endif %}
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Con materias en Bajo</span>
+    <strong>{{ alertas|length }}</strong>
+  </div>
+</div>
+
+<div class="tarjeta">
+  <div class="tarjeta-titulo">
+    <h2>Notas por estudiante</h2>
+    <div class="reparto">
+      {% for nivel in ["Superior", "Alto", "Básico", "Bajo"] %}
+      <span class="chip {{ nivel }}">{{ nivel }}: {{ conteo[nivel] }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Puesto</th>
+          <th class="izq">Estudiante</th>
+          {% for materia in materias %}<th title="{{ materia.nombre }}">{{ materia.corto }}</th>{% endfor %}
+          <th>Promedio</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+        <tr>
+          <td>{% if fila.puesto %}<span class="puesto {% if fila.puesto <= 3 %}podio{% endif %}">{{ fila.puesto }}</span>{% else %}—{% endif %}</td>
+          <td class="izq"><a href="/boletin/{{ fila.estudiante.usuario }}">{{ fila.estudiante.nombre }}</a></td>
+          {% for nota in fila.notas %}
+          <td>{% if nota is none %}<span class="vacia">—</span>{% else %}<span class="nota {{ desempeno(nota) }}">{{ nota }}</span>{% endif %}</td>
+          {% endfor %}
+          <td>{% if fila.promedio is none %}—{% else %}<strong class="nota {{ desempeno(fila.promedio) }}">{{ fila.promedio }}</strong>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Resumen por materia</h2>
+    <table class="tabla simple">
+      <thead><tr><th class="izq">Materia</th><th class="izq">Docente</th><th>Promedio</th><th>En Bajo</th></tr></thead>
+      <tbody>
+        {% for item in resumen %}
+        <tr>
+          <td class="izq">{{ item.materia.nombre }}</td>
+          <td class="izq gris">{{ item.profesor.nombre }}</td>
+          <td>{% if item.promedio is none %}—{% else %}<span class="nota {{ desempeno(item.promedio) }}">{{ item.promedio }}</span>{% endif %}</td>
+          <td>{{ item.en_bajo }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tarjeta">
+    <h2>Alertas académicas</h2>
+    {% if alertas %}
+    <ul class="alertas">
+      {% for alerta in alertas %}
+      <li>
+        <a href="/boletin/{{ alerta.estudiante.usuario }}">{{ alerta.estudiante.nombre }}</a>
+        <span>{{ alerta.materias|join(", ") }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">Ningún estudiante tiene materias en desempeño bajo en esta vista.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

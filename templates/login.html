@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block publico %}
+<div class="login">
+  <section class="login-hero">
+    <img class="escudo-login" src="/static/escudo.png" alt="Escudo Instituto Pijao">
+    <h1>{{ colegio }}</h1>
+    <p class="lema">"Sapientiam a juventute dilexi et quaesivi"</p>
+    <p class="subtitulo">Plataforma de notas · Grado {{ grado }} · {{ anio }}</p>
+    <svg class="colinas" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,200 L0,120 L160,80 L340,130 L520,55 L720,115 L900,70 L1080,125 L1200,95 L1200,200 Z" fill="#3F6B4A" opacity="0.55"/>
+      <path d="M0,200 L0,155 L220,115 L430,150 L640,95 L860,140 L1050,105 L1200,135 L1200,200 Z" fill="#2C4E35" opacity="0.8"/>
+      <path d="M0,200 L0,182 L260,166 L520,188 L780,162 L1000,184 L1200,172 L1200,200 Z" fill="#BD5B2E"/>
+    </svg>
+  </section>
+
+  <section class="login-panel">
+    <h2>Iniciar sesión</h2>
+    {% if error %}<div class="aviso error">{{ error }}</div>{% endif %}
+    <form method="post" action="/">
+      <label for="usuario">Usuario</label>
+      <input id="usuario" name="usuario" autocomplete="username" autofocus>
+      <label for="clave">Contraseña</label>
+      <input id="clave" name="clave" type="password" autocomplete="current-password">
+      <button class="boton" type="submit">Ingresar</button>
+    </form>
+
+    <div class="accesos">
+      <p>Acceso rápido para la clase · contraseña <code>pijao2026</code></p>
+      <div class="accesos-lista">
+        {% for persona in accesos %}
+        <form method="post" action="/">
+          <input type="hidden" name="usuario" value="{{ persona.usuario }}">
+          <input type="hidden" name="clave" value="{{ persona.clave }}">
+          <button type="submit" class="acceso">
+            <strong>
+              {% if persona.rol == "rectora" %}Rectora
+              {% elif persona.rol == "coordinadora" %}Coordinadora
+              {% elif persona.rol == "director" %}Director de grupo
+              {% elif persona.rol == "profesor" %}Profesor
+              {% else %}Estudiante{% endif %}
+            </strong>
+            <span>{{ persona.usuario }}</span>
+          </button>
+        </form>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

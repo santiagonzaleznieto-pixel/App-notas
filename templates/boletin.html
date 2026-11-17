@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block contenido %}
+<div class="encabezado">
+  {% if yo.rol != "estudiante" %}<a class="volver" href="/consolidado">← Volver al consolidado</a>{% endif %}
+  <h1>Boletín de notas</h1>
+  <p>{{ colegio }} · Grado {{ grado }} · {{ anio }}</p>
+</div>
+
+<div class="tarjeta perfil">
+  <div class="perfil-nombre">
+    <span class="inicial">{{ estudiante.nombre[0] }}</span>
+    <div>
+      <h2>{{ estudiante.nombre }}</h2>
+      <p class="gris">Director de grupo: {{ director.nombre }}</p>
+    </div>
+  </div>
+  <div class="perfil-datos">
+    <div>
+      <span>Promedio general</span>
+      <strong>{% if general is none %}—{% else %}{{ general }}{% endif %}</strong>
+      <em class="chip {{ desempeno(general) }}">{{ desempeno(general) }}</em>
+    </div>
+    <div>
+      <span>Puesto en el grupo</span>
+      <strong>{% if puesto %}{{ puesto }}<small> de {{ total }}</small>{% else %}—{% endif %}</strong>
+    </div>
+  </div>
+  <p class="mensaje {{ desempeno(general) }}">{{ mensaje }}</p>
+</div>
+
+<div class="tarjeta">
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th class="izq">Materia</th>
+          {% for p in range(1, periodos + 1) %}<th>P{{ p }}</th>{% endfor %}
+          <th>Promedio</th>
+          <th>Desempeño</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+        <tr>
+          <td class="izq">
+            <strong>{{ fila.materia.nombre }}</strong>
+            <small class="gris bloque">{{ fila.profesor.nombre }}</small>
+          </td>
+          {% for nota in fila.notas %}
+          <td>{% if nota is none %}<span class="vacia">—</span>{% else %}<span class="nota {{ desempeno(nota) }}">{{ nota }}</span>{% endif %}</td>
+          {% endfor %}
+          <td>{% if fila.final is none %}—{% else %}<strong class="nota {{ desempeno(fila.final) }}">{{ fila.final }}</strong>{% endif %}</td>
+          <td><span class="chip {{ desempeno(fila.final) }}">{{ desempeno(fila.final) }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="acciones">
+    <button class="boton secundario" type="button" onclick="window.print()">Imprimir boletín</button>
+  </div>
+</div>
+{% endblock %}
