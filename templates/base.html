@@ -10,6 +10,9 @@
 <link rel="stylesheet" href="/static/estilos.css">
 {% block estilos %}{% endblock %}
 <link rel="icon" href="/static/escudo.png">
+<link rel="manifest" href="/static/manifest.json">
+<link rel="apple-touch-icon" href="/static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
 </head>
 <body>
 {% if yo %}
@@ -42,5 +45,10 @@
 {% else %}
   {% block publico %}{% endblock %}
 {% endif %}
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
 </body>
 </html>

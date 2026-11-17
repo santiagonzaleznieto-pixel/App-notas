@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, timedelta
-from flask import g, render_template, request, redirect, session
+from flask import g, render_template, request, redirect, session, send_from_directory
 from werkzeug.security import check_password_hash, generate_password_hash
 from nucleo import app, NOMBRES_ROLES, menu_de, registrar, CON_DATOS_DE_EJEMPLO
 from datos import CLAVE_PRUEBA
@@ -75,6 +75,18 @@ def privacidad():
     if len(rectores) > 0:
         rector = rectores[0]
     return render_template("privacidad.html", activo="", rector=rector)
+
+
+@app.route("/sw.js")
+def trabajador_sin_conexion():
+    respuesta = send_from_directory(app.static_folder, "sw.js", mimetype="application/javascript")
+    respuesta.headers["Cache-Control"] = "no-cache"
+    return respuesta
+
+
+@app.route("/sin-conexion")
+def sin_conexion():
+    return render_template("sin_conexion.html", activo="")
 
 
 @app.route("/salir")

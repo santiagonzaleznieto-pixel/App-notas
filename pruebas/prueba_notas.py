@@ -62,4 +62,7 @@ publico = ayuda.app.test_client()
 revisar("la política de datos se ve sin iniciar sesión", "Ley 1581" in publico.get("/privacidad").get_data(as_text=True))
 revisar("en modo pruebas se ven los accesos rápidos", "Acceso rápido" in publico.get("/").get_data(as_text=True))
 
+revisar("el trabajador sin conexión se sirve como JavaScript", publico.get("/sw.js").mimetype == "application/javascript")
+revisar("la página sin conexión se ve sin sesión", "No hay conexión" in publico.get("/sin-conexion").get_data(as_text=True))
+
 ayuda.terminar()

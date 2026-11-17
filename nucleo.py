@@ -232,7 +232,7 @@ def cargar_sesion():
         g.colegio = base_datos.buscar_colegio(g.yo["colegio_id"])
     if g.colegio is None:
         return "Todavía no hay ningún colegio creado. Ejecuta: py crear_colegio.py", 503
-    libres = ["/mi-cuenta", "/salir"]
+    libres = ["/mi-cuenta", "/salir", "/sw.js", "/sin-conexion", "/privacidad"]
     if g.yo is not None and g.yo["debe_cambiar_clave"] == 1:
         if request.path not in libres and not request.path.startswith("/static/"):
             return redirect("/mi-cuenta")

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block titulo %}Sin conexión{% endblock %}
+{% macro aviso() %}
+<div class="tarjeta vacio">
+  <h1>No hay conexión a internet</h1>
+  <p>Revisa los datos o el wifi. Tu información no se pierde: cuando vuelva la señal, recarga la página.</p>
+  <button class="boton" type="button" onclick="location.reload()">Intentar de nuevo</button>
+</div>
+{% endmacro %}
+{% block contenido %}{{ aviso() }}{% endblock %}
+{% block publico %}<div class="publico-simple">{{ aviso() }}</div>{% endblock %}
