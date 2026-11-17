@@ -1,7 +1,10 @@
 COLEGIO = "Institución Educativa Instituto Pijao"
+MUNICIPIO = "Pijao"
+DEPARTAMENTO = "Quindío"
 GRADO = "Décimo"
 ANIO = 2026
 PERIODOS = 4
+CLAVE_PRUEBA = "pijao2026"
 
 USUARIOS = [
     {"usuario": "rectora", "clave": "pijao2026", "nombre": "Martha Cecilia Vallejo", "rol": "rectora"},

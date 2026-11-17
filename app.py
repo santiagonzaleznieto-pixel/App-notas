@@ -1,26 +1,44 @@
 from flask import Flask, render_template, request, redirect, session
-from datos import COLEGIO, GRADO, ANIO, PERIODOS, USUARIOS, MATERIAS, NOTAS
+from werkzeug.security import check_password_hash
+from datos import GRADO, CLAVE_PRUEBA
+import base_datos
 
 app = Flask(__name__)
 app.secret_key = "instituto-pijao-decimo"
 
-ESTUDIANTES = []
-for persona in USUARIOS:
-    if persona["rol"] == "estudiante":
-        ESTUDIANTES.append(persona)
+base_datos.preparar_base()
+PILOTO = base_datos.buscar_colegio(1)
 
 
 def buscar_usuario(usuario):
+    usuarios = base_datos.todos_los_usuarios()
     i = 0
-    while i < len(USUARIOS):
-        if USUARIOS[i]["usuario"] == usuario:
-            return USUARIOS[i]
+    while i < len(usuarios):
+        if usuarios[i]["usuario"] == usuario:
+            return usuarios[i]
         i = i + 1
     return None
 
 
 def usuario_actual():
     return buscar_usuario(session.get("usuario", ""))
+
+
+def datos_del_colegio(colegio_id):
+    colegio = base_datos.buscar_colegio(colegio_id)
+    usuarios = base_datos.usuarios_del_colegio(colegio_id)
+    estudiantes = []
+    for persona in usuarios:
+        if persona["rol"] == "estudiante":
+            estudiantes.append(persona)
+    return {
+        "colegio": colegio,
+        "usuarios": usuarios,
+        "estudiantes": estudiantes,
+        "materias": base_datos.materias_del_colegio(colegio_id),
+        "notas": base_datos.notas_del_colegio(colegio_id, colegio["periodos"]),
+        "periodos": colegio["periodos"],
+    }
 
 
 def desempeno(nota):
@@ -48,19 +66,19 @@ def promedio(lista):
     return round(suma / cantidad, 1)
 
 
-def nota_materia(usuario, id_materia, periodo):
-    lista = NOTAS[usuario][id_materia]
+def nota_materia(datos, usuario, id_materia, periodo):
+    lista = datos["notas"][usuario][id_materia]
     if periodo == 0:
         return promedio(lista)
     return lista[periodo - 1]
 
 
-def tabla_grupo(periodo):
+def tabla_grupo(datos, periodo):
     filas = []
-    for estudiante in ESTUDIANTES:
+    for estudiante in datos["estudiantes"]:
         notas = []
-        for materia in MATERIAS:
-            notas.append(nota_materia(estudiante["usuario"], materia["id"], periodo))
+        for materia in datos["materias"]:
+            notas.append(nota_materia(datos, estudiante["usuario"], materia["id"], periodo))
         filas.append({"estudiante": estudiante, "notas": notas, "promedio": promedio(notas), "puesto": None})
 
     for fila in filas:
@@ -74,9 +92,9 @@ def tabla_grupo(periodo):
 
 
 app.jinja_env.globals["desempeno"] = desempeno
-app.jinja_env.globals["colegio"] = COLEGIO
+app.jinja_env.globals["colegio"] = PILOTO["nombre"]
 app.jinja_env.globals["grado"] = GRADO
-app.jinja_env.globals["anio"] = ANIO
+app.jinja_env.globals["anio"] = PILOTO["anio"]
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -93,7 +111,7 @@ def login():
             error = "Escribe tu usuario y tu contraseña."
         elif persona is None:
             error = "Ese usuario no existe en el grado " + GRADO + "."
-        elif persona["clave"] != clave:
+        elif not check_password_hash(persona["clave"], clave):
             error = "La contraseña no es correcta."
         else:
             session["usuario"] = persona["usuario"]
@@ -101,12 +119,12 @@ def login():
 
     accesos = []
     roles_vistos = []
-    for persona in USUARIOS:
+    for persona in base_datos.usuarios_del_colegio(PILOTO["id"]):
         if persona["rol"] not in roles_vistos:
             accesos.append(persona)
             roles_vistos.append(persona["rol"])
 
-    return render_template("login.html", error=error, accesos=accesos)
+    return render_template("login.html", error=error, accesos=accesos, clave_prueba=CLAVE_PRUEBA)
 
 
 @app.route("/inicio")
@@ -128,19 +146,21 @@ def materias():
     if yo is None or yo["rol"] not in ["profesor", "director"]:
         return redirect("/")
 
+    datos = datos_del_colegio(yo["colegio_id"])
+    periodos = datos["periodos"]
     mis_materias = []
-    for materia in MATERIAS:
+    for materia in datos["materias"]:
         if materia["profesor"] == yo["usuario"]:
             finales = []
             en_bajo = 0
             calificados = 0
-            for estudiante in ESTUDIANTES:
-                lista = NOTAS[estudiante["usuario"]][materia["id"]]
+            for estudiante in datos["estudiantes"]:
+                lista = datos["notas"][estudiante["usuario"]][materia["id"]]
                 final = promedio(lista)
                 finales.append(final)
                 if final is not None and final < 3.0:
                     en_bajo = en_bajo + 1
-                if lista[PERIODOS - 1] is not None:
+                if lista[periodos - 1] is not None:
                     calificados = calificados + 1
             mis_materias.append({
                 "materia": materia,
@@ -150,17 +170,18 @@ def materias():
             })
 
     return render_template("materias.html", yo=yo, activo="materias", mis_materias=mis_materias,
-                           total=len(ESTUDIANTES), periodos=PERIODOS)
+                           total=len(datos["estudiantes"]), periodos=periodos)
 
 
-@app.route("/calificar/<id_materia>", methods=["GET", "POST"])
+@app.route("/calificar/<int:id_materia>", methods=["GET", "POST"])
 def calificar(id_materia):
     yo = usuario_actual()
     if yo is None:
         return redirect("/")
 
+    datos = datos_del_colegio(yo["colegio_id"])
     materia = None
-    for m in MATERIAS:
+    for m in datos["materias"]:
         if m["id"] == id_materia:
             materia = m
     if materia is None or materia["profesor"] != yo["usuario"]:
@@ -169,27 +190,28 @@ def calificar(id_materia):
     mensaje = ""
     errores = []
     if request.method == "POST":
-        for estudiante in ESTUDIANTES:
-            for p in range(PERIODOS):
+        for estudiante in datos["estudiantes"]:
+            for p in range(datos["periodos"]):
                 texto = request.form.get(estudiante["usuario"] + "-" + str(p + 1), "").strip()
                 if texto == "":
-                    NOTAS[estudiante["usuario"]][id_materia][p] = None
+                    base_datos.guardar_nota(yo["colegio_id"], estudiante["usuario"], id_materia, p + 1, None)
                 else:
                     valor = round(float(texto.replace(",", ".")), 1)
                     if valor >= 1.0 and valor <= 5.0:
-                        NOTAS[estudiante["usuario"]][id_materia][p] = valor
+                        base_datos.guardar_nota(yo["colegio_id"], estudiante["usuario"], id_materia, p + 1, valor)
                     else:
                         errores.append(estudiante["nombre"] + ", período " + str(p + 1) + ": la nota debe estar entre 1.0 y 5.0")
         if len(errores) == 0:
             mensaje = "Notas guardadas correctamente."
+        datos = datos_del_colegio(yo["colegio_id"])
 
     filas = []
-    for estudiante in ESTUDIANTES:
-        lista = NOTAS[estudiante["usuario"]][id_materia]
+    for estudiante in datos["estudiantes"]:
+        lista = datos["notas"][estudiante["usuario"]][id_materia]
         filas.append({"estudiante": estudiante, "notas": lista, "final": promedio(lista)})
 
     return render_template("calificar.html", yo=yo, activo="materias", materia=materia, filas=filas,
-                           mensaje=mensaje, errores=errores, periodos=PERIODOS)
+                           mensaje=mensaje, errores=errores, periodos=datos["periodos"])
 
 
 @app.route("/consolidado")
@@ -198,12 +220,18 @@ def consolidado():
     if yo is None or yo["rol"] not in ["director", "coordinadora", "rectora"]:
         return redirect("/")
 
+    datos = datos_del_colegio(yo["colegio_id"])
+    materias_colegio = datos["materias"]
+
     periodo = request.args.get("periodo", "0")
-    if periodo not in ["0", "1", "2", "3", "4"]:
+    opciones = ["0"]
+    for p in range(1, datos["periodos"] + 1):
+        opciones.append(str(p))
+    if periodo not in opciones:
         periodo = "0"
     periodo = int(periodo)
 
-    filas = tabla_grupo(periodo)
+    filas = tabla_grupo(datos, periodo)
 
     ordenadas = []
     for posicion in range(1, len(filas) + 1):
@@ -221,14 +249,14 @@ def consolidado():
         promedios.append(fila["promedio"])
         conteo[desempeno(fila["promedio"])] = conteo[desempeno(fila["promedio"])] + 1
         perdidas = []
-        for i in range(len(MATERIAS)):
+        for i in range(len(materias_colegio)):
             if fila["notas"][i] is not None and fila["notas"][i] < 3.0:
-                perdidas.append(MATERIAS[i]["nombre"])
+                perdidas.append(materias_colegio[i]["nombre"])
         if len(perdidas) > 0:
             alertas.append({"estudiante": fila["estudiante"], "materias": perdidas})
 
     resumen = []
-    for i in range(len(MATERIAS)):
+    for i in range(len(materias_colegio)):
         columna = []
         en_bajo = 0
         for fila in filas:
@@ -236,8 +264,8 @@ def consolidado():
             if fila["notas"][i] is not None and fila["notas"][i] < 3.0:
                 en_bajo = en_bajo + 1
         resumen.append({
-            "materia": MATERIAS[i],
-            "profesor": buscar_usuario(MATERIAS[i]["profesor"]),
+            "materia": materias_colegio[i],
+            "profesor": buscar_usuario(materias_colegio[i]["profesor"]),
             "promedio": promedio(columna),
             "en_bajo": en_bajo,
         })
@@ -246,8 +274,8 @@ def consolidado():
     if len(ordenadas) > 0 and ordenadas[0]["puesto"] == 1:
         mejor = ordenadas[0]
 
-    return render_template("consolidado.html", yo=yo, activo="consolidado", filas=ordenadas, materias=MATERIAS,
-                           periodo=periodo, periodos=PERIODOS, promedio_grupo=promedio(promedios),
+    return render_template("consolidado.html", yo=yo, activo="consolidado", filas=ordenadas, materias=materias_colegio,
+                           periodo=periodo, periodos=datos["periodos"], promedio_grupo=promedio(promedios),
                            conteo=conteo, alertas=alertas, resumen=resumen, mejor=mejor)
 
 
@@ -258,16 +286,17 @@ def boletin(usuario):
         return redirect("/")
 
     estudiante = buscar_usuario(usuario)
-    if estudiante is None or estudiante["rol"] != "estudiante":
+    if estudiante is None or estudiante["rol"] != "estudiante" or estudiante["colegio_id"] != yo["colegio_id"]:
         return redirect("/inicio")
     if yo["rol"] == "estudiante" and yo["usuario"] != usuario:
         return redirect("/inicio")
     if yo["rol"] == "profesor":
         return redirect("/inicio")
 
+    datos = datos_del_colegio(yo["colegio_id"])
     filas = []
-    for materia in MATERIAS:
-        lista = NOTAS[usuario][materia["id"]]
+    for materia in datos["materias"]:
+        lista = datos["notas"][usuario][materia["id"]]
         filas.append({
             "materia": materia,
             "profesor": buscar_usuario(materia["profesor"]),
@@ -277,7 +306,7 @@ def boletin(usuario):
 
     puesto = None
     general = None
-    for fila in tabla_grupo(0):
+    for fila in tabla_grupo(datos, 0):
         if fila["estudiante"]["usuario"] == usuario:
             puesto = fila["puesto"]
             general = fila["promedio"]
@@ -294,7 +323,7 @@ def boletin(usuario):
         mensaje = "Necesitas reforzar. Habla con tus profesores y con tu director de grupo."
 
     director = None
-    for persona in USUARIOS:
+    for persona in datos["usuarios"]:
         if persona["rol"] == "director":
             director = persona
 
@@ -304,7 +333,7 @@ def boletin(usuario):
 
     return render_template("boletin.html", yo=yo, activo=activo, estudiante=estudiante, filas=filas,
                            puesto=puesto, general=general, mensaje=mensaje, director=director,
-                           total=len(ESTUDIANTES), periodos=PERIODOS)
+                           total=len(datos["estudiantes"]), periodos=datos["periodos"])
 
 
 @app.route("/salir")

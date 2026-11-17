@@ -30,7 +30,7 @@
         {% for persona in accesos %}
         <form method="post" action="/">
           <input type="hidden" name="usuario" value="{{ persona.usuario }}">
-          <input type="hidden" name="clave" value="{{ persona.clave }}">
+          <input type="hidden" name="clave" value="{{ clave_prueba }}">
           <button type="submit" class="acceso">
             <strong>
               {% if persona.rol == "rectora" %}Rectora
