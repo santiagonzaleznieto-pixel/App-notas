@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notas Décimo · Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="icon" href="static/escudo.png">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero las notas no se guardan.</div>
+
+  
+<div class="login">
+  <section class="login-hero">
+    <img class="escudo-login" src="static/escudo.png" alt="Escudo Instituto Pijao">
+    <h1>Institución Educativa Instituto Pijao</h1>
+    <p class="lema">"Sapientiam a juventute dilexi et quaesivi"</p>
+    <p class="subtitulo">Plataforma de notas · Grado Décimo · 2026</p>
+    <svg class="colinas" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,200 L0,120 L160,80 L340,130 L520,55 L720,115 L900,70 L1080,125 L1200,95 L1200,200 Z" fill="#3F6B4A" opacity="0.55"/>
+      <path d="M0,200 L0,155 L220,115 L430,150 L640,95 L860,140 L1050,105 L1200,135 L1200,200 Z" fill="#2C4E35" opacity="0.8"/>
+      <path d="M0,200 L0,182 L260,166 L520,188 L780,162 L1000,184 L1200,172 L1200,200 Z" fill="#BD5B2E"/>
+    </svg>
+  </section>
+
+  <section class="login-panel">
+    <h2>Iniciar sesión</h2>
+    
+    <form onsubmit="return entrarDemo(this);">
+      <label for="usuario">Usuario</label>
+      <input id="usuario" name="usuario" autocomplete="username" autofocus>
+      <label for="clave">Contraseña</label>
+      <input id="clave" name="clave" type="password" autocomplete="current-password">
+      <button class="boton" type="submit">Ingresar</button>
+    </form>
+
+    <div class="accesos">
+      <p>Acceso rápido para la clase · contraseña <code>pijao2026</code></p>
+      <div class="accesos-lista">
+        
+        <form method="get" action="rectora--consolidado.html">
+          
+          <button type="submit" class="acceso">
+            <strong>
+              Rectora
+              
+            </strong>
+            <span>rectora</span>
+          </button>
+        </form>
+        
+        <form method="get" action="coordinadora--consolidado.html">
+          
+          <button type="submit" class="acceso">
+            <strong>
+              Coordinadora
+              
+            </strong>
+            <span>coordinadora</span>
+          </button>
+        </form>
+        
+        <form method="get" action="h.aguirre--materias.html">
+          
+          <button type="submit" class="acceso">
+            <strong>
+              Director de grupo
+              
+            </strong>
+            <span>h.aguirre</span>
+          </button>
+        </form>
+        
+        <form method="get" action="c.munoz--materias.html">
+          
+          <button type="submit" class="acceso">
+            <strong>
+              Profesor
+              
+            </strong>
+            <span>c.munoz</span>
+          </button>
+        </form>
+        
+        <form method="get" action="melany.osorio--boletin-melany.osorio.html">
+          
+          <button type="submit" class="acceso">
+            <strong>
+              Estudiante
+            </strong>
+            <span>melany.osorio</span>
+          </button>
+        </form>
+        
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<script>
+var paginas = {"rectora": "rectora--consolidado.html", "coordinadora": "coordinadora--consolidado.html", "h.aguirre": "h.aguirre--materias.html", "c.munoz": "c.munoz--materias.html", "melany.osorio": "melany.osorio--boletin-melany.osorio.html", };
+function entrarDemo(formulario) {
+  var usuario = formulario.usuario.value.trim().toLowerCase();
+  if (paginas[usuario] && formulario.clave.value === 'pijao2026') {
+    location.href = paginas[usuario];
+  } else {
+    alert('En la demo solo funcionan los usuarios de acceso rápido, con la contraseña pijao2026.');
+  }
+  return false;
+}
+</script>
+</body>
+</html>

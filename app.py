@@ -1,10 +1,11 @@
+import os
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import check_password_hash
 from datos import GRADO, CLAVE_PRUEBA
 import base_datos
 
 app = Flask(__name__)
-app.secret_key = "instituto-pijao-decimo"
+app.secret_key = os.environ.get("CLAVE_SECRETA", "solo-para-pruebas-en-mi-computador")
 
 base_datos.preparar_base()
 PILOTO = base_datos.buscar_colegio(1)

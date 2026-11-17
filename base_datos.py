@@ -1,8 +1,10 @@
+import os
 import sqlite3
 from werkzeug.security import generate_password_hash
 from datos import COLEGIO, MUNICIPIO, DEPARTAMENTO, ANIO, PERIODOS, USUARIOS, MATERIAS, NOTAS
 
-ARCHIVO = "plataforma.db"
+CARPETA_PROYECTO = os.path.dirname(os.path.abspath(__file__))
+ARCHIVO = os.path.join(CARPETA_PROYECTO, "plataforma.db")
 
 TABLAS = """
 CREATE TABLE IF NOT EXISTS colegios (

@@ -2,7 +2,11 @@
 
 Plataforma web en Python con Flask para manejar todo un colegio colombiano: notas, asistencia, convivencia, horas sociales, familias, pagos y reportes. Se venderá a instituciones públicas y privadas, de Transición a Once. Empezó como un proyecto de clase del SENA con las notas de Décimo de la Institución Educativa Instituto Pijao (Pijao, Quindío), que ahora es el **colegio piloto**.
 
-Plan maestro (visión, ley, roles, módulos, fases): https://claude.ai/artifact/QQYMz3DWLH2gvuDGn6a4yu
+- Repositorio: https://github.com/santiagonzaleznieto-pixel/plataforma-escolar (público, rama `main`)
+- Demo de solo lectura (GitHub Pages, carpeta `docs`): https://santiagonzaleznieto-pixel.github.io/plataforma-escolar/
+- Plan maestro (visión, ley, roles, módulos, fases): https://claude.ai/artifact/QQYMz3DWLH2gvuDGn6a4yu
+
+Este repositorio es solo para la plataforma escolar. El sitio del restaurante Amo Pijao Terraza es otro proyecto, en otro repositorio y otra sesión: no se mezclan.
 
 ## Reglas para trabajar en este proyecto
 
@@ -27,7 +31,7 @@ py app.py
 
 Luego abrir http://127.0.0.1:5000 en el navegador.
 
-La primera vez, `app.py` crea el archivo `plataforma.db` y lo llena con los datos de `datos.py`. Para volver a los datos iniciales: cerrar el programa, borrar `plataforma.db` y abrirlo otra vez. `plataforma.db` no se sube a GitHub (está en `.gitignore`) porque guarda datos de estudiantes.
+La primera vez, `app.py` crea el archivo `plataforma.db` (al lado de `base_datos.py`) y lo llena con los datos de `datos.py`. Para volver a los datos iniciales: cerrar el programa, borrar `plataforma.db` y abrirlo otra vez. `plataforma.db` no se sube a GitHub (está en `.gitignore`) porque guarda datos de estudiantes.
 
 ## Estructura
 
@@ -36,6 +40,15 @@ La primera vez, `app.py` crea el archivo `plataforma.db` y lo llena con los dato
 - `datos.py`: datos iniciales del colegio piloto. Solo se usan para llenar la base cuando está vacía.
 - `templates/`: `base.html`, `login.html`, `materias.html`, `calificar.html`, `consolidado.html`, `boletin.html` (plantillas Jinja).
 - `static/`: `estilos.css` y `escudo.png`.
+- `generar_demo.py`: crea la demo de solo lectura en `docs/` para GitHub Pages. Usa una base temporal (`demo.db`) y la borra al terminar. Se vuelve a correr (`py generar_demo.py`) cada vez que cambie el diseño o los datos de prueba.
+- `docs/`: la demo generada. No se edita a mano.
+- `README.md`: portada del repositorio, con los pasos para publicar en PythonAnywhere.
+
+## Publicación
+
+- Demo en GitHub Pages: sale de la carpeta `docs/` de la rama `main`. Las páginas son fijas: no se inicia sesión de verdad ni se guardan notas.
+- Plataforma real: PythonAnywhere (pasos en `README.md`).
+- `app.secret_key` se lee de la variable de entorno `CLAVE_SECRETA`. El repositorio es público: nunca escribir claves ni contraseñas reales en el código.
 
 ## Tablas de la base de datos
 
