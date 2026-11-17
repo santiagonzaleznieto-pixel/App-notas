@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Grupos{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Grupos {{ colegio.anio }}</h1>
+  <p>Elige un grupo para ver su consolidado de notas, los puestos y las alertas.</p>
+</div>
+
+<div class="tarjeta">
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th class="izq">Grupo</th><th class="izq">Director de grupo</th><th>Estudiantes</th><th>Promedio</th><th>En Bajo</th></tr>
+      </thead>
+      <tbody>
+        {% for item in grupos %}
+        <tr>
+          <td class="izq"><a href="/grupos/{{ item.grupo.id }}">{{ item.grupo.nombre }}</a> <small class="gris">{{ item.grupo.grado }} · {{ item.grupo.sede }}</small></td>
+          <td class="izq">{{ item.grupo.director or "Sin asignar" }}</td>
+          <td>{{ item.total }}</td>
+          <td>{% if item.promedio is none %}—{% else %}<span class="nota {{ desempeno(item.promedio) }}">{{ item.promedio }}</span>{% endif %}</td>
+          <td>{{ item.en_bajo }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,19 +1,16 @@
 {% extends "base.html" %}
+{% block titulo %}Grupo {{ grupo.nombre }}{% endblock %}
 {% block contenido %}
 <div class="encabezado">
-  {% if yo.rol == "director" %}
-  <h1>Mi grupo · {{ grado }}</h1>
-  <p>Como director de grupo ves las notas de todas las materias de tus estudiantes.</p>
-  {% else %}
-  <h1>Consolidado de notas · {{ grado }}</h1>
-  <p>Vista general del grado para {% if yo.rol == "rectora" %}rectoría{% else %}coordinación académica{% endif %}.</p>
-  {% endif %}
+  {% if "director" not in yo.roles or yo.roles|length > 2 %}<a class="volver" href="/grupos">← Grupos</a>{% endif %}
+  <h1>Grupo {{ grupo.nombre }}</h1>
+  <p>{{ grupo.grado }} · {{ grupo.sede }} · Director de grupo: {{ grupo.director or "sin asignar" }}</p>
 </div>
 
 <div class="periodos">
-  <a href="/consolidado?periodo=0" class="{% if periodo == 0 %}activo{% endif %}">Acumulado</a>
-  {% for p in range(1, periodos + 1) %}
-  <a href="/consolidado?periodo={{ p }}" class="{% if periodo == p %}activo{% endif %}">Período {{ p }}</a>
+  <a href="/grupos/{{ grupo.id }}?periodo=0" class="{% if periodo == 0 %}activo{% endif %}">Acumulado</a>
+  {% for p in periodos %}
+  <a href="/grupos/{{ grupo.id }}?periodo={{ p.numero }}" class="{% if periodo == p.numero %}activo{% endif %}">{{ p.nombre }}</a>
   {% endfor %}
 </div>
 
@@ -57,7 +54,7 @@
         <tr>
           <th>Puesto</th>
           <th class="izq">Estudiante</th>
-          {% for materia in materias %}<th title="{{ materia.nombre }}">{{ materia.corto }}</th>{% endfor %}
+          {% for asignacion in asignaciones %}<th title="{{ asignacion.materia }}">{{ asignacion.corto }}</th>{% endfor %}
           <th>Promedio</th>
         </tr>
       </thead>
@@ -65,7 +62,7 @@
         {% for fila in filas %}
         <tr>
           <td>{% if fila.puesto %}<span class="puesto {% if fila.puesto <= 3 %}podio{% endif %}">{{ fila.puesto }}</span>{% else %}—{% endif %}</td>
-          <td class="izq"><a href="/boletin/{{ fila.estudiante.usuario }}">{{ fila.estudiante.nombre }}</a></td>
+          <td class="izq"><a href="/boletin/{{ fila.estudiante.id }}">{{ fila.estudiante.nombre }}</a></td>
           {% for nota in fila.notas %}
           <td>{% if nota is none %}<span class="vacia">—</span>{% else %}<span class="nota {{ desempeno(nota) }}">{{ nota }}</span>{% endif %}</td>
           {% endfor %}
@@ -85,8 +82,8 @@
       <tbody>
         {% for item in resumen %}
         <tr>
-          <td class="izq">{{ item.materia.nombre }}</td>
-          <td class="izq gris">{{ item.profesor.nombre }}</td>
+          <td class="izq">{{ item.asignacion.materia }}</td>
+          <td class="izq gris">{{ item.asignacion.docente }}</td>
           <td>{% if item.promedio is none %}—{% else %}<span class="nota {{ desempeno(item.promedio) }}">{{ item.promedio }}</span>{% endif %}</td>
           <td>{{ item.en_bajo }}</td>
         </tr>
@@ -101,7 +98,7 @@
     <ul class="alertas">
       {% for alerta in alertas %}
       <li>
-        <a href="/boletin/{{ alerta.estudiante.usuario }}">{{ alerta.estudiante.nombre }}</a>
+        <a href="/boletin/{{ alerta.estudiante.id }}">{{ alerta.estudiante.nombre }}</a>
         <span>{{ alerta.materias|join(", ") }}</span>
       </li>
       {% endfor %}

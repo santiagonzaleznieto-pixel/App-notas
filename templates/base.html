@@ -3,31 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notas {{ grado }} · Instituto Pijao</title>
+<title>{% block titulo %}Plataforma escolar{% endblock %} · {{ colegio.nombre_corto }}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/estilos.css">
+{% block estilos %}{% endblock %}
 <link rel="icon" href="/static/escudo.png">
 </head>
 <body>
 {% if yo %}
 <header class="barra">
-  <img class="escudo-barra" src="/static/escudo.png" alt="Escudo">
+  <a href="/inicio"><img class="escudo-barra" src="/static/escudo.png" alt="Escudo del colegio"></a>
   <div class="barra-colegio">
-    <strong>I.E. Instituto Pijao</strong>
-    <span>Grado {{ grado }} · {{ anio }}</span>
+    <strong>{{ colegio.nombre_corto }}</strong>
+    <span>{{ colegio.municipio }} · Año escolar {{ colegio.anio }}</span>
   </div>
   <div class="barra-usuario">
     <strong>{{ yo.nombre }}</strong>
-    <span>
-      {% if yo.rol == "rectora" %}Rectora
-      {% elif yo.rol == "coordinadora" %}Coordinadora académica
-      {% elif yo.rol == "director" %}Docente · Director de grupo
-      {% elif yo.rol == "profesor" %}Docente
-      {% else %}Estudiante{% endif %}
-    </span>
+    <span>{% for rol in yo.roles %}{{ nombres_roles[rol] }}{% if not loop.last %} · {% endif %}{% endfor %}</span>
   </div>
+  <a class="boton-salir" href="/mi-cuenta">Mi cuenta</a>
   <a class="boton-salir" href="/salir">Salir</a>
 </header>
 <svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
@@ -36,18 +32,10 @@
 </svg>
 <main class="contenedor">
   <nav class="pestanas">
-    {% if yo.rol == "estudiante" %}
-      <a href="/boletin/{{ yo.usuario }}" class="{% if activo == 'boletin' %}activa{% endif %}">Mis notas</a>
-    {% endif %}
-    {% if yo.rol == "profesor" or yo.rol == "director" %}
-      <a href="/materias" class="{% if activo == 'materias' %}activa{% endif %}">Mis materias</a>
-    {% endif %}
-    {% if yo.rol == "director" %}
-      <a href="/consolidado" class="{% if activo == 'consolidado' %}activa{% endif %}">Mi grupo</a>
-    {% endif %}
-    {% if yo.rol == "coordinadora" or yo.rol == "rectora" %}
-      <a href="/consolidado" class="{% if activo == 'consolidado' %}activa{% endif %}">Consolidado {{ grado }}</a>
-    {% endif %}
+    <a href="/inicio" class="{% if activo == 'inicio' %}activa{% endif %}">Inicio</a>
+    {% for opcion in menu %}
+    <a href="{{ opcion.ruta }}" class="{% if activo == opcion.clave %}activa{% endif %}">{{ opcion.titulo }}</a>
+    {% endfor %}
   </nav>
   {% block contenido %}{% endblock %}
 </main>

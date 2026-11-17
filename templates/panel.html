@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block titulo %}Inicio{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Hola, {{ yo.nombre.split(" ")[0] }}</h1>
+  <p>{{ nombres|join(" · ") }} · {{ colegio.nombre }}</p>
+</div>
+
+{% if opciones %}
+<div class="tablero">
+  {% for opcion in opciones %}
+  <a class="tarjeta modulo" href="{{ opcion.ruta }}">
+    <h2>{{ opcion.titulo }}</h2>
+    <p>{{ opcion.descripcion }}</p>
+    <span class="ir">Abrir →</span>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="tarjeta vacio">
+  <p>Todavía no tienes módulos asignados. Habla con la administración del colegio.</p>
+</div>
+{% endif %}
+{% endblock %}

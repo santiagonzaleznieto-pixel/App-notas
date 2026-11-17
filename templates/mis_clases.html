@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}Mis clases{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Mis clases</h1>
+  <p>{% if abierto %}Período abierto: <strong>{{ abierto.nombre }}</strong> (hasta el {{ abierto.fecha_fin }}).{% else %}No hay períodos abiertos: solo puedes ver las notas.{% endif %}</p>
+</div>
+
+{% if clases %}
+<div class="materias">
+  {% for clase in clases %}
+  <article class="tarjeta materia">
+    <span class="etiqueta">{{ clase.asignacion.grupo }}</span>
+    <h2>{{ clase.asignacion.materia }}</h2>
+    <div class="datos-materia">
+      <div>
+        <span>Promedio</span>
+        {% if clase.promedio is none %}<strong>—</strong>{% else %}<strong>{{ clase.promedio }}</strong>{% endif %}
+        <em class="chip {{ desempeno(clase.promedio) }}">{{ desempeno(clase.promedio) }}</em>
+      </div>
+      <div>
+        <span>En Bajo</span>
+        <strong>{{ clase.en_bajo }}</strong>
+      </div>
+      <div>
+        <span>{% if abierto %}{{ abierto.nombre }}{% else %}Estudiantes{% endif %}</span>
+        <strong>{% if abierto %}{{ clase.calificados }}/{% endif %}{{ clase.total }}</strong>
+      </div>
+    </div>
+    {% if abierto and clase.total %}<div class="barra-progreso"><div style="width: {{ (clase.calificados * 100 / clase.total)|round }}%"></div></div>{% endif %}
+    <a class="boton" href="/calificar/{{ clase.asignacion.id }}">Calificar</a>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="tarjeta vacio"><p>No tienes clases asignadas este año. La coordinación las asigna desde Administración.</p></div>
+{% endif %}
+{% endblock %}

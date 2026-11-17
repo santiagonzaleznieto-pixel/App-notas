@@ -1,42 +1,112 @@
-COLEGIO = "Institución Educativa Instituto Pijao"
-MUNICIPIO = "Pijao"
-DEPARTAMENTO = "Quindío"
-GRADO = "Décimo"
-ANIO = 2026
-PERIODOS = 4
+COLEGIO = {
+    "nombre": "Institución Educativa Instituto Pijao",
+    "nombre_corto": "I.E. Instituto Pijao",
+    "municipio": "Pijao",
+    "departamento": "Quindío",
+    "lema": "Sapientiam a juventute dilexi et quaesivi",
+    "anio": 2026,
+}
+
 CLAVE_PRUEBA = "pijao2026"
 
+SEDES = [
+    {"nombre": "Sede Principal", "jornada": "Mañana"},
+]
+
+GRADOS = [
+    {"nombre": "Transición", "nivel": "Preescolar"},
+    {"nombre": "Primero", "nivel": "Básica primaria"},
+    {"nombre": "Segundo", "nivel": "Básica primaria"},
+    {"nombre": "Tercero", "nivel": "Básica primaria"},
+    {"nombre": "Cuarto", "nivel": "Básica primaria"},
+    {"nombre": "Quinto", "nivel": "Básica primaria"},
+    {"nombre": "Sexto", "nivel": "Básica secundaria"},
+    {"nombre": "Séptimo", "nivel": "Básica secundaria"},
+    {"nombre": "Octavo", "nivel": "Básica secundaria"},
+    {"nombre": "Noveno", "nivel": "Básica secundaria"},
+    {"nombre": "Décimo", "nivel": "Media"},
+    {"nombre": "Once", "nivel": "Media"},
+]
+
+PERIODOS = [
+    {"numero": 1, "nombre": "Primer período", "inicio": "2026-01-26", "fin": "2026-04-03", "porcentaje": 25, "abierto": 0},
+    {"numero": 2, "nombre": "Segundo período", "inicio": "2026-04-06", "fin": "2026-06-12", "porcentaje": 25, "abierto": 0},
+    {"numero": 3, "nombre": "Tercer período", "inicio": "2026-07-06", "fin": "2026-09-11", "porcentaje": 25, "abierto": 0},
+    {"numero": 4, "nombre": "Cuarto período", "inicio": "2026-09-14", "fin": "2026-11-27", "porcentaje": 25, "abierto": 1},
+]
+
 USUARIOS = [
-    {"usuario": "rectora", "clave": "pijao2026", "nombre": "Martha Cecilia Vallejo", "rol": "rectora"},
-    {"usuario": "coordinadora", "clave": "pijao2026", "nombre": "Diana Lorena Betancur", "rol": "coordinadora"},
-    {"usuario": "h.aguirre", "clave": "pijao2026", "nombre": "Hernán Darío Aguirre", "rol": "director"},
-    {"usuario": "c.munoz", "clave": "pijao2026", "nombre": "Claudia Isabel Muñoz", "rol": "profesor"},
-    {"usuario": "a.trejos", "clave": "pijao2026", "nombre": "Álvaro Trejos", "rol": "profesor"},
-    {"usuario": "s.londono", "clave": "pijao2026", "nombre": "Sebastián Londoño", "rol": "profesor"},
-    {"usuario": "s.grajales", "clave": "pijao2026", "nombre": "Sandra Milena Grajales", "rol": "profesor"},
-    {"usuario": "w.tapasco", "clave": "pijao2026", "nombre": "Wilmar Tapasco", "rol": "profesor"},
-    {"usuario": "j.estrada", "clave": "pijao2026", "nombre": "Julián Estrada", "rol": "profesor"},
-    {"usuario": "melany.osorio", "clave": "pijao2026", "nombre": "Melany Osorio Cárdenas", "rol": "estudiante"},
-    {"usuario": "juan.restrepo", "clave": "pijao2026", "nombre": "Juan Pablo Restrepo", "rol": "estudiante"},
-    {"usuario": "sharon.loaiza", "clave": "pijao2026", "nombre": "Sharon Daniela Loaiza", "rol": "estudiante"},
-    {"usuario": "valentina.arias", "clave": "pijao2026", "nombre": "Valentina Arias Zuluaga", "rol": "estudiante"},
-    {"usuario": "david.giraldo", "clave": "pijao2026", "nombre": "David Santiago Giraldo", "rol": "estudiante"},
-    {"usuario": "mariana.henao", "clave": "pijao2026", "nombre": "Mariana Henao Ríos", "rol": "estudiante"},
-    {"usuario": "samuel.ocampo", "clave": "pijao2026", "nombre": "Samuel Ocampo Marín", "rol": "estudiante"},
-    {"usuario": "laura.patino", "clave": "pijao2026", "nombre": "Laura Sofía Patiño", "rol": "estudiante"},
-    {"usuario": "jhon.castano", "clave": "pijao2026", "nombre": "Jhon Alexander Castaño", "rol": "estudiante"},
-    {"usuario": "isabella.mejia", "clave": "pijao2026", "nombre": "Isabella Mejía Toro", "rol": "estudiante"},
+    {"usuario": "admin", "nombre": "Paula Andrea Rincón", "roles": ["administrador"]},
+    {"usuario": "rectora", "nombre": "Martha Cecilia Vallejo", "roles": ["rector"]},
+    {"usuario": "coordinadora", "nombre": "Diana Lorena Betancur", "roles": ["coordinador"]},
+    {"usuario": "h.aguirre", "nombre": "Hernán Darío Aguirre", "roles": ["docente"]},
+    {"usuario": "c.munoz", "nombre": "Claudia Isabel Muñoz", "roles": ["docente"]},
+    {"usuario": "a.trejos", "nombre": "Álvaro Trejos", "roles": ["docente"]},
+    {"usuario": "s.londono", "nombre": "Sebastián Londoño", "roles": ["docente"]},
+    {"usuario": "s.grajales", "nombre": "Sandra Milena Grajales", "roles": ["docente"]},
+    {"usuario": "w.tapasco", "nombre": "Wilmar Tapasco", "roles": ["docente"]},
+    {"usuario": "j.estrada", "nombre": "Julián Estrada", "roles": ["docente"]},
+    {"usuario": "secretaria", "nombre": "Luz Marina Ospina", "roles": ["secretaria"]},
+    {"usuario": "orientadora", "nombre": "Natalia Giraldo Ruiz", "roles": ["orientador"]},
+    {"usuario": "melany.osorio", "nombre": "Melany Osorio Cárdenas", "roles": ["estudiante"]},
+    {"usuario": "juan.restrepo", "nombre": "Juan Pablo Restrepo", "roles": ["estudiante"]},
+    {"usuario": "sharon.loaiza", "nombre": "Sharon Daniela Loaiza", "roles": ["estudiante"]},
+    {"usuario": "valentina.arias", "nombre": "Valentina Arias Zuluaga", "roles": ["estudiante"]},
+    {"usuario": "david.giraldo", "nombre": "David Santiago Giraldo", "roles": ["estudiante"]},
+    {"usuario": "mariana.henao", "nombre": "Mariana Henao Ríos", "roles": ["estudiante"]},
+    {"usuario": "samuel.ocampo", "nombre": "Samuel Ocampo Marín", "roles": ["estudiante"]},
+    {"usuario": "laura.patino", "nombre": "Laura Sofía Patiño", "roles": ["estudiante"]},
+    {"usuario": "jhon.castano", "nombre": "Jhon Alexander Castaño", "roles": ["estudiante"]},
+    {"usuario": "isabella.mejia", "nombre": "Isabella Mejía Toro", "roles": ["estudiante"]},
+    {"usuario": "esteban.ramirez", "nombre": "Esteban Ramírez Gómez", "roles": ["estudiante"]},
+    {"usuario": "daniela.cardona", "nombre": "Daniela Cardona López", "roles": ["estudiante"]},
+    {"usuario": "andres.quintero", "nombre": "Andrés Felipe Quintero", "roles": ["estudiante"]},
+    {"usuario": "luisa.montoya", "nombre": "Luisa Fernanda Montoya", "roles": ["estudiante"]},
+    {"usuario": "kevin.largo", "nombre": "Kevin Stiven Largo", "roles": ["estudiante"]},
+    {"usuario": "maria.valencia", "nombre": "María José Valencia", "roles": ["estudiante"]},
+    {"usuario": "gloria.cardenas", "nombre": "Gloria Inés Cárdenas", "roles": ["acudiente"]},
+    {"usuario": "jorge.restrepo", "nombre": "Jorge Iván Restrepo", "roles": ["acudiente"]},
+    {"usuario": "olga.gomez", "nombre": "Olga Lucía Gómez", "roles": ["acudiente"]},
+]
+
+ACUDIENTES = [
+    {"acudiente": "gloria.cardenas", "estudiante": "melany.osorio", "parentesco": "Madre"},
+    {"acudiente": "jorge.restrepo", "estudiante": "juan.restrepo", "parentesco": "Padre"},
+    {"acudiente": "olga.gomez", "estudiante": "esteban.ramirez", "parentesco": "Madre"},
 ]
 
 MATERIAS = [
-    {"id": "matematicas", "nombre": "Matemáticas", "corto": "Mat", "profesor": "c.munoz"},
-    {"id": "castellano", "nombre": "Lengua Castellana", "corto": "Cast", "profesor": "a.trejos"},
-    {"id": "ingles", "nombre": "Inglés", "corto": "Ing", "profesor": "s.londono"},
-    {"id": "naturales", "nombre": "Ciencias Naturales", "corto": "Nat", "profesor": "s.grajales"},
-    {"id": "sociales", "nombre": "Ciencias Sociales", "corto": "Soc", "profesor": "h.aguirre"},
-    {"id": "filosofia", "nombre": "Filosofía", "corto": "Filo", "profesor": "h.aguirre"},
-    {"id": "fisica", "nombre": "Educación Física", "corto": "E.F.", "profesor": "w.tapasco"},
-    {"id": "tecnologia", "nombre": "Tecnología e Informática", "corto": "Tec", "profesor": "j.estrada"},
+    {"clave": "matematicas", "nombre": "Matemáticas", "corto": "Mat", "area": "Matemáticas", "profesor": "c.munoz", "horas": 5},
+    {"clave": "castellano", "nombre": "Lengua Castellana", "corto": "Cast", "area": "Humanidades", "profesor": "a.trejos", "horas": 4},
+    {"clave": "ingles", "nombre": "Inglés", "corto": "Ing", "area": "Humanidades", "profesor": "s.londono", "horas": 3},
+    {"clave": "naturales", "nombre": "Ciencias Naturales", "corto": "Nat", "area": "Ciencias naturales", "profesor": "s.grajales", "horas": 4},
+    {"clave": "sociales", "nombre": "Ciencias Sociales", "corto": "Soc", "area": "Ciencias sociales", "profesor": "h.aguirre", "horas": 3},
+    {"clave": "filosofia", "nombre": "Filosofía", "corto": "Filo", "area": "Filosofía", "profesor": "h.aguirre", "horas": 2},
+    {"clave": "fisica", "nombre": "Educación Física", "corto": "E.F.", "area": "Educación física", "profesor": "w.tapasco", "horas": 2},
+    {"clave": "tecnologia", "nombre": "Tecnología e Informática", "corto": "Tec", "area": "Tecnología e informática", "profesor": "j.estrada", "horas": 2},
+]
+
+GRUPOS = [
+    {"nombre": "10-A", "grado": "Décimo", "director": "h.aguirre", "estudiantes": [
+        "melany.osorio",
+        "juan.restrepo",
+        "sharon.loaiza",
+        "valentina.arias",
+        "david.giraldo",
+        "mariana.henao",
+        "samuel.ocampo",
+        "laura.patino",
+        "jhon.castano",
+        "isabella.mejia",
+    ]},
+    {"nombre": "11-A", "grado": "Once", "director": "s.grajales", "estudiantes": [
+        "esteban.ramirez",
+        "daniela.cardona",
+        "andres.quintero",
+        "luisa.montoya",
+        "kevin.largo",
+        "maria.valencia",
+    ]},
 ]
 
 NOTAS = {
@@ -139,5 +209,65 @@ NOTAS = {
         "filosofia": [3.7, 3.6, 3.4, None],
         "fisica": [3.8, 3.3, 3.7, 3.5],
         "tecnologia": [3.4, 2.8, 3.4, None],
+    },
+    "esteban.ramirez": {
+        "matematicas": [4.2, 4.4, 4.8, None],
+        "castellano": [4.3, 4.3, 4.4, None],
+        "ingles": [3.9, 4.3, 4.5, None],
+        "naturales": [4.7, 3.8, 4.1, None],
+        "sociales": [3.8, 4.7, 4.5, None],
+        "filosofia": [3.8, 4.9, 4.9, None],
+        "fisica": [4.5, 4.4, 3.9, None],
+        "tecnologia": [3.7, 4.3, 3.8, None],
+    },
+    "daniela.cardona": {
+        "matematicas": [3.2, 3.3, 3.0, None],
+        "castellano": [3.6, 3.5, 4.0, None],
+        "ingles": [3.6, 3.8, 3.6, None],
+        "naturales": [3.8, 3.5, 3.3, None],
+        "sociales": [4.2, 4.2, 4.0, None],
+        "filosofia": [3.8, 3.4, 3.3, None],
+        "fisica": [3.3, 3.1, 3.9, None],
+        "tecnologia": [3.5, 4.0, 3.5, None],
+    },
+    "andres.quintero": {
+        "matematicas": [3.4, 3.3, 2.3, None],
+        "castellano": [2.6, 3.4, 2.9, None],
+        "ingles": [3.5, 2.8, 2.4, None],
+        "naturales": [3.1, 3.2, 2.6, None],
+        "sociales": [2.4, 2.7, 3.5, None],
+        "filosofia": [3.2, 2.4, 2.6, None],
+        "fisica": [2.4, 2.4, 3.3, None],
+        "tecnologia": [2.5, 3.0, 2.8, None],
+    },
+    "luisa.montoya": {
+        "matematicas": [4.2, 4.9, 4.2, None],
+        "castellano": [4.8, 4.1, 4.5, None],
+        "ingles": [4.3, 4.3, 5.0, None],
+        "naturales": [5.0, 4.4, 5.0, None],
+        "sociales": [4.3, 4.5, 5.0, None],
+        "filosofia": [4.8, 4.1, 5.0, None],
+        "fisica": [4.3, 4.3, 4.9, None],
+        "tecnologia": [4.4, 4.4, 4.1, None],
+    },
+    "kevin.largo": {
+        "matematicas": [2.8, 3.4, 3.0, None],
+        "castellano": [3.4, 3.1, 3.2, None],
+        "ingles": [3.9, 3.3, 3.4, None],
+        "naturales": [3.7, 2.9, 2.9, None],
+        "sociales": [3.8, 3.7, 3.0, None],
+        "filosofia": [2.9, 3.6, 3.8, None],
+        "fisica": [2.9, 3.8, 3.8, None],
+        "tecnologia": [3.4, 3.2, 2.8, None],
+    },
+    "maria.valencia": {
+        "matematicas": [3.4, 4.6, 3.7, None],
+        "castellano": [4.2, 3.7, 4.4, None],
+        "ingles": [4.1, 3.8, 3.6, None],
+        "naturales": [4.3, 3.5, 3.7, None],
+        "sociales": [4.1, 4.4, 4.1, None],
+        "filosofia": [3.7, 4.5, 3.6, None],
+        "fisica": [3.4, 3.7, 3.9, None],
+        "tecnologia": [3.5, 3.6, 3.8, None],
     },
 }

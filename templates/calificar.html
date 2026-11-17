@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% block titulo %}Calificar {{ asignacion.materia }}{% endblock %}
 {% block contenido %}
 <div class="encabezado">
-  <a class="volver" href="/materias">← Mis materias</a>
-  <h1>{{ materia.nombre }}</h1>
-  <p>Notas de 1.0 a 5.0. Deja la casilla vacía si aún no hay nota.</p>
+  <a class="volver" href="/mis-clases">← Mis clases</a>
+  <h1>{{ asignacion.materia }} · {{ asignacion.grupo }}</h1>
+  <p>Notas de {{ colegio.nota_minima }} a {{ colegio.nota_maxima }}. Deja la casilla vacía si aún no hay nota. Los períodos cerrados no se pueden cambiar.</p>
 </div>
 
 {% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
@@ -14,10 +15,10 @@
 {% endif %}
 
 <div class="escala">
-  <span class="chip Bajo">Bajo 1.0 – 2.9</span>
-  <span class="chip Básico">Básico 3.0 – 3.9</span>
-  <span class="chip Alto">Alto 4.0 – 4.5</span>
-  <span class="chip Superior">Superior 4.6 – 5.0</span>
+  <span class="chip Bajo">Bajo menos de {{ colegio.limite_basico }}</span>
+  <span class="chip Básico">Básico desde {{ colegio.limite_basico }}</span>
+  <span class="chip Alto">Alto desde {{ colegio.limite_alto }}</span>
+  <span class="chip Superior">Superior desde {{ colegio.limite_superior }}</span>
 </div>
 
 <form method="post" class="tarjeta">
@@ -27,8 +28,8 @@
         <tr>
           <th>#</th>
           <th class="izq">Estudiante</th>
-          {% for p in range(1, periodos + 1) %}<th>P{{ p }}</th>{% endfor %}
-          <th>Promedio</th>
+          {% for periodo in periodos %}<th title="{{ periodo.nombre }} · {{ periodo.porcentaje }} %">P{{ periodo.numero }}{% if not periodo.abierto %} 🔒{% endif %}</th>{% endfor %}
+          <th>Final</th>
           <th>Desempeño</th>
         </tr>
       </thead>
@@ -37,11 +38,16 @@
         <tr>
           <td class="numero">{{ loop.index }}</td>
           <td class="izq">{{ fila.estudiante.nombre }}</td>
-          {% for p in range(periodos) %}
+          {% for periodo in periodos %}
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="{{ fila.estudiante.usuario }}-{{ p + 1 }}"
-                   value="{% if fila.notas[p] is not none %}{{ fila.notas[p] }}{% endif %}">
+            {% set nota = fila.notas[periodo.numero - 1] %}
+            {% if periodo.abierto %}
+            <input class="casilla" type="number" step="0.1" min="{{ colegio.nota_minima }}" max="{{ colegio.nota_maxima }}"
+                   name="nota-{{ fila.estudiante.id }}-{{ periodo.numero }}" aria-label="{{ fila.estudiante.nombre }}, {{ periodo.nombre }}"
+                   value="{% if nota is not none %}{{ nota }}{% endif %}">
+            {% else %}
+            {% if nota is none %}<span class="vacia">—</span>{% else %}<span class="nota {{ desempeno(nota) }}">{{ nota }}</span>{% endif %}
+            {% endif %}
           </td>
           {% endfor %}
           <td>{% if fila.final is none %}—{% else %}<span class="nota {{ desempeno(fila.final) }}">{{ fila.final }}</span>{% endif %}</td>

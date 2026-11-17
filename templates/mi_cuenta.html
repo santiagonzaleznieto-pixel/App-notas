@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titulo %}Mi cuenta{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Mi cuenta</h1>
+  <p>Usuario <strong>{{ yo.usuario }}</strong> · {% for rol in yo.roles %}{{ nombres_roles[rol] }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+</div>
+
+{% if yo.debe_cambiar_clave %}
+<div class="aviso error">Por seguridad, cambia la contraseña temporal antes de seguir.</div>
+{% endif %}
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="dos-columnas">
+  <form method="post" class="tarjeta formulario">
+    <h2>Cambiar contraseña</h2>
+    <input type="hidden" name="accion" value="clave">
+    <label for="actual">Contraseña actual</label>
+    <input id="actual" name="actual" type="password" autocomplete="current-password" required>
+    <label for="nueva">Contraseña nueva (mínimo 8 caracteres)</label>
+    <input id="nueva" name="nueva" type="password" autocomplete="new-password" minlength="8" required>
+    <label for="repetida">Repite la contraseña nueva</label>
+    <input id="repetida" name="repetida" type="password" autocomplete="new-password" minlength="8" required>
+    <div class="acciones"><button class="boton" type="submit">Cambiar contraseña</button></div>
+  </form>
+
+  <form method="post" class="tarjeta formulario">
+    <h2>Datos de contacto</h2>
+    <input type="hidden" name="accion" value="datos">
+    <label for="correo">Correo</label>
+    <input id="correo" name="correo" type="email" value="{{ yo.correo }}">
+    <label for="telefono">Celular o WhatsApp</label>
+    <input id="telefono" name="telefono" value="{{ yo.telefono }}">
+    <div class="acciones"><button class="boton secundario" type="submit">Guardar datos</button></div>
+  </form>
+</div>
+{% endblock %}

@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% block titulo %}Boletín de {{ estudiante.nombre }}{% endblock %}
 {% block contenido %}
 <div class="encabezado">
-  {% if yo.rol != "estudiante" %}<a class="volver" href="/consolidado">← Volver al consolidado</a>{% endif %}
+  {% if grupo and yo.id != estudiante.id and "acudiente" not in yo.roles %}<a class="volver" href="/grupos/{{ grupo.id }}">← Grupo {{ grupo.nombre }}</a>{% endif %}
+  {% if "acudiente" in yo.roles and yo.id != estudiante.id %}<a class="volver" href="/familia">← Mi familia</a>{% endif %}
   <h1>Boletín de notas</h1>
-  <p>{{ colegio }} · Grado {{ grado }} · {{ anio }}</p>
+  <p>{{ colegio.nombre }} · {% if grupo %}Grupo {{ grupo.nombre }} · {% endif %}{{ colegio.anio }}</p>
 </div>
 
 <div class="tarjeta perfil">
@@ -11,7 +13,7 @@
     <span class="inicial">{{ estudiante.nombre[0] }}</span>
     <div>
       <h2>{{ estudiante.nombre }}</h2>
-      <p class="gris">Director de grupo: {{ director.nombre }}</p>
+      <p class="gris">{% if grupo %}Director de grupo: {{ grupo.director or "sin asignar" }}{% else %}Sin matrícula activa este año{% endif %}</p>
     </div>
   </div>
   <div class="perfil-datos">
@@ -34,8 +36,8 @@
       <thead>
         <tr>
           <th class="izq">Materia</th>
-          {% for p in range(1, periodos + 1) %}<th>P{{ p }}</th>{% endfor %}
-          <th>Promedio</th>
+          {% for periodo in periodos %}<th title="{{ periodo.nombre }} · {{ periodo.porcentaje }} %">P{{ periodo.numero }}</th>{% endfor %}
+          <th>Final</th>
           <th>Desempeño</th>
         </tr>
       </thead>
@@ -43,8 +45,8 @@
         {% for fila in filas %}
         <tr>
           <td class="izq">
-            <strong>{{ fila.materia.nombre }}</strong>
-            <small class="gris bloque">{{ fila.profesor.nombre }}</small>
+            <strong>{{ fila.asignacion.materia }}</strong>
+            <small class="gris bloque">{{ fila.asignacion.docente }}</small>
           </td>
           {% for nota in fila.notas %}
           <td>{% if nota is none %}<span class="vacia">—</span>{% else %}<span class="nota {{ desempeno(nota) }}">{{ nota }}</span>{% endif %}</td>
