@@ -11,6 +11,8 @@ import modulo_familias
 import modulo_circulares
 import modulo_orientacion
 import modulo_gobierno
+import modulo_tesoreria
+import modulo_servicios
 
 if __name__ == "__main__":
     app.run(debug=True)

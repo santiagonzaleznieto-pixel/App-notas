@@ -25,6 +25,10 @@ NOMBRES_ROLES = {
     "director": "Director de grupo",
     "secretaria": "Secretaría académica",
     "orientador": "Orientación escolar",
+    "tesoreria": "Tesorería",
+    "bibliotecario": "Biblioteca",
+    "enfermeria": "Enfermería",
+    "porteria": "Portería",
     "estudiante": "Estudiante",
     "acudiente": "Acudiente",
 }

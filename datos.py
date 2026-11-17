@@ -67,6 +67,10 @@ USUARIOS = [
     {"usuario": "gloria.cardenas", "nombre": "Gloria Inés Cárdenas", "roles": ["acudiente"]},
     {"usuario": "jorge.restrepo", "nombre": "Jorge Iván Restrepo", "roles": ["acudiente"]},
     {"usuario": "olga.gomez", "nombre": "Olga Lucía Gómez", "roles": ["acudiente"]},
+    {"usuario": "tesoreria", "nombre": "Carlos Alberto Ramírez", "roles": ["tesoreria"]},
+    {"usuario": "biblioteca", "nombre": "Rosa Elena Marín", "roles": ["bibliotecario"]},
+    {"usuario": "enfermeria", "nombre": "Adriana Patricia López", "roles": ["enfermeria"]},
+    {"usuario": "porteria", "nombre": "José Hernando Castro", "roles": ["porteria"]},
 ]
 
 ACUDIENTES = [
