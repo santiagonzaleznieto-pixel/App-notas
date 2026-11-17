@@ -2,8 +2,8 @@
 
 Plataforma web en Python con Flask para manejar todo un colegio colombiano: notas, asistencia, convivencia, horas sociales, familias, pagos y reportes. Se venderá a instituciones públicas y privadas, de Transición a Once. Empezó como un proyecto de clase del SENA con las notas de Décimo de la Institución Educativa Instituto Pijao (Pijao, Quindío), que ahora es el **colegio piloto**.
 
-- Repositorio: https://github.com/santiagonzaleznieto-pixel/plataforma-escolar (público, rama `main`)
-- Demo de solo lectura (GitHub Pages, carpeta `docs`): https://santiagonzaleznieto-pixel.github.io/plataforma-escolar/
+- Repositorio: https://github.com/santiagonzaleznieto-pixel/App-notas (público, rama `main`)
+- Demo de solo lectura (GitHub Pages, carpeta `docs`): https://santiagonzaleznieto-pixel.github.io/App-notas/
 - Plan maestro (visión, ley, roles, módulos, fases): https://claude.ai/artifact/QQYMz3DWLH2gvuDGn6a4yu
 
 Este repositorio es solo para la plataforma escolar. El sitio del restaurante Amo Pijao Terraza es otro proyecto, en otro repositorio y otra sesión: no se mezclan.

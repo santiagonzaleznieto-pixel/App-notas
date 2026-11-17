@@ -4,7 +4,7 @@ Plataforma web para manejar todo un colegio colombiano: notas, asistencia, convi
 
 Empezó como proyecto de clase del SENA con las notas del grado Décimo de la Institución Educativa Instituto Pijao (Pijao, Quindío), que es el colegio piloto.
 
-- **Demo de solo lectura (GitHub Pages):** https://santiagonzaleznieto-pixel.github.io/plataforma-escolar/
+- **Demo de solo lectura (GitHub Pages):** https://santiagonzaleznieto-pixel.github.io/App-notas/
 - **Plan maestro:** https://claude.ai/artifact/QQYMz3DWLH2gvuDGn6a4yu
 
 Usuarios de prueba (contraseña `pijao2026`): `rectora`, `coordinadora`, `h.aguirre` (director de grupo), `c.munoz` (profesora), `melany.osorio` (estudiante).
@@ -39,7 +39,7 @@ Este programa abre cada página como si fuera cada usuario de prueba y guarda el
 1. Crea una cuenta gratis en https://www.pythonanywhere.com (plan Beginner).
 2. Abre **Consoles → Bash** y escribe:
    ```
-   git clone https://github.com/santiagonzaleznieto-pixel/plataforma-escolar.git
+   git clone https://github.com/santiagonzaleznieto-pixel/App-notas.git
    ```
 3. Ve a **Web → Add a new web app → Next → Manual configuration → Python 3.13** (o la versión más nueva que aparezca).
 4. En la misma página, abre el enlace del **WSGI configuration file**, borra todo y pega esto (cambia `TU_USUARIO` y la frase secreta):
@@ -47,12 +47,12 @@ Este programa abre cada página como si fuera cada usuario de prueba y guarda el
    import os
    import sys
    os.environ["CLAVE_SECRETA"] = "escribe-aqui-una-frase-larga-que-nadie-conozca"
-   sys.path.insert(0, "/home/TU_USUARIO/plataforma-escolar")
+   sys.path.insert(0, "/home/TU_USUARIO/App-notas")
    from app import app as application
    ```
-5. En **Static files** agrega: URL `/static/` y directorio `/home/TU_USUARIO/plataforma-escolar/static/`.
+5. En **Static files** agrega: URL `/static/` y directorio `/home/TU_USUARIO/App-notas/static/`.
 6. Oprime **Reload**. La plataforma queda en `https://TU_USUARIO.pythonanywhere.com`.
 
-Para actualizarla después: en la consola Bash escribe `cd plataforma-escolar && git pull` y oprime **Reload** en la pestaña Web. En el plan gratis hay que entrar a la pestaña Web al menos una vez cada tres meses y oprimir el botón para mantenerla activa.
+Para actualizarla después: en la consola Bash escribe `cd App-notas && git pull` y oprime **Reload** en la pestaña Web. En el plan gratis hay que entrar a la pestaña Web al menos una vez cada tres meses y oprimir el botón para mantenerla activa.
 
 La clave secreta (`CLAVE_SECRETA`) protege las sesiones. Nunca la escribas en el código ni la subas a GitHub.
