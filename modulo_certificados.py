@@ -197,7 +197,7 @@ def armar_contenido(colegio, estudiante, tipo, fecha):
                 + " horas aprobadas: todavía no cumple el requisito.", "texto": ""}
     donde = ""
     if grupo is not None:
-        donde = ", estudiante de " + descripcion_grupo(grupo) + " en " + anio
+        donde = ", estudiante del grado " + grupo["grado"] + ", grupo " + grupo["nombre"] + ", en " + anio
 
     if tipo == "servicio_social":
         nombres = []

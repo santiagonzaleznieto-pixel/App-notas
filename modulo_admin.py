@@ -11,6 +11,7 @@ MATRICULA = ["administrador", "secretaria"]
 VEN_ADMINISTRACION = ["administrador", "coordinador", "secretaria"]
 VEN_REGISTRO = ["administrador", "rector"]
 ROLES_DIRECTIVOS = ["administrador", "rector", "coordinador"]
+ROLES_SOLO_ADMINISTRADOR = ["administrador", "rector", "coordinador", "orientador", "tesoreria", "enfermeria"]
 ROLES_ASIGNABLES = ["administrador", "rector", "coordinador", "docente", "secretaria", "orientador", "tesoreria",
                     "bibliotecario", "enfermeria", "porteria", "estudiante", "acudiente"]
 JORNADAS = ["Mañana", "Tarde", "Única", "Nocturna", "Fin de semana"]
@@ -65,6 +66,8 @@ SECCIONES = [
 
 agregar_menu("admin", "Administración", "/admin", ["administrador", "coordinador", "secretaria"],
              "Usuarios, grupos, matrículas, materias, períodos y datos del colegio.")
+agregar_menu("registro", "Registro de actividad", "/admin/registro", ["rector"],
+             "Quién hizo qué y cuándo en la plataforma.")
 
 
 def solo_digitos(texto):
@@ -237,7 +240,7 @@ def usuario_del_colegio(usuario_id):
 def puede_gestionar(persona):
     if tiene_rol(g.yo, "administrador"):
         return True
-    for rol in ROLES_DIRECTIVOS:
+    for rol in ROLES_SOLO_ADMINISTRADOR:
         if rol in persona["roles"]:
             return False
     return True
@@ -320,7 +323,7 @@ def opciones_de_roles():
     opciones = []
     for rol in ROLES_ASIGNABLES:
         permitido = True
-        if rol in ROLES_DIRECTIVOS and not tiene_rol(g.yo, "administrador"):
+        if rol in ROLES_SOLO_ADMINISTRADOR and not tiene_rol(g.yo, "administrador"):
             permitido = False
         opciones.append({"rol": rol, "nombre": NOMBRES_ROLES[rol], "permitido": permitido})
     return opciones
@@ -346,7 +349,7 @@ def errores_de_persona(datos, roles, persona_id):
         errores.append("Marca al menos un rol.")
     if not tiene_rol(g.yo, "administrador"):
         for rol in roles:
-            if rol in ROLES_DIRECTIVOS:
+            if rol in ROLES_SOLO_ADMINISTRADOR:
                 errores.append("Solo la administración puede dar el rol " + NOMBRES_ROLES[rol] + ".")
     return errores
 

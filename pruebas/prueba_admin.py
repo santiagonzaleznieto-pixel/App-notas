@@ -324,7 +324,14 @@ secretaria.post("/admin/usuarios/nuevo", data=jefe)
 revisar("la secretaria no puede crear coordinadores", base_datos.buscar_usuario("mario.falso") is None)
 respuesta = secretaria.post("/admin/usuarios/nuevo", data={"nombre": "Sincero Tesorero", "documento": "44445555", "correo": "",
                                                            "telefono": "", "roles": "tesoreria"})
-revisar("la secretaria sí puede dar los roles nuevos del núcleo", "tesoreria" in base_datos.roles_de(base_datos.buscar_usuario("sincero.tesorero")["id"]))
+revisar("la secretaria no puede dar roles con datos sensibles (tesorería)", base_datos.buscar_usuario("sincero.tesorero") is None)
+respuesta = secretaria.post("/admin/usuarios/nuevo", data={"nombre": "Sincero Bibliotecario", "documento": "44445556", "correo": "",
+                                                           "telefono": "", "roles": "bibliotecario"})
+revisar("la secretaria sí puede dar los demás roles nuevos (biblioteca)", "bibliotecario" in base_datos.roles_de(base_datos.buscar_usuario("sincero.bibliotecario")["id"]))
+respuesta = secretaria.get("/admin/usuarios/12")
+revisar("la secretaria ve a la orientadora solo en lectura", "solo la administración puede cambiar" in texto(respuesta))
+respuesta = secretaria.post("/admin/usuarios/12", data={"accion": "clave"})
+revisar("la secretaria no puede restablecer la clave de la orientadora", destino(respuesta) == "/inicio")
 admin.post("/admin/usuarios/nuevo", data={"nombre": "Carlos Andrés Mejía", "documento": "55556666", "correo": "carlos@colegio.edu.co",
                                           "telefono": "", "roles": "coordinador"})
 carlos = base_datos.buscar_usuario("carlos.mejia")
