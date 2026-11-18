@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block titulo %}Mi familia{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/familias.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Mi familia</h1>
+  <p>{{ colegio.nombre }} · Año escolar {{ colegio.anio }}</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+{% if tarjetas and not aceptado %}
+<form method="post" class="tarjeta compromiso">
+  <input type="hidden" name="accion" value="compromiso">
+  <span class="etiqueta">Compromiso {{ colegio.anio }}</span>
+  <h2>Escuela para padres, madres y cuidadores</h2>
+  <p>Yo, <strong>{{ yo.nombre }}</strong>, acudiente de <strong>{{ nombres|join(", ") }}</strong>, me comprometo con {{ colegio.nombre }} a:</p>
+  <ul>
+    <li>Participar en los encuentros de la escuela para padres, madres y cuidadores que el colegio programe durante el año escolar.</li>
+    <li>Acompañar en casa el proceso de formación: tareas, asistencia a clases, convivencia y proyecto de vida.</li>
+    <li>Mantener una comunicación respetuosa y oportuna con docentes, directivos y orientación escolar.</li>
+    <li>Avisar a tiempo cuando no pueda asistir a un encuentro y ponerme al día con lo que se trató.</li>
+  </ul>
+  <p class="ley">La Ley 2025 de 2020 hace obligatoria la escuela para padres, madres y cuidadores en todos los colegios del país, con un compromiso de participación firmado al matricular. El Decreto 459 de 2024 la reglamenta.</p>
+  <div class="acciones"><button class="boton" type="submit">Acepto el compromiso</button></div>
+</form>
+{% endif %}
+
+{% if tarjetas %}
+<div class="hijos">
+  {% for tarjeta in tarjetas %}
+  <article class="tarjeta hijo">
+    <div class="hijo-cabeza">
+      <span class="inicial">{{ tarjeta.hijo.nombre[0] }}</span>
+      <div>
+        <h2>{{ tarjeta.hijo.nombre }}</h2>
+        <p class="gris">{% if tarjeta.grupo %}Grupo {{ tarjeta.grupo.nombre }} · {{ tarjeta.grupo.grado }}{% else %}Sin matrícula activa este año{% endif %}</p>
+      </div>
+    </div>
+    {% if tarjeta.grupo %}<p class="hijo-director">Director de grupo: <strong>{{ tarjeta.grupo.director or "sin asignar" }}</strong></p>{% endif %}
+    <div class="hijo-promedio">
+      <span>Promedio general del año</span>
+      <strong>{% if tarjeta.general is none %}—{% else %}{{ tarjeta.general }}{% endif %}</strong>
+      <em class="chip {{ desempeno(tarjeta.general) }}">{{ desempeno(tarjeta.general) }}</em>
+    </div>
+    <nav class="enlaces-hijo" aria-label="Información de {{ tarjeta.hijo.nombre }}">
+      <a href="/boletin/{{ tarjeta.hijo.id }}">Boletín de notas</a>
+      <a href="/asistencia/estudiante/{{ tarjeta.hijo.id }}">Asistencia</a>
+      <a href="/observador/estudiante/{{ tarjeta.hijo.id }}">Observador</a>
+      {% if tarjeta.grupo and tarjeta.grupo.nivel == "Media" %}<a href="/horas/estudiante/{{ tarjeta.hijo.id }}">Horas sociales</a>{% endif %}
+      <a href="/certificados">Certificados</a>
+    </nav>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="tarjeta vacio"><p>Aún no tienes estudiantes a cargo en la plataforma. Habla con la secretaría del colegio.</p></div>
+{% endif %}
+
+<div class="dos-columnas">
+  <section class="tarjeta">
+    <h2>Escuela para familias</h2>
+    {% if aceptado %}
+    <p><span class="estado bien">Compromiso {{ colegio.anio }} aceptado</span> <small class="gris">el {{ fecha_larga(aceptado_en[:10]) }}</small></p>
+    {% endif %}
+
+    <h3 class="seccion-titulo">Próximos encuentros</h3>
+    {% if proximos %}
+    <ul class="lista encuentros">
+      {% for encuentro in proximos %}
+      <li>
+        <div class="dia"><strong>{{ encuentro.fecha[8:10]|int }}</strong><span>{{ meses_cortos[encuentro.fecha[5:7]|int - 1] }}</span></div>
+        <div>
+          <strong>{{ encuentro.titulo }}</strong>
+          <span class="fecha bloque">{{ fecha_larga(encuentro.fecha)|capitalize }} · {{ hora_texto(encuentro.hora) }}</span>
+          <span class="fecha bloque">{{ encuentro.lugar }}</span>
+          <p class="gris">Tema: {{ encuentro.tema }}</p>
+          {% if encuentro.descripcion %}<p class="texto-largo">{{ encuentro.descripcion }}</p>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">Por ahora no hay encuentros programados. Te avisaremos cuando el colegio programe el siguiente.</p>
+    {% endif %}
+
+    <h3 class="seccion-titulo">Encuentros pasados</h3>
+    {% if pasados %}
+    <ul class="lista encuentros">
+      {% for encuentro in pasados %}
+      <li>
+        <div class="dia pasado"><strong>{{ encuentro.fecha[8:10]|int }}</strong><span>{{ meses_cortos[encuentro.fecha[5:7]|int - 1] }}</span></div>
+        <div>
+          <strong>{{ encuentro.titulo }}</strong>
+          <span class="fecha bloque">{{ fecha_larga(encuentro.fecha)|capitalize }}</span>
+          {% if encuentro.asistio == 1 %}<span class="estado bien">Asististe</span>
+          {% elif encuentro.asistio == 0 %}<span class="estado mal">No asististe</span>
+          {% else %}<span class="estado neutro">Sin registro de asistencia</span>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">Todavía no hay encuentros realizados este año.</p>
+    {% endif %}
+  </section>
+
+  <form method="post" class="tarjeta formulario">
+    <input type="hidden" name="accion" value="caracterizacion">
+    <h2>Datos de mi familia</h2>
+    <p class="gris">Con estos datos el colegio planea los encuentros y la mejor forma de comunicarse contigo.</p>
+
+    <label for="personas_hogar">¿Cuántas personas viven en tu hogar?</label>
+    <input id="personas_hogar" name="personas_hogar" type="number" min="1" max="30" inputmode="numeric" value="{{ formulario.personas_hogar }}" required>
+
+    <fieldset>
+      <legend>¿Tienes internet en casa?</legend>
+      <div class="casillas">
+        <label><input type="radio" name="tiene_internet" value="si" {% if formulario.tiene_internet == "si" %}checked{% endif %} required> Sí</label>
+        <label><input type="radio" name="tiene_internet" value="no" {% if formulario.tiene_internet == "no" %}checked{% endif %}> No</label>
+      </div>
+    </fieldset>
+
+    <label for="medio_preferido">¿Cómo prefieres que el colegio te contacte?</label>
+    <select id="medio_preferido" name="medio_preferido">
+      {% for clave in medios %}
+      <option value="{{ clave }}" {% if formulario.medio_preferido == clave %}selected{% endif %}>{{ medios[clave] }}</option>
+      {% endfor %}
+    </select>
+    <p class="ayuda">Revisa que tu celular y tu correo estén al día en <a href="/mi-cuenta">Mi cuenta</a>.</p>
+
+    <label for="necesidades">¿Qué necesita tu familia del colegio? (opcional)</label>
+    <textarea id="necesidades" name="necesidades" maxlength="1000">{{ formulario.necesidades }}</textarea>
+    <p class="ayuda">Por ejemplo: horarios que te sirven para los encuentros, temas que te interesan o apoyo para conectarte.</p>
+
+    {% if ficha %}<p class="ayuda">Última actualización: {{ fecha_larga(ficha.actualizado_en[:10]) }}.</p>{% endif %}
+    <div class="acciones"><button class="boton secundario" type="submit">Guardar datos de mi familia</button></div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block titulo %}Asistencia {{ grupo.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/asistencia.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/asistencia">← Asistencia</a>
+  <h1>Asistencia · Grupo {{ grupo.nombre }}</h1>
+  <p>{{ grupo.grado }} · Director de grupo: {{ grupo.director or "sin asignar" }} · Año escolar del {{ limites.inicio }} al {{ limites.fin }}</p>
+</div>
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Estudiantes</span>
+    <strong>{{ filas|length }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Fallas sin excusa en el año</span>
+    <strong>{{ totales.falla }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Retardos · fallas con excusa</span>
+    <strong>{{ totales.retardo }} · {{ totales.excusa }}</strong>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Estudiantes con alertas</span>
+    <strong>{{ alertas|length }}</strong>
+  </div>
+</div>
+
+<div class="tarjeta">
+  <h2>Por estudiante</h2>
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th class="izq">Estudiante</th>
+          <th>Fallas</th>
+          <th>Retardos</th>
+          <th>Con excusa</th>
+          <th title="Fallas sin excusa de los últimos 30 días">Fallas 30 días</th>
+          <th title="Días calendario seguidos con falla en todas las clases">Inasistencia continua</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+        {% set resumen = fila.resumen %}
+        <tr>
+          <td class="izq"><a href="/asistencia/estudiante/{{ fila.estudiante.id }}">{{ fila.estudiante.nombre }}</a></td>
+          <td>{% if resumen.falla %}<span class="estado mal">{{ resumen.falla }}</span>{% else %}<span class="vacia">0</span>{% endif %}</td>
+          <td>{% if resumen.retardo %}<span class="estado atencion">{{ resumen.retardo }}</span>{% else %}<span class="vacia">0</span>{% endif %}</td>
+          <td>{% if resumen.excusa %}<span class="estado neutro">{{ resumen.excusa }}</span>{% else %}<span class="vacia">0</span>{% endif %}</td>
+          <td>{% if resumen.fallas_recientes >= 3 %}<span class="estado mal">{{ resumen.fallas_recientes }}</span>{% else %}{{ resumen.fallas_recientes }}{% endif %}</td>
+          <td>
+            {% if resumen.continua.dias == 0 %}<span class="vacia">—</span>
+            {% elif resumen.continua.marca >= 20 %}<span class="estado mal">{{ resumen.continua.dias }} días</span>
+            {% elif resumen.continua.marca == 10 %}<span class="estado atencion">{{ resumen.continua.dias }} días</span>
+            {% else %}<span class="gris">{{ resumen.continua.dias }} {% if resumen.continua.dias == 1 %}día{% else %}días{% endif %}</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Alertas de asistencia</h2>
+    {% if alertas %}
+    <ul class="alertas">
+      {% for item in alertas %}
+      <li>
+        <a href="/asistencia/estudiante/{{ item.estudiante.id }}">{{ item.estudiante.nombre }}</a>
+        {% for alerta in item.alertas %}<span class="bloque-alerta {{ alerta.nivel }}">{{ alerta.texto }}</span>{% endfor %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">Ningún estudiante tiene alertas de asistencia.</p>
+    {% endif %}
+    <p class="ayuda-texto">Se alerta con 3 o más fallas sin excusa en 30 días, y con 10, 20 y 30 días calendario seguidos de inasistencia en todas las clases. La Resolución 5862 de 2024 ordena retirar del SIMAT al estudiante con más de 30 días calendario de inasistencia continua sin justificar.</p>
+  </div>
+
+  <div class="tarjeta">
+    <h2>Listas por materia</h2>
+    <div class="tabla-caja">
+    <table class="tabla simple">
+      <thead><tr><th class="izq">Materia</th><th>Listas</th><th>Última</th></tr></thead>
+      <tbody>
+        {% for item in materias %}
+        <tr>
+          <td class="izq">{{ item.asignacion.materia }}<small class="gris bloque">{{ item.asignacion.docente }}</small></td>
+          <td>{{ item.listas }}</td>
+          <td>{% if item.ultima %}{{ item.ultima }}{% else %}<span class="vacia">—</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

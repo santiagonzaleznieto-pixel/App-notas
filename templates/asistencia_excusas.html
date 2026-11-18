@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block titulo %}Excusas{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/asistencia.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/asistencia">← Asistencia</a>
+  <h1>Excusas</h1>
+  <p>Al aprobar una excusa, las fallas del estudiante entre esas fechas quedan justificadas. Si la rechazas, escribe el motivo para la familia.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}
+<div class="aviso error">
+  {% for error in errores %}<div>{{ error }}</div>{% endfor %}
+</div>
+{% endif %}
+
+<h2 class="seccion">Por revisar ({{ pendientes|length }})</h2>
+{% if pendientes %}
+<div class="excusas">
+  {% for excusa in pendientes %}
+  <form method="post" class="tarjeta formulario excusa">
+    <input type="hidden" name="excusa_id" value="{{ excusa.id }}">
+    <div class="excusa-cabeza">
+      <h2><a href="/asistencia/estudiante/{{ excusa.estudiante_id }}">{{ excusa.estudiante_nombre }}</a></h2>
+      {% if excusa.grupo %}<span class="etiqueta">{{ excusa.grupo }}</span>{% endif %}
+    </div>
+    <p><strong>{% if excusa.fecha_inicio == excusa.fecha_fin %}{{ excusa.fecha_inicio }}{% else %}Del {{ excusa.fecha_inicio }} al {{ excusa.fecha_fin }}{% endif %}</strong>
+      · Fallas que se justifican: <strong>{{ excusa.fallas }}</strong></p>
+    <p class="motivo">{{ excusa.motivo }}</p>
+    <span class="fecha">Enviada por {{ excusa.enviada_por_nombre }} el {{ excusa.enviada_en }}</span>
+    <label for="respuesta-{{ excusa.id }}">Respuesta para la familia</label>
+    <textarea id="respuesta-{{ excusa.id }}" name="respuesta" maxlength="500" class="corta" placeholder="Obligatoria si la rechazas"></textarea>
+    <div class="acciones">
+      <button class="boton peligro" type="submit" name="accion" value="rechazar">Rechazar</button>
+      <button class="boton" type="submit" name="accion" value="aprobar">Aprobar</button>
+    </div>
+  </form>
+  {% endfor %}
+</div>
+{% else %}
+<div class="tarjeta vacio"><p>No hay excusas pendientes. ¡Todo al día!</p></div>
+{% endif %}
+
+{% if revisadas %}
+<div class="tarjeta">
+  <h2>Revisadas hace poco</h2>
+  <div class="tabla-caja">
+    <table class="tabla simple">
+      <thead><tr><th class="izq">Estudiante</th><th class="izq">Fechas</th><th>Estado</th><th class="izq">Revisó</th></tr></thead>
+      <tbody>
+        {% for excusa in revisadas %}
+        <tr>
+          <td class="izq"><a href="/asistencia/estudiante/{{ excusa.estudiante_id }}">{{ excusa.estudiante_nombre }}</a></td>
+          <td class="izq">{{ excusa.fecha_inicio }}{% if excusa.fecha_fin != excusa.fecha_inicio %} a {{ excusa.fecha_fin }}{% endif %}</td>
+          <td><span class="estado {{ colores_excusas[excusa.estado] }}">{{ nombres_excusas[excusa.estado] }}</span></td>
+          <td class="izq gris">{{ excusa.revisada_por_nombre }} · {{ excusa.revisada_en }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

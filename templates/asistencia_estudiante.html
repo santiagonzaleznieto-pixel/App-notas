@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block titulo %}Asistencia de {{ estudiante.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/asistencia.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  {% if volver %}<a class="volver" href="{{ volver.ruta }}">{{ volver.texto }}</a>{% endif %}
+  <h1>Asistencia de {{ estudiante.nombre }}</h1>
+  <p>{% if grupo %}Grupo {{ grupo.nombre }} · Director de grupo: {{ grupo.director or "sin asignar" }} · {% endif %}Año escolar del {{ limites.inicio }} al {{ limites.fin }}</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}
+<div class="aviso error">
+  {% for error in errores %}<div>{{ error }}</div>{% endfor %}
+</div>
+{% endif %}
+
+<div class="cifras">
+  <div class="tarjeta cifra alerta">
+    <span>Fallas sin excusa</span>
+    <strong>{{ resumen.falla }}</strong>
+    <small>{{ resumen.fallas_recientes }} en los últimos 30 días</small>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Retardos</span>
+    <strong>{{ resumen.retardo }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Fallas con excusa</span>
+    <strong>{{ resumen.excusa }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Clases con asistencia</span>
+    <strong>{{ resumen.presente }}</strong>
+    <small>de {{ resumen.registros|length }} registradas</small>
+  </div>
+</div>
+
+{% if resumen.alertas %}
+<ul class="alertas">
+  {% for alerta in resumen.alertas %}
+  <li><span class="bloque-alerta {{ alerta.nivel }}">{{ alerta.texto }}</span></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Fallas y retardos</h2>
+    {% if novedades %}
+    <div class="tabla-caja">
+      <table class="tabla simple">
+        <thead><tr><th class="izq">Fecha</th><th class="izq">Materia</th><th>Estado</th></tr></thead>
+        <tbody>
+          {% for registro in novedades %}
+          <tr>
+            <td class="izq">{{ registro.fecha }}</td>
+            <td class="izq">{{ registro.materia }}</td>
+            <td><span class="estado {{ colores_estados[registro.estado] }}">{{ nombres_estados[registro.estado] }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="gris">No tiene fallas ni retardos este año.</p>
+    {% endif %}
+  </div>
+
+  <div>
+    <div class="tarjeta">
+      <h2>Excusas</h2>
+      {% if excusas %}
+      <ul class="lista">
+        {% for excusa in excusas %}
+        <li>
+          <div class="excusa-cabeza">
+            <strong>{% if excusa.fecha_inicio == excusa.fecha_fin %}{{ excusa.fecha_inicio }}{% else %}Del {{ excusa.fecha_inicio }} al {{ excusa.fecha_fin }}{% endif %}</strong>
+            <span class="estado {{ colores_excusas[excusa.estado] }}">{{ nombres_excusas[excusa.estado] }}</span>
+          </div>
+          <p class="motivo">{{ excusa.motivo }}</p>
+          <span class="fecha">Enviada por {{ excusa.enviada_por_nombre }} el {{ excusa.enviada_en }}</span>
+          {% if excusa.estado != "pendiente" %}
+          <span class="fecha bloque">Revisada por {{ excusa.revisada_por_nombre }} el {{ excusa.revisada_en }}{% if excusa.respuesta %}: “{{ excusa.respuesta }}”{% endif %}</span>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="gris">No hay excusas registradas.</p>
+      {% endif %}
+    </div>
+
+    {% if acudiente %}
+    <form method="post" class="tarjeta formulario excusa">
+      <h2>Enviar excusa</h2>
+      <p class="gris nota-pequena">Puedes justificar inasistencias desde el {{ minima }}. La coordinación o el director de grupo la revisa.</p>
+      <div class="rejilla">
+        <div>
+          <label for="fecha_inicio">Desde</label>
+          <input id="fecha_inicio" name="fecha_inicio" type="date" value="{{ valores.fecha_inicio }}" min="{{ minima }}" max="{{ limites.fin }}" required>
+        </div>
+        <div>
+          <label for="fecha_fin">Hasta</label>
+          <input id="fecha_fin" name="fecha_fin" type="date" value="{{ valores.fecha_fin }}" min="{{ minima }}" max="{{ limites.fin }}" required>
+        </div>
+      </div>
+      <label for="motivo">Motivo</label>
+      <textarea id="motivo" name="motivo" maxlength="1000" required>{{ valores.motivo }}</textarea>
+      <p class="ayuda">Ejemplo: cita médica, calamidad familiar o enfermedad. Si tienes constancia, entrégala al director de grupo.</p>
+      <div class="acciones"><button class="boton" type="submit">Enviar excusa</button></div>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

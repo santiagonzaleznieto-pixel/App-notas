@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block titulo %}{{ encuentro.titulo }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/familias.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/escuela-familias">← Escuela para familias</a>
+  <h1>{{ encuentro.titulo }}</h1>
+  <p>{{ fecha_larga(encuentro.fecha)|capitalize }} · {{ hora_texto(encuentro.hora) }} · {{ encuentro.lugar }}</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="tarjeta">
+  <span class="etiqueta">Tema</span>
+  <h2>{{ encuentro.tema }}</h2>
+  {% if encuentro.descripcion %}<p class="texto-largo">{{ encuentro.descripcion }}</p>{% endif %}
+</div>
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Familias que asistieron</span>
+    <strong>{{ asistentes }}<small> de {{ total }}</small></strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Porcentaje de asistencia</span>
+    <strong>{% if tomada %}{{ porcentaje }} %{% else %}—{% endif %}</strong>
+    <small>{% if futuro %}El encuentro aún no se realiza{% elif not tomada %}Falta tomar asistencia{% else %}Asistencia tomada{% endif %}</small>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Familias que no asistieron</span>
+    <strong>{% if tomada %}{{ total - asistentes }}{% else %}—{% endif %}</strong>
+  </div>
+</div>
+
+{% if futuro %}
+<div class="aviso informacion">Este encuentro todavía no se ha realizado. La asistencia se podrá tomar desde el {{ fecha_larga(encuentro.fecha) }}.</div>
+{% endif %}
+
+<form method="post" class="tarjeta">
+  <div class="tarjeta-titulo">
+    <h2>Asistencia de las familias</h2>
+    <span class="gris">Marca a quienes asistieron y guarda.</span>
+  </div>
+  {% if filas %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th>Asistió</th><th class="izq">Acudiente</th><th class="izq">Estudiantes a cargo</th><th>Compromiso</th></tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+        <tr>
+          <td>
+            <label class="marca">
+              <input type="checkbox" name="asistio-{{ fila.acudiente.id }}" value="1" {% if fila.asistio == 1 %}checked{% endif %} {% if futuro %}disabled{% endif %}>
+              <span class="gris">Sí</span>
+            </label>
+          </td>
+          <td class="izq">
+            <strong>{{ fila.acudiente.nombre }}</strong>
+            {% if fila.acudiente.telefono %}<span class="contacto">{{ fila.acudiente.telefono }}</span>{% endif %}
+          </td>
+          <td class="izq">{% if fila.hijos %}{{ fila.hijos|join(", ") }}{% else %}<span class="gris">Sin estudiantes</span>{% endif %}</td>
+          <td>{% if fila.compromiso %}<span class="estado bien">Aceptado</span>{% else %}<span class="estado atencion">Pendiente</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if not futuro %}<div class="acciones"><button class="boton" type="submit">Guardar asistencia</button></div>{% endif %}
+  {% else %}
+  <p class="vacio">El colegio todavía no tiene acudientes registrados.</p>
+  {% endif %}
+</form>
+{% endblock %}
