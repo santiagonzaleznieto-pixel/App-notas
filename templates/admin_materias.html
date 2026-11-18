@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block titulo %}Materias{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/admin">← Administración</a>
+  <h1>Materias</h1>
+  <p>El nombre corto aparece en las columnas del consolidado y del boletín. Las materias se asignan a cada grupo desde Grupos.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="tarjeta">
+  <h2>Plan de estudios</h2>
+  {% for materia in materias %}
+  <form method="post" class="formulario fila-edicion">
+    <input type="hidden" name="accion" value="editar">
+    <input type="hidden" name="materia_id" value="{{ materia.id }}">
+    <div>
+      <label for="nombre-{{ materia.id }}">Nombre</label>
+      <input id="nombre-{{ materia.id }}" name="nombre" value="{{ materia.nombre }}" maxlength="80" required>
+    </div>
+    <div>
+      <label for="corto-{{ materia.id }}">Nombre corto</label>
+      <input id="corto-{{ materia.id }}" name="corto" value="{{ materia.corto }}" maxlength="8" required>
+    </div>
+    <div>
+      <label for="area-{{ materia.id }}">Área</label>
+      <input id="area-{{ materia.id }}" name="area" value="{{ materia.area }}" maxlength="60">
+    </div>
+    <button class="boton secundario" type="submit">Guardar</button>
+    <p class="ayuda">Asignada en {{ materia.grupos }} {% if materia.grupos == 1 %}grupo{% else %}grupos{% endif %} de {{ colegio.anio }}</p>
+  </form>
+  {% else %}
+  <p class="vacio">Todavía no hay materias.</p>
+  {% endfor %}
+</div>
+
+<form method="post" class="tarjeta formulario">
+  <h2>Nueva materia</h2>
+  <input type="hidden" name="accion" value="crear">
+  <div class="rejilla">
+    <div>
+      <label for="nombre">Nombre</label>
+      <input id="nombre" name="nombre" value="{{ nueva.nombre }}" maxlength="80" placeholder="Ética y Valores" required>
+    </div>
+    <div>
+      <label for="corto">Nombre corto</label>
+      <input id="corto" name="corto" value="{{ nueva.corto }}" maxlength="8" placeholder="Ética" required>
+    </div>
+    <div>
+      <label for="area">Área</label>
+      <input id="area" name="area" value="{{ nueva.area }}" maxlength="60" placeholder="Educación ética y valores humanos">
+    </div>
+  </div>
+  <div class="acciones"><button class="boton" type="submit">Crear materia</button></div>
+</form>
+{% endblock %}

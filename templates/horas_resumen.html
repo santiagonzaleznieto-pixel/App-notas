@@ -7,7 +7,7 @@
     </div>
   </div>
   {% if ficha.ultimo_grado and not (ficha.resumen.social.cumplido and ficha.resumen.constitucional.cumplido) %}
-  <p class="mensaje Bajo">Estás en el último grado: completa tus horas antes de terminar el año para poder graduarte.</p>
+  <p class="mensaje Bajo">Último grado: las horas deben quedar completas y aprobadas antes de terminar el año para poder graduarse.</p>
   {% elif ficha.resumen.social.cumplido and ficha.resumen.constitucional.cumplido %}
   <p class="mensaje Superior">¡Requisitos de horas completos para el título de bachiller!</p>
   {% endif %}
@@ -30,7 +30,7 @@
       {% elif puede_emitir %}
       <a href="/certificados?estudiante={{ ficha.estudiante.id }}">Emitir certificado →</a>
       {% else %}
-      <a href="/certificados">Pedir el certificado →</a>
+      <span class="gris">Lo emite la secretaría.</span> <a href="/certificados">Ir a certificados →</a>
       {% endif %}
     </div>
     {% else %}
