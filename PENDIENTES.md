@@ -4,8 +4,14 @@ Cosas que solo puede hacer el dueño del proyecto (necesitan su cuenta, su firma
 
 ## Ya mismo
 
+- [ ] **Conectar Supabase para que los datos no se borren** (la página ya está en Vercel: https://app-notas-weld.vercel.app):
+  1. En https://supabase.com/dashboard crea un proyecto nuevo llamado `app-notas`, región **East US (North Virginia)**. Anota la contraseña de la base de datos.
+  2. Cuando esté listo, oprime **Connect**, elige **Session pooler** y copia la cadena de conexión. Cambia `[YOUR-PASSWORD]` por tu contraseña.
+  3. En https://vercel.com abre el proyecto **app-notas → Settings → Environment Variables**, agrega `URL_BASE_DATOS` con esa cadena (marca Production y Preview) y guarda.
+  4. Ve a **Deployments**, abre el último y oprime **Redeploy**. La primera vez se crean solas todas las tablas y los datos de prueba en Supabase.
+  5. Avísale a Claude para que revise que todo quedó en Supabase.
+- [ ] **Dominio propio** (cuando lo compres): Vercel → app-notas → **Settings → Domains → Add**.
 - [ ] **Activar GitHub Pages.** Entra a https://github.com/santiagonzaleznieto-pixel/App-notas/settings/pages. En **Source** elige **Deploy from a branch**, en **Branch** elige **main** y la carpeta **/docs**, y oprime **Save**. La demo queda en https://santiagonzaleznieto-pixel.github.io/App-notas/
-- [ ] **Crear la cuenta gratis en PythonAnywhere** (https://www.pythonanywhere.com, plan Beginner) y publicar con los pasos del `README.md`. Si quieres que Claude lo haga, crea la cuenta, saca un token en **Account → API token** y pídele que lo use; te lo pedirá en un formulario seguro.
 - [ ] **Preguntar al instructor del SENA** quién es dueño del código hecho en el proyecto de formación, antes de venderlo.
 
 ## Antes de usar datos reales del colegio piloto

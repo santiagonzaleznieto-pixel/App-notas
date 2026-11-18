@@ -3,6 +3,7 @@
 Plataforma web en Python con Flask y SQLite para manejar todo un colegio colombiano: notas, asistencia, convivencia, horas sociales, certificados, familias, circulares, orientación, elecciones, tesorería y servicios escolares. Se venderá a instituciones públicas y privadas, de Transición a Once. Empezó como proyecto de clase del SENA con las notas de Décimo de la Institución Educativa Instituto Pijao (Pijao, Quindío), que ahora es el **colegio piloto**.
 
 - Repositorio: https://github.com/santiagonzaleznieto-pixel/App-notas (público, rama `main`)
+- En internet (Vercel, proyecto `app-notas`, se publica solo con cada cambio en `main`): https://app-notas-weld.vercel.app
 - Demo de solo lectura (GitHub Pages, carpeta `docs`): https://santiagonzaleznieto-pixel.github.io/App-notas/
 - Plan maestro (visión, ley, roles, módulos, fases): https://claude.ai/artifact/QQYMz3DWLH2gvuDGn6a4yu
 

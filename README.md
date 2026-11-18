@@ -4,6 +4,7 @@ Plataforma web para manejar todo un colegio colombiano, de Transición a Once. E
 
 Empezó como proyecto de clase del SENA con las notas del grado Décimo de la Institución Educativa Instituto Pijao (Pijao, Quindío), que es el colegio piloto.
 
+- **Plataforma en internet (Vercel):** https://app-notas-weld.vercel.app
 - **Demo de solo lectura (GitHub Pages):** https://santiagonzaleznieto-pixel.github.io/App-notas/
 - **Plan maestro:** https://claude.ai/artifact/QQYMz3DWLH2gvuDGn6a4yu
 
