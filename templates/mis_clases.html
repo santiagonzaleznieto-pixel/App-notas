@@ -3,8 +3,19 @@
 {% block contenido %}
 <div class="encabezado">
   <h1>Mis clases</h1>
-  <p>{% if abierto %}Período abierto: <strong>{{ abierto.nombre }}</strong> (hasta el {{ abierto.fecha_fin }}).{% else %}No hay períodos abiertos: solo puedes ver las notas.{% endif %}</p>
+  {% if abierto %}
+  <p>Período abierto: <strong>{{ abierto.nombre }}</strong>. Cierra el {{ fecha_larga(abierto.fecha_fin) }}.</p>
+  {% else %}
+  <p>No hay períodos abiertos: puedes ver las notas, pero no cambiarlas.</p>
+  {% endif %}
 </div>
+
+{% if abierto and faltan is not none and faltan >= 0 and faltan <= 15 %}
+<div class="aviso atencion">
+  {% if faltan == 0 %}Hoy cierra el {{ abierto.nombre|lower }}.{% elif faltan == 1 %}Mañana cierra el {{ abierto.nombre|lower }}.{% else %}Faltan {{ faltan }} días para el cierre del {{ abierto.nombre|lower }}.{% endif %}
+  Registra las definitivas de cada clase antes de esa fecha.
+</div>
+{% endif %}
 
 {% if clases %}
 <div class="materias">
@@ -12,23 +23,26 @@
   <article class="tarjeta materia">
     <span class="etiqueta">{{ clase.asignacion.grupo }}</span>
     <h2>{{ clase.asignacion.materia }}</h2>
+    {% if abierto %}
     <div class="datos-materia">
+      <div>
+        <span>Actividades</span>
+        <strong>{{ clase.actividades }}</strong>
+      </div>
       <div>
         <span>Promedio</span>
         {% if clase.promedio is none %}<strong>—</strong>{% else %}<strong>{{ clase.promedio }}</strong>{% endif %}
-        <em class="chip {{ desempeno(clase.promedio) }}">{{ desempeno(clase.promedio) }}</em>
       </div>
       <div>
-        <span>En Bajo</span>
-        <strong>{{ clase.en_bajo }}</strong>
-      </div>
-      <div>
-        <span>{% if abierto %}{{ abierto.nombre }}{% else %}Estudiantes{% endif %}</span>
-        <strong>{% if abierto %}{{ clase.calificados }}/{% endif %}{{ clase.total }}</strong>
+        <span>Definitivas</span>
+        <strong>{{ clase.guardadas }}/{{ clase.total }}</strong>
       </div>
     </div>
-    {% if abierto and clase.total %}<div class="barra-progreso"><div style="width: {{ (clase.calificados * 100 / clase.total)|round }}%"></div></div>{% endif %}
-    <a class="boton" href="/calificar/{{ clase.asignacion.id }}">Calificar</a>
+    {% if clase.total %}<div class="barra-progreso" role="img" aria-label="{{ clase.guardadas }} de {{ clase.total }} definitivas registradas"><div style="width: {{ (clase.guardadas * 100 / clase.total)|round }}%"></div></div>{% endif %}
+    {% else %}
+    <p class="gris">{{ clase.total }} estudiantes</p>
+    {% endif %}
+    <a class="boton" href="/calificar/{{ clase.asignacion.id }}">Abrir la clase</a>
   </article>
   {% endfor %}
 </div>

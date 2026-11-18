@@ -14,7 +14,7 @@ if os.environ.get("CLAVE_SECRETA", "") != "":
 CON_DATOS_DE_EJEMPLO = os.environ.get("DATOS_DE_EJEMPLO", "1") == "1"
 
 base_datos.crear_tablas(base_datos.TABLAS)
-SEMBRAR = CON_DATOS_DE_EJEMPLO and base_datos.reclamar_siembra()
+SEMBRAR = CON_DATOS_DE_EJEMPLO and base_datos.reclamar_siembra(1)
 if SEMBRAR and base_datos.tabla_vacia("colegios"):
     semilla.sembrar()
 
@@ -108,6 +108,26 @@ def desempeno(nota):
         return "Básico"
     else:
         return "Bajo"
+
+
+NIVELES_DESEMPENO = ["Superior", "Alto", "Básico", "Bajo"]
+
+
+def desempeno_definitivo(valor, manual):
+    if manual in NIVELES_DESEMPENO:
+        return manual
+    return desempeno(valor)
+
+
+def fecha_valida(texto):
+    if len(texto) != 10 or texto[4] != "-" or texto[7] != "-":
+        return False
+    for posicion in range(10):
+        if posicion != 4 and posicion != 7 and texto[posicion] not in "0123456789":
+            return False
+    mes = int(texto[5:7])
+    dia = int(texto[8:10])
+    return mes >= 1 and mes <= 12 and dia >= 1 and dia <= 31
 
 
 def promedio(lista):

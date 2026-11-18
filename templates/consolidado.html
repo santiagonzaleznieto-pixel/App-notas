@@ -64,7 +64,8 @@
           <td>{% if fila.puesto %}<span class="puesto {% if fila.puesto <= 3 %}podio{% endif %}">{{ fila.puesto }}</span>{% else %}—{% endif %}</td>
           <td class="izq"><a href="/boletin/{{ fila.estudiante.id }}">{{ fila.estudiante.nombre }}</a></td>
           {% for nota in fila.notas %}
-          <td>{% if nota is none %}<span class="vacia">—</span>{% else %}<span class="nota {{ desempeno(nota) }}">{{ nota }}</span>{% endif %}</td>
+          {% set nivel = fila.niveles[loop.index0] %}
+          <td>{% if nota is none and nivel == "Pendiente" %}<span class="vacia">—</span>{% elif nota is none %}<span class="chip {{ nivel }}" title="Desempeño definido por el docente">{{ nivel[0] }}</span>{% else %}<span class="nota {{ nivel }}" {% if nivel != desempeno(nota) %}title="Desempeño definido por el docente: {{ nivel }}"{% endif %}>{{ nota }}{% if nivel != desempeno(nota) %}<sup>M</sup>{% endif %}</span>{% endif %}</td>
           {% endfor %}
           <td>{% if fila.promedio is none %}—{% else %}<strong class="nota {{ desempeno(fila.promedio) }}">{{ fila.promedio }}</strong>{% endif %}</td>
         </tr>

@@ -1,6 +1,6 @@
 import secrets
 from flask import g, render_template, request, redirect
-from nucleo import (app, agregar_menu, tiene_rol, tiene_alguno, numero, ahora, registrar, promedio, nota_final,
+from nucleo import (desempeno_definitivo, app, agregar_menu, tiene_rol, tiene_alguno, numero, ahora, registrar, promedio, nota_final,
                     desempeno, estudiante_del_colegio, grupo_del_estudiante, DIRECTIVOS, SEMBRAR)
 import base_datos
 
@@ -177,12 +177,19 @@ def armar_contenido(colegio, estudiante, tipo, fecha):
         lineas = [quien + ", cursa en esta institución educativa " + descripcion_grupo(grupo) + " en el año lectivo " + anio
                   + " y, con corte al " + fecha_en_letras(fecha) + ", obtuvo las siguientes valoraciones finales:"]
         finales = []
+        manuales = base_datos.desempenos_manuales_de(estudiante["id"], colegio["anio"])
         for asignacion in base_datos.asignaciones_del_grupo(grupo["id"]):
             final = None
             if asignacion["materia_id"] in todas:
                 final = nota_final(todas[asignacion["materia_id"]], periodos)
             finales.append(final)
-            lineas.append(asignacion["materia"] + " | " + texto_nota(final) + " | " + desempeno(final))
+            manual = None
+            if asignacion["materia_id"] in manuales:
+                manual = manuales[asignacion["materia_id"]].get(0)
+            if manual is None:
+                lineas.append(asignacion["materia"] + " | " + texto_nota(final) + " | " + desempeno(final))
+            else:
+                lineas.append(asignacion["materia"] + " | — | " + desempeno_definitivo(final, manual))
         general = promedio(finales)
         lineas.append("Promedio general | " + texto_nota(general) + " | " + desempeno(general))
         lineas.append(escala_del_colegio(colegio))

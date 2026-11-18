@@ -15,6 +15,8 @@ CONFLICTOS = {
     "notas": ["anio", "estudiante_id", "materia_id", "periodo"],
     "asistencia": ["asignacion_id", "estudiante_id", "fecha"],
     "asistencia_encuentros": ["encuentro_id", "acudiente_id"],
+    "calificaciones": ["actividad_id", "estudiante_id"],
+    "desempenos_manuales": ["anio", "estudiante_id", "materia_id", "periodo"],
 }
 COMPARTIDA = {"conexion": None}
 PROTEGER_TABLAS = """
@@ -148,6 +150,43 @@ CREATE TABLE IF NOT EXISTS notas (
     materia_id INTEGER NOT NULL REFERENCES materias(id),
     periodo INTEGER NOT NULL,
     valor REAL,
+    UNIQUE (anio, estudiante_id, materia_id, periodo)
+);
+
+CREATE TABLE IF NOT EXISTS actividades (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    colegio_id INTEGER NOT NULL REFERENCES colegios(id),
+    anio INTEGER NOT NULL,
+    asignacion_id INTEGER NOT NULL REFERENCES asignaciones(id),
+    periodo INTEGER NOT NULL,
+    nombre TEXT NOT NULL,
+    fecha TEXT NOT NULL,
+    descripcion TEXT NOT NULL DEFAULT '',
+    creado_por INTEGER REFERENCES usuarios(id),
+    creado_en TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS calificaciones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    colegio_id INTEGER NOT NULL REFERENCES colegios(id),
+    actividad_id INTEGER NOT NULL REFERENCES actividades(id),
+    estudiante_id INTEGER NOT NULL REFERENCES usuarios(id),
+    valor REAL,
+    observacion TEXT NOT NULL DEFAULT '',
+    actualizado_en TEXT NOT NULL,
+    UNIQUE (actividad_id, estudiante_id)
+);
+
+CREATE TABLE IF NOT EXISTS desempenos_manuales (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    colegio_id INTEGER NOT NULL REFERENCES colegios(id),
+    anio INTEGER NOT NULL,
+    estudiante_id INTEGER NOT NULL REFERENCES usuarios(id),
+    materia_id INTEGER NOT NULL REFERENCES materias(id),
+    periodo INTEGER NOT NULL,
+    desempeno TEXT NOT NULL,
+    definido_por INTEGER REFERENCES usuarios(id),
+    definido_en TEXT NOT NULL,
     UNIQUE (anio, estudiante_id, materia_id, periodo)
 );
 
@@ -295,11 +334,11 @@ def tabla_vacia(tabla):
     return consultar_uno("SELECT id FROM " + tabla + " LIMIT 1", []) is None
 
 
-def reclamar_siembra():
+def reclamar_siembra(numero):
     if not usa_postgres():
         return True
     crear_tablas("CREATE TABLE IF NOT EXISTS control_siembra (id INTEGER PRIMARY KEY)")
-    fila = compartida().execute("INSERT INTO control_siembra (id) VALUES (1) ON CONFLICT DO NOTHING RETURNING id").fetchone()
+    fila = compartida().execute("INSERT INTO control_siembra (id) VALUES (%s) ON CONFLICT DO NOTHING RETURNING id", [numero]).fetchone()
     return fila is not None
 
 
@@ -434,7 +473,7 @@ def notas_del_estudiante(estudiante_id, anio, cantidad_periodos):
             for p in range(cantidad_periodos):
                 lista.append(None)
             notas[fila["materia_id"]] = lista
-        if fila["periodo"] <= cantidad_periodos:
+        if fila["periodo"] >= 1 and fila["periodo"] <= cantidad_periodos:
             notas[fila["materia_id"]][fila["periodo"] - 1] = fila["valor"]
     return notas
 
@@ -443,6 +482,66 @@ def guardar_nota(colegio_id, anio, estudiante_id, materia_id, periodo, valor):
     ejecutar(
         "INSERT OR REPLACE INTO notas (colegio_id, anio, estudiante_id, materia_id, periodo, valor) VALUES (?, ?, ?, ?, ?, ?)",
         [colegio_id, anio, estudiante_id, materia_id, periodo, valor],
+    )
+
+
+def actividades_del_periodo(asignacion_id, anio, periodo):
+    return consultar(
+        "SELECT * FROM actividades WHERE asignacion_id = ? AND anio = ? AND periodo = ? ORDER BY fecha, id",
+        [asignacion_id, anio, periodo],
+    )
+
+
+def buscar_actividad(actividad_id):
+    return consultar_uno("SELECT * FROM actividades WHERE id = ?", [actividad_id])
+
+
+def calificaciones_del_periodo(asignacion_id, anio, periodo):
+    tabla = {}
+    filas = consultar(
+        "SELECT calificaciones.* FROM calificaciones JOIN actividades ON actividades.id = calificaciones.actividad_id "
+        "WHERE actividades.asignacion_id = ? AND actividades.anio = ? AND actividades.periodo = ?",
+        [asignacion_id, anio, periodo],
+    )
+    for fila in filas:
+        if fila["estudiante_id"] not in tabla:
+            tabla[fila["estudiante_id"]] = {}
+        tabla[fila["estudiante_id"]][fila["actividad_id"]] = fila
+    return tabla
+
+
+def guardar_calificacion(colegio_id, actividad_id, estudiante_id, valor, observacion, momento):
+    ejecutar(
+        "INSERT OR REPLACE INTO calificaciones (colegio_id, actividad_id, estudiante_id, valor, observacion, actualizado_en) "
+        "VALUES (?, ?, ?, ?, ?, ?)",
+        [colegio_id, actividad_id, estudiante_id, valor, observacion, momento],
+    )
+
+
+def borrar_actividad(actividad_id):
+    ejecutar("DELETE FROM calificaciones WHERE actividad_id = ?", [actividad_id])
+    ejecutar("DELETE FROM actividades WHERE id = ?", [actividad_id])
+
+
+def desempenos_manuales_de(estudiante_id, anio):
+    manuales = {}
+    for fila in consultar("SELECT materia_id, periodo, desempeno FROM desempenos_manuales WHERE estudiante_id = ? AND anio = ?",
+                          [estudiante_id, anio]):
+        if fila["materia_id"] not in manuales:
+            manuales[fila["materia_id"]] = {}
+        manuales[fila["materia_id"]][fila["periodo"]] = fila["desempeno"]
+    return manuales
+
+
+def guardar_desempeno_manual(colegio_id, anio, estudiante_id, materia_id, periodo, desempeno, usuario_id, momento):
+    if desempeno is None:
+        ejecutar("DELETE FROM desempenos_manuales WHERE anio = ? AND estudiante_id = ? AND materia_id = ? AND periodo = ?",
+                 [anio, estudiante_id, materia_id, periodo])
+        return
+    ejecutar(
+        "INSERT OR REPLACE INTO desempenos_manuales (colegio_id, anio, estudiante_id, materia_id, periodo, desempeno, definido_por, definido_en) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [colegio_id, anio, estudiante_id, materia_id, periodo, desempeno, usuario_id, momento],
     )
 
 

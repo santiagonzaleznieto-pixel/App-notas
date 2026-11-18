@@ -48,16 +48,17 @@
             <strong>{{ fila.asignacion.materia }}</strong>
             <small class="gris bloque">{{ fila.asignacion.docente }}</small>
           </td>
-          {% for nota in fila.notas %}
-          <td>{% if nota is none %}<span class="vacia">—</span>{% else %}<span class="nota {{ desempeno(nota) }}">{{ nota }}</span>{% endif %}</td>
+          {% for c in fila.periodos %}
+          <td>{% if c.manual %}<span class="chip {{ c.desempeno }}">{{ c.desempeno }}</span>{% elif c.valor is none %}<span class="vacia">—</span>{% else %}<span class="nota {{ c.desempeno }}">{{ c.valor }}</span>{% endif %}</td>
           {% endfor %}
-          <td>{% if fila.final is none %}—{% else %}<strong class="nota {{ desempeno(fila.final) }}">{{ fila.final }}</strong>{% endif %}</td>
-          <td><span class="chip {{ desempeno(fila.final) }}">{{ desempeno(fila.final) }}</span></td>
+          <td>{% if fila.final.manual %}<span class="vacia">—</span>{% elif fila.final.valor is none %}—{% else %}<strong class="nota {{ fila.final.desempeno }}">{{ fila.final.valor }}</strong>{% endif %}</td>
+          <td><span class="chip {{ fila.final.desempeno }}">{{ fila.final.desempeno }}</span></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
+  <p class="nota-pie">El boletín muestra solo las notas definitivas de cada período. Cuando el docente define directamente el desempeño, aparece el desempeño sin número.</p>
   <div class="acciones">
     <button class="boton secundario" type="button" onclick="window.print()">Imprimir boletín</button>
   </div>

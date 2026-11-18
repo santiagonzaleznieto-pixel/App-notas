@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block titulo %}Final del año · {{ asignacion.materia }}{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/mis-clases">← Mis clases</a>
+  <h1>{{ asignacion.materia }} · {{ asignacion.grupo }}</h1>
+  <p>Definitiva del año: promedio de las definitivas de cada período según su porcentaje.</p>
+</div>
+
+<nav class="periodos" aria-label="Períodos">
+  {% for p in periodos %}
+  <a href="/calificar/{{ asignacion.id }}?periodo={{ p.numero }}">{{ p.nombre }}{% if not p.abierto %} · cerrado{% endif %}</a>
+  {% endfor %}
+  <a href="/calificar/{{ asignacion.id }}?periodo=final" class="activo">Final del año</a>
+</nav>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if not editable %}<div class="aviso neutro">La definitiva del año se registra mientras el {{ ultimo.nombre|lower }} está abierto.</div>{% endif %}
+
+<form method="post" class="tarjeta">
+  <p class="ayuda-tabla">Por defecto la definitiva del año es <strong>automática</strong>. Si lo necesitas, elige tú el desempeño final; el boletín mostrará solo ese desempeño.</p>
+  <div class="tabla-caja">
+    <table class="tabla tabla-notas">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th class="izq">Estudiante</th>
+          {% for p in periodos %}<th title="{{ p.nombre }} · {{ p.porcentaje|round|int }} %">P{{ p.numero }}</th>{% endfor %}
+          <th>Calculada</th>
+          <th class="izq">Definitiva del año</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+        <tr>
+          <td class="numero">{{ loop.index }}</td>
+          <td class="izq">{{ fila.estudiante.nombre }}</td>
+          {% for c in fila.periodos %}
+          <td>{% if c.manual %}<span class="chip {{ c.desempeno }}">{{ c.desempeno }}</span>{% elif c.valor is none %}<span class="vacia">—</span>{% else %}<span class="nota {{ c.desempeno }}">{{ c.valor }}</span>{% endif %}</td>
+          {% endfor %}
+          <td>{% if fila.calculado is none %}—{% else %}<strong class="nota {{ desempeno(fila.calculado) }}">{{ fila.calculado }}</strong>{% endif %}</td>
+          <td class="izq">
+            {% if editable %}
+            <select class="campo-tabla" name="final-{{ fila.estudiante.id }}" aria-label="Definitiva del año de {{ fila.estudiante.nombre }}">
+              <option value="auto">Automática{% if fila.calculado is not none %} · {{ fila.calculado }} {{ desempeno(fila.calculado) }}{% endif %}</option>
+              {% for nivel in niveles %}<option value="{{ nivel }}" {% if fila.final.manual == nivel %}selected{% endif %}>Manual · {{ nivel }}</option>{% endfor %}
+            </select>
+            {% else %}
+            <span class="chip {{ fila.final.desempeno }}">{{ fila.final.desempeno }}</span>{% if fila.final.manual %} <small class="gris">manual</small>{% endif %}
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if editable %}<div class="acciones"><button class="boton" type="submit">Guardar definitivas del año</button></div>{% endif %}
+</form>
+{% endblock %}

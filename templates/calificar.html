@@ -1,64 +1,128 @@
 {% extends "base.html" %}
-{% block titulo %}Calificar {{ asignacion.materia }}{% endblock %}
+{% block titulo %}{{ asignacion.materia }} {{ asignacion.grupo }}{% endblock %}
 {% block contenido %}
 <div class="encabezado">
   <a class="volver" href="/mis-clases">← Mis clases</a>
   <h1>{{ asignacion.materia }} · {{ asignacion.grupo }}</h1>
-  <p>Notas de {{ colegio.nota_minima }} a {{ colegio.nota_maxima }}. Deja la casilla vacía si aún no hay nota. Los períodos cerrados no se pueden cambiar.</p>
+  <p>{{ periodo.nombre }}: del {{ fecha_larga(periodo.fecha_inicio) }} al {{ fecha_larga(periodo.fecha_fin) }} · vale {{ periodo.porcentaje|round|int }} % del año.</p>
 </div>
+
+<nav class="periodos" aria-label="Períodos">
+  {% for p in periodos %}
+  <a href="/calificar/{{ asignacion.id }}?periodo={{ p.numero }}" class="{% if p.numero == periodo.numero %}activo{% endif %}">{{ p.nombre }}{% if not p.abierto %} · cerrado{% endif %}</a>
+  {% endfor %}
+  <a href="/calificar/{{ asignacion.id }}?periodo=final">Final del año</a>
+</nav>
 
 {% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
-{% if errores %}
-<div class="aviso error">
-  {% for error in errores %}<div>{{ error }}</div>{% endfor %}
-</div>
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+{% if not editable %}
+<div class="aviso neutro">Este período está cerrado: puedes ver las notas, pero no cambiarlas.</div>
+{% elif faltan is not none and faltan >= 0 and faltan <= 15 %}
+<div class="aviso atencion">{% if faltan == 0 %}Hoy{% elif faltan == 1 %}Mañana{% else %}En {{ faltan }} días{% endif %} cierra el período. Antes de esa fecha guarda las definitivas.</div>
 {% endif %}
 
-<div class="escala">
-  <span class="chip Bajo">Bajo menos de {{ colegio.limite_basico }}</span>
-  <span class="chip Básico">Básico desde {{ colegio.limite_basico }}</span>
-  <span class="chip Alto">Alto desde {{ colegio.limite_alto }}</span>
-  <span class="chip Superior">Superior desde {{ colegio.limite_superior }}</span>
+<div class="cifras">
+  <div class="tarjeta cifra"><span>Actividades</span><strong>{{ actividades|length }}</strong></div>
+  <div class="tarjeta cifra"><span>Promedio del grupo</span><strong>{% if resumen.promedio is none %}—{% else %}{{ resumen.promedio }}{% endif %}</strong><em class="chip {{ desempeno(resumen.promedio) }}">{{ desempeno(resumen.promedio) }}</em></div>
+  <div class="tarjeta cifra"><span>Definitivas guardadas</span><strong>{{ resumen.guardadas }}<small> de {{ resumen.filas|length }}</small></strong></div>
 </div>
 
+<section class="tarjeta">
+  <div class="tarjeta-titulo">
+    <h2>1. Actividades del período</h2>
+    <span class="gris">Talleres, quices, exposiciones… las que necesites.</span>
+  </div>
+  {% if actividades %}
+  <ul class="actividades">
+    {% for item in actividades %}
+    <li>
+      <a href="/calificar/{{ asignacion.id }}/actividad/{{ item.actividad.id }}">
+        <strong>{{ item.actividad.nombre }}</strong>
+        <span class="gris">{{ fecha_larga(item.actividad.fecha) }}</span>
+      </a>
+      <span class="nota {{ desempeno(item.promedio) }}">{% if item.promedio is none %}—{% else %}{{ item.promedio }}{% endif %}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="gris">Todavía no hay actividades en este período.</p>
+  {% endif %}
+
+  {% if editable %}
+  <details class="nueva-actividad" {% if errores or not actividades %}open{% endif %}>
+    <summary>+ Nueva actividad</summary>
+    <form method="post" class="formulario">
+      <input type="hidden" name="accion" value="nueva_actividad">
+      <div class="rejilla">
+        <div>
+          <label for="nombre">Nombre de la actividad</label>
+          <input id="nombre" name="nombre" value="{{ nueva.nombre }}" maxlength="80" placeholder="Ej.: Taller de fracciones" required>
+        </div>
+        <div>
+          <label for="fecha">Fecha</label>
+          <input id="fecha" name="fecha" type="date" value="{{ nueva.fecha }}" min="{{ periodo.fecha_inicio }}" max="{{ periodo.fecha_fin }}" required>
+        </div>
+      </div>
+      <label for="descripcion">Observación o descripción (opcional)</label>
+      <input id="descripcion" name="descripcion" value="{{ nueva.descripcion }}" maxlength="300" placeholder="Ej.: Ejercicios de las páginas 20 a 25">
+      <div class="acciones izquierda"><button class="boton" type="submit">Crear y calificar</button></div>
+    </form>
+  </details>
+  {% endif %}
+</section>
+
 <form method="post" class="tarjeta">
+  <input type="hidden" name="accion" value="definitivas">
+  <div class="tarjeta-titulo">
+    <h2>2. Definitivas del período</h2>
+    <span class="gris">Solo la definitiva aparece en el boletín.</span>
+  </div>
+  <p class="ayuda-tabla">Por defecto la definitiva es <strong>automática</strong>: el promedio de las actividades. Si quieres, elige tú el desempeño de un estudiante (Superior, Alto, Básico o Bajo); en ese caso el boletín muestra solo ese desempeño.</p>
   <div class="tabla-caja">
-    <table class="tabla">
+    <table class="tabla tabla-notas">
       <thead>
         <tr>
           <th>#</th>
           <th class="izq">Estudiante</th>
-          {% for periodo in periodos %}<th title="{{ periodo.nombre }} · {{ periodo.porcentaje }} %">P{{ periodo.numero }}{% if not periodo.abierto %} 🔒{% endif %}</th>{% endfor %}
-          <th>Final</th>
-          <th>Desempeño</th>
+          {% for item in actividades %}<th title="{{ item.actividad.nombre }}"><a href="/calificar/{{ asignacion.id }}/actividad/{{ item.actividad.id }}">A{{ loop.index }}</a></th>{% endfor %}
+          <th>Promedio</th>
+          <th class="izq">Definitiva</th>
+          <th>Estado</th>
         </tr>
       </thead>
       <tbody>
-        {% for fila in filas %}
+        {% for fila in resumen.filas %}
         <tr>
           <td class="numero">{{ loop.index }}</td>
           <td class="izq">{{ fila.estudiante.nombre }}</td>
-          {% for periodo in periodos %}
-          <td>
-            {% set nota = fila.notas[periodo.numero - 1] %}
-            {% if periodo.abierto %}
-            <input class="casilla" type="number" step="0.1" min="{{ colegio.nota_minima }}" max="{{ colegio.nota_maxima }}"
-                   name="nota-{{ fila.estudiante.id }}-{{ periodo.numero }}" aria-label="{{ fila.estudiante.nombre }}, {{ periodo.nombre }}"
-                   value="{% if nota is not none %}{{ nota }}{% endif %}">
+          {% for nota in fila.notas %}
+          <td>{% if nota.valor is none %}<span class="vacia">—</span>{% else %}<span class="nota {{ desempeno(nota.valor) }}" {% if nota.observacion %}title="{{ nota.observacion }}"{% endif %}>{{ nota.valor }}{% if nota.observacion %}<sup>•</sup>{% endif %}</span>{% endif %}</td>
+          {% endfor %}
+          <td>{% if fila.calculado is none %}—{% else %}<strong class="nota {{ fila.nivel_calculado }}">{{ fila.calculado }}</strong>{% endif %}</td>
+          <td class="izq">
+            {% if editable %}
+            <select class="campo-tabla" name="definitiva-{{ fila.estudiante.id }}" aria-label="Definitiva de {{ fila.estudiante.nombre }}">
+              <option value="auto">Automática{% if fila.calculado is not none %} · {{ fila.calculado }} {{ fila.nivel_calculado }}{% endif %}</option>
+              {% for nivel in niveles %}<option value="{{ nivel }}" {% if fila.guardada.manual == nivel %}selected{% endif %}>Manual · {{ nivel }}</option>{% endfor %}
+            </select>
             {% else %}
-            {% if nota is none %}<span class="vacia">—</span>{% else %}<span class="nota {{ desempeno(nota) }}">{{ nota }}</span>{% endif %}
+            {% if fila.guardada.manual %}<span class="chip {{ fila.guardada.desempeno }}">{{ fila.guardada.desempeno }}</span> <small class="gris">manual</small>
+            {% elif fila.guardada.valor is not none %}<span class="nota {{ fila.guardada.desempeno }}">{{ fila.guardada.valor }}</span> <span class="chip {{ fila.guardada.desempeno }}">{{ fila.guardada.desempeno }}</span>
+            {% else %}<span class="vacia">—</span>{% endif %}
             {% endif %}
           </td>
-          {% endfor %}
-          <td>{% if fila.final is none %}—{% else %}<span class="nota {{ desempeno(fila.final) }}">{{ fila.final }}</span>{% endif %}</td>
-          <td><span class="chip {{ desempeno(fila.final) }}">{{ desempeno(fila.final) }}</span></td>
+          <td><span class="estado {{ fila.estado.clase }}">{{ fila.estado.texto }}</span></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
+  {% if actividades %}<p class="nota-pie">A1, A2… son las actividades en el orden de la lista. El punto (•) indica que la nota tiene una observación: pasa el cursor para leerla.</p>{% endif %}
+  {% if editable %}
   <div class="acciones">
-    <button class="boton" type="submit">Guardar notas</button>
+    <button class="boton" type="submit">Guardar definitivas</button>
   </div>
+  {% endif %}
 </form>
 {% endblock %}
