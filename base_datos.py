@@ -17,6 +17,15 @@ CONFLICTOS = {
     "asistencia_encuentros": ["encuentro_id", "acudiente_id"],
 }
 COMPARTIDA = {"conexion": None}
+PROTEGER_TABLAS = """
+DO $$
+DECLARE t record;
+BEGIN
+  FOR t IN SELECT tablename FROM pg_tables WHERE schemaname = current_schema() AND rowsecurity = false LOOP
+    EXECUTE 'ALTER TABLE ' || quote_ident(t.tablename) || ' ENABLE ROW LEVEL SECURITY';
+  END LOOP;
+END $$;
+"""
 
 TABLAS = """
 CREATE TABLE IF NOT EXISTS colegios (
@@ -273,6 +282,7 @@ def crear_tablas(script):
         conexion = conectar()
         conexion.execute("SELECT pg_advisory_xact_lock(20261118)")
         conexion.execute(texto)
+        conexion.execute(PROTEGER_TABLAS)
         conexion.commit()
         conexion.close()
         return
