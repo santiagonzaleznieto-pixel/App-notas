@@ -6,6 +6,8 @@
 .celda-acciones { white-space: nowrap; }
 .celda-acciones .boton { margin: 2px; }
 .formulario-angosto { max-width: 760px; }
+.ubicacion { display: inline-block; margin-top: 3px; font-size: .74rem; font-weight: 600; color: var(--verde-oscuro); }
+.celda-acciones .boton.pequeno { padding: 6px 10px; }
 
 .fila-vencida td { background: #FBF1EF; }
 .fila-vencida td:first-child { box-shadow: inset 4px 0 0 #A33227; }
@@ -97,4 +99,6 @@ li.fila-vencida { background: #FBF1EF; border-left: 4px solid #A33227; padding-l
   .fecha-consulta { flex: 1 1 100%; }
   .visitante, .autorizado { flex-wrap: wrap; }
   .opciones { grid-template-columns: 1fr; }
+  .celda-acciones { white-space: normal; }
+  .celda-acciones .boton { display: block; text-align: center; }
 }

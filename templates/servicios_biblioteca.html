@@ -41,13 +41,15 @@
   {% if vencidos %}
   <div class="tabla-caja">
     <table class="tabla">
-      <thead><tr><th class="izq">Persona</th><th class="izq">Libro</th><th>Debía devolverlo</th><th>Días de retraso</th><th></th></tr></thead>
+      <thead><tr><th class="izq">Préstamo</th><th>Días de retraso</th><th></th></tr></thead>
       <tbody>
         {% for prestamo in vencidos %}
         <tr class="fila-vencida">
-          <td class="izq"><strong>{{ prestamo.persona }}</strong>{% if prestamo.grupo %} <small class="gris">{{ prestamo.grupo }}</small>{% endif %}</td>
-          <td class="izq">{{ prestamo.titulo }}</td>
-          <td>{{ fecha_corta(prestamo.fecha_devolucion) }}</td>
+          <td class="izq">
+            <strong>{{ prestamo.persona }}</strong>{% if prestamo.grupo %} <small class="gris">{{ prestamo.grupo }}</small>{% endif %}
+            <span class="bloque">{{ prestamo.titulo }}</span>
+            <small class="gris bloque">Debía devolverlo el {{ fecha_corta(prestamo.fecha_devolucion) }}</small>
+          </td>
           <td><span class="estado mal">{{ prestamo.dias_retraso }} día{% if prestamo.dias_retraso != 1 %}s{% endif %}</span></td>
           <td>
             <form method="post" action="/biblioteca/devolver/{{ prestamo.id }}" class="en-linea">
@@ -69,13 +71,15 @@
   {% if al_dia %}
   <div class="tabla-caja">
     <table class="tabla">
-      <thead><tr><th class="izq">Persona</th><th class="izq">Libro</th><th>Prestado</th><th>Devolver antes del</th><th></th></tr></thead>
+      <thead><tr><th class="izq">Préstamo</th><th>Devolver</th><th></th></tr></thead>
       <tbody>
         {% for prestamo in al_dia %}
         <tr>
-          <td class="izq"><strong>{{ prestamo.persona }}</strong>{% if prestamo.grupo %} <small class="gris">{{ prestamo.grupo }}</small>{% endif %}</td>
-          <td class="izq">{{ prestamo.titulo }}</td>
-          <td>{{ fecha_corta(prestamo.prestado_en) }}</td>
+          <td class="izq">
+            <strong>{{ prestamo.persona }}</strong>{% if prestamo.grupo %} <small class="gris">{{ prestamo.grupo }}</small>{% endif %}
+            <span class="bloque">{{ prestamo.titulo }}</span>
+            <small class="gris bloque">Prestado el {{ fecha_corta(prestamo.prestado_en) }}</small>
+          </td>
           <td>{{ fecha_corta(prestamo.fecha_devolucion) }}{% if prestamo.dias_restantes <= 2 %} <span class="estado atencion">{% if prestamo.dias_restantes == 0 %}hoy{% else %}en {{ prestamo.dias_restantes }} d{% endif %}</span>{% endif %}</td>
           <td>
             <form method="post" action="/biblioteca/devolver/{{ prestamo.id }}" class="en-linea">
@@ -154,7 +158,6 @@
       <thead>
         <tr>
           <th class="izq">Libro</th>
-          <th class="izq">Ubicación</th>
           <th>Disponibles</th>
           {% if gestiona %}<th></th>{% endif %}
         </tr>
@@ -165,8 +168,8 @@
           <td class="izq">
             <strong>{{ libro.titulo }}</strong>
             <small class="gris bloque">{{ libro.autor }}{% if libro.editorial %} · {{ libro.editorial }}{% endif %}</small>
+            {% if libro.ubicacion %}<small class="ubicacion">{{ libro.ubicacion }}</small>{% endif %}
           </td>
-          <td class="izq gris">{{ libro.ubicacion }}</td>
           <td>
             {% if not libro.activo %}<span class="estado neutro">Retirado</span>
             {% elif libro.disponibles > 0 %}<span class="estado bien">{{ libro.disponibles }} de {{ libro.ejemplares }}</span>
