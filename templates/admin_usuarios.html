@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block titulo %}Usuarios{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/admin">← Administración</a>
+  <h1>Usuarios</h1>
+  <p>Todas las personas del colegio. Abre una para cambiar sus datos, sus roles o su contraseña.</p>
+</div>
+
+<div class="acciones izquierda">
+  <a class="boton" href="/admin/usuarios/nuevo">Nuevo usuario</a>
+  <a class="boton secundario" href="/admin/cargue">Cargue masivo de estudiantes</a>
+</div>
+
+<form method="get" class="tarjeta filtros">
+  <div>
+    <label for="texto">Buscar</label>
+    <input id="texto" name="texto" value="{{ texto }}" placeholder="Nombre, usuario o documento">
+  </div>
+  <div>
+    <label for="rol">Rol</label>
+    <select id="rol" name="rol">
+      <option value="">Todos los roles</option>
+      {% for opcion in roles %}<option value="{{ opcion }}" {% if opcion == rol %}selected{% endif %}>{{ nombres_roles[opcion] }}</option>{% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="estado">Estado</label>
+    <select id="estado" name="estado">
+      <option value="todos" {% if estado == "todos" %}selected{% endif %}>Activos e inactivos</option>
+      <option value="activos" {% if estado == "activos" %}selected{% endif %}>Solo activos</option>
+      <option value="inactivos" {% if estado == "inactivos" %}selected{% endif %}>Solo inactivos</option>
+    </select>
+  </div>
+  <button class="boton" type="submit">Filtrar</button>
+</form>
+
+<div class="tarjeta">
+  <p class="gris">{{ personas|length }} {% if personas|length == 1 %}persona{% else %}personas{% endif %}</p>
+  {% if personas %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th class="izq">Nombre</th><th class="izq">Documento</th><th class="izq">Roles</th><th>Estado</th></tr>
+      </thead>
+      <tbody>
+        {% for persona in personas %}
+        <tr>
+          <td class="izq"><a href="/admin/usuarios/{{ persona.id }}">{{ persona.nombre }}</a><small class="gris bloque">{{ persona.usuario }}</small></td>
+          <td class="izq">{{ persona.documento or "—" }}</td>
+          <td class="izq"><div class="roles-chips">{% for rol_persona in persona.roles %}<span class="etiqueta">{{ nombres_roles[rol_persona] or rol_persona }}</span>{% endfor %}</div></td>
+          <td>
+            {% if persona.activo %}<span class="estado bien">Activo</span>{% else %}<span class="estado neutro">Inactivo</span>{% endif %}
+            {% if persona.debe_cambiar_clave %}<span class="estado atencion">Clave temporal</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="vacio">Nadie coincide con ese filtro.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block titulo %}Mis horas sociales{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/horas.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Mis horas sociales</h1>
+  <p>Para graduarte necesitas 80 horas de servicio social en un proyecto pedagógico y 50 horas de estudios constitucionales, aprobadas por el colegio.</p>
+</div>
+
+{% if not ficha.de_media %}
+<div class="tarjeta vacio">
+  <h2>Todavía no te toca</h2>
+  <p>El servicio social estudiantil (Resolución 4210 de 1996) y los estudios constitucionales (Ley 107 de 1994) se cumplen en la educación Media, es decir, en 10° y 11°.</p>
+  <p>{% if ficha.grupo %}Este año estás en {{ ficha.grupo.grado }} ({{ ficha.grupo.nombre }}).{% else %}No tienes matrícula activa este año.{% endif %} Cuando llegues a 10° podrás inscribirte en un proyecto y registrar tus horas aquí.</p>
+</div>
+{% else %}
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+{% include "horas_resumen.html" %}
+
+<div class="dos-columnas">
+  <form method="post" class="tarjeta formulario">
+    <h2>Registrar horas</h2>
+    <input type="hidden" name="accion" value="registrar">
+    <div class="rejilla">
+      <div>
+        <label for="tipo">Tipo de horas</label>
+        <select id="tipo" name="tipo">
+          {% for clave in tipos %}
+          <option value="{{ clave }}" {% if formulario.tipo == clave %}selected{% endif %}>{{ tipos[clave] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="proyecto_id">Proyecto (solo servicio social)</label>
+        <select id="proyecto_id" name="proyecto_id">
+          <option value="">Sin proyecto</option>
+          {% for proyecto in ficha.inscripciones %}
+          <option value="{{ proyecto.id }}" {% if formulario.proyecto_id == proyecto.id|string %}selected{% endif %}>{{ proyecto.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="fecha">Fecha</label>
+        <input id="fecha" name="fecha" type="date" max="{{ hoy }}" value="{{ formulario.fecha }}" required>
+      </div>
+      <div>
+        <label for="horas">Horas (de 0,5 a {{ maximo_dia }})</label>
+        <input id="horas" name="horas" type="number" min="0.5" max="{{ maximo_dia }}" step="0.5" value="{{ formulario.horas }}" required>
+      </div>
+    </div>
+    <label for="actividad">¿Qué hiciste?</label>
+    <textarea id="actividad" name="actividad" maxlength="300" required>{{ formulario.actividad }}</textarea>
+    <label for="evidencia">Evidencia</label>
+    <input id="evidencia" name="evidencia" maxlength="300" value="{{ formulario.evidencia }}" required>
+    <p class="ayuda">Describe la evidencia (planilla firmada, fotos, acta) o pega un enlace.</p>
+    {% if not ficha.inscripciones %}<p class="ayuda">Para registrar servicio social primero inscríbete en un proyecto.</p>{% endif %}
+    <div class="acciones"><button class="boton" type="submit">Registrar horas</button></div>
+  </form>
+
+  <div>
+    <div class="tarjeta">
+      <h2>Mis proyectos</h2>
+      {% if ficha.inscripciones %}
+      <ul class="lista">
+        {% for proyecto in ficha.inscripciones %}
+        <li>
+          <strong>{{ proyecto.nombre }}</strong>
+          <small class="gris bloque">{{ proyecto.lugar }} · Responsable: {{ proyecto.responsable }} · {{ proyecto.anio }}</small>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="gris">Todavía no estás inscrito en ningún proyecto de servicio social.</p>
+      {% endif %}
+    </div>
+
+    <div class="tarjeta">
+      <h2>Proyectos con cupos</h2>
+      {% if disponibles %}
+      <ul class="lista">
+        {% for proyecto in disponibles %}
+        <li class="proyecto-disponible">
+          <div>
+            <strong>{{ proyecto.nombre }}</strong>
+            <small class="gris bloque">{{ proyecto.lugar }}{% if proyecto.entidad_aliada %} · {{ proyecto.entidad_aliada }}{% endif %}</small>
+            <p class="descripcion-corta">{{ proyecto.descripcion }}</p>
+            <span class="estado neutro">{{ proyecto.libres }} cupos libres de {{ proyecto.cupos }}</span>
+          </div>
+          <form method="post">
+            <input type="hidden" name="accion" value="inscribir">
+            <input type="hidden" name="proyecto_id" value="{{ proyecto.id }}">
+            <button class="boton pequeno secundario" type="submit">Inscribirme</button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="gris">No hay otros proyectos con cupos disponibles en este momento.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% include "horas_registros.html" %}
+{% endif %}
+{% endblock %}

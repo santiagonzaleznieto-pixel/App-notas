@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block titulo %}Observador de {{ estudiante.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/observador.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  {% if volver %}<a class="volver" href="{{ volver.ruta }}">{{ volver.texto }}</a>{% endif %}
+  <h1>Observador de {{ estudiante.nombre }}</h1>
+  <p>{% if grupo %}Grupo {{ grupo.nombre }} · Director de grupo: {{ grupo.director or "sin asignar" }}{% else %}Sin matrícula activa este año{% endif %}</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}
+<div class="aviso error">
+  {% for error in errores %}<div>{{ error }}</div>{% endfor %}
+</div>
+{% endif %}
+
+{% if puede_ver and reservados %}
+<div class="reservado">
+  <strong>{% if reservados == 1 %}Hay un caso de convivencia{% else %}Hay {{ reservados }} casos de convivencia{% endif %} en manejo por coordinación.</strong>
+  <span>Para más información, comunícate con la coordinación del colegio.</span>
+</div>
+{% endif %}
+{% if not puede_ver %}
+<div class="aviso">Solo ves las anotaciones que tú escribiste. El director de grupo y la coordinación ven el observador completo.</div>
+{% endif %}
+
+<div class="{% if puede_anotar %}dos-columnas{% endif %}">
+  <div>
+    <div class="reparto-anotaciones">
+      <span class="chip-tipo positiva">Positivas: {{ conteo.positiva }}</span>
+      <span class="chip-tipo por-mejorar">Por mejorar: {{ conteo.por_mejorar }}</span>
+      <span class="chip-tipo situacion-1">Situaciones: {{ conteo.situacion }}</span>
+    </div>
+    {% if anotaciones %}
+    {% for observacion in anotaciones %}
+    <article class="anotacion {{ observacion.clase }}">
+      <div class="anotacion-cabeza">
+        <span class="chip-tipo {{ observacion.clase }}">{{ observacion.nombre_tipo }}</span>
+        {% if observacion.tipo == "situacion" %}
+        {% if observacion.estado == "abierta" %}<span class="estado atencion">Abierto</span>{% else %}<span class="estado neutro">Cerrado</span>{% endif %}
+        {% endif %}
+        {% if observacion.confidencial %}<span class="estado mal">Confidencial</span>{% endif %}
+        <span class="fecha">{{ observacion.fecha }} · {{ observacion.autor_nombre }}</span>
+      </div>
+      <p class="texto-largo">{{ observacion.descripcion }}</p>
+      {% if observacion.compromiso %}<p class="compromiso"><strong>Compromiso:</strong> {{ observacion.compromiso }}</p>{% endif %}
+      {% if observacion.abrir %}<a class="boton secundario pequeno" href="/observador/caso/{{ observacion.id }}">{% if observacion.tipo == "situacion" %}Ver caso y protocolo{% else %}Ver seguimientos{% endif %}</a>{% endif %}
+    </article>
+    {% endfor %}
+    {% else %}
+    <div class="tarjeta vacio"><p>No hay anotaciones para mostrar.</p></div>
+    {% endif %}
+  </div>
+
+  {% if puede_anotar %}
+  <form method="post" class="tarjeta formulario nueva-anotacion">
+    <h2>Nueva anotación</h2>
+    <label for="tipo">Tipo</label>
+    <select id="tipo" name="tipo">
+      {% for clave in ["positiva", "por_mejorar", "situacion"] %}
+      <option value="{{ clave }}"{% if valores.tipo == clave %} selected{% endif %}>{{ tipos[clave] }}</option>
+      {% endfor %}
+    </select>
+    <label for="situacion_tipo">Si es situación de convivencia</label>
+    <select id="situacion_tipo" name="situacion_tipo">
+      <option value="1"{% if valores.situacion_tipo == "1" %} selected{% endif %}>Tipo I</option>
+      {% if gestor %}
+      <option value="2"{% if valores.situacion_tipo == "2" %} selected{% endif %}>Tipo II</option>
+      <option value="3"{% if valores.situacion_tipo == "3" %} selected{% endif %}>Tipo III</option>
+      {% endif %}
+    </select>
+    <p class="ayuda">{% if gestor %}Tipo I: conflictos esporádicos sin daño al cuerpo o a la salud. Tipo II: agresión, acoso o ciberacoso repetido, o con daño sin incapacidad. Tipo III: posibles delitos.{% else %}Los docentes registran situaciones tipo I. Si es tipo II o III, informa de inmediato a coordinación.{% endif %}</p>
+    <label for="descripcion">Qué pasó</label>
+    <textarea id="descripcion" name="descripcion" maxlength="3000" required>{{ valores.descripcion }}</textarea>
+    <label for="compromiso">Compromiso (opcional)</label>
+    <textarea id="compromiso" name="compromiso" maxlength="1000" class="corta">{{ valores.compromiso }}</textarea>
+    {% if gestor %}
+    <div class="casillas">
+      <label for="confidencial"><input id="confidencial" type="checkbox" name="confidencial" value="1"{% if valores.confidencial == "1" %} checked{% endif %}> Confidencial (solo coordinación, rectoría y orientación)</label>
+    </div>
+    {% endif %}
+    <div class="acciones"><button class="boton" type="submit">Guardar anotación</button></div>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

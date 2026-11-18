@@ -1,0 +1,9 @@
+<fieldset class="grupo-casillas">
+  <legend>Roles</legend>
+  <div class="casillas">
+    {% for opcion in opciones_roles %}
+    <label class="{% if not opcion.permitido %}apagada{% endif %}"><input type="checkbox" name="roles" value="{{ opcion.rol }}"{% if opcion.rol in roles_marcados %} checked{% endif %}{% if not opcion.permitido %} disabled{% endif %}> {{ opcion.nombre }}</label>
+    {% endfor %}
+  </div>
+  {% if "administrador" not in yo.roles %}<p class="ayuda">Solo la administración puede dar los roles de Administración, Rectoría y Coordinación.</p>{% endif %}
+</fieldset>

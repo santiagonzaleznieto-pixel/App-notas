@@ -5,7 +5,11 @@
 <div class="encabezado">
   <a class="volver" href="/admin">← Administración</a>
   <h1>Grupos {{ colegio.anio }}</h1>
-  <p>Abre un grupo para {% if academico %}cambiar su director y asignar docentes por materia{% endif %}{% if academico and yo.roles|select("in", ["administrador", "secretaria"])|list %} o para {% endif %}{% if "administrador" in yo.roles or "secretaria" in yo.roles %}matricular, retirar o trasladar estudiantes{% endif %}.</p>
+  {% if academico %}
+  <p>Abre un grupo para cambiar su director, asignar docentes por materia y ver sus estudiantes.</p>
+  {% else %}
+  <p>Abre un grupo para matricular, retirar o trasladar estudiantes.</p>
+  {% endif %}
 </div>
 
 {% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}

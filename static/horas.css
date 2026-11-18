@@ -1,0 +1,36 @@
+.requisitos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 4px; }
+.requisito { border-top: 5px solid var(--verde); }
+.requisito.constitucional { border-top-color: var(--azul); }
+.requisito-cifra { margin-top: 6px; }
+.requisito-cifra strong { font-family: var(--titulos); font-size: 2.4rem; color: var(--azul-oscuro); line-height: 1.1; }
+.requisito-cifra small { color: var(--gris); }
+.requisito .barra-progreso { height: 12px; margin: 10px 0 12px; }
+.requisito .norma { font-size: .82rem; }
+.barra-progreso.constitucional div { background: linear-gradient(90deg, var(--azul), #5B84B1); }
+.barra-progreso.cupos { height: 6px; margin: 4px auto 0; max-width: 90px; }
+.barra-progreso.cupos div { background: var(--dorado); }
+.cumplido { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 12px; background: #F1F6F1; border-radius: 8px; }
+.cumplido a { font-weight: 600; text-decoration: none; }
+.cumplido a:hover { text-decoration: underline; }
+.horas-perfil { grid-template-columns: 1fr; }
+
+.celda-avance { min-width: 170px; }
+.celda-avance .barra-progreso { margin: 4px 0 0; height: 7px; }
+.celda-cupos { min-width: 110px; }
+.avance-linea { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px; font-size: .88rem; }
+
+.revisiones li { display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px 24px; align-items: start; }
+.revisiones p { margin: 4px 0; }
+.bloque-nombre { display: block; margin-top: 2px; }
+.revision-form label { margin-top: 0; }
+.evidencia { overflow-wrap: anywhere; }
+
+.proyecto-disponible { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.descripcion-corta { font-size: .86rem; margin: 6px 0; }
+.separado { margin-top: 20px; }
+
+@media (max-width: 800px) {
+  .revisiones li { grid-template-columns: 1fr; }
+  .proyecto-disponible { flex-direction: column; }
+  .requisito-cifra strong { font-size: 2rem; }
+}
