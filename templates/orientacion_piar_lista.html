@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block titulo %}PIAR{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/orientacion.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>PIAR</h1>
+  <p>Plan Individual de Ajustes Razonables (Decreto 1421 de 2017): cómo aprende el estudiante, qué barreras encuentra y qué ajustes hace cada docente en su materia.</p>
+</div>
+
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+{% if planes %}
+<section class="tarjeta">
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th class="izq">Estudiante</th><th>Año</th><th>Grupo</th><th>Materias con ajustes</th><th>Revisado por la familia</th></tr>
+      </thead>
+      <tbody>
+        {% for plan in planes %}
+        <tr>
+          <td class="izq"><a href="/piar/{{ plan.id }}">{{ plan.estudiante }}</a></td>
+          <td>{{ plan.anio }}</td>
+          <td>{{ plan.grupo }}</td>
+          <td>{{ plan.con_ajustes }} de {{ plan.materias }}</td>
+          <td>{% if plan.revisado_acudiente_en %}<span class="estado bien">{{ plan.revisado_acudiente_en[:10] }}</span>{% else %}<span class="estado atencion">Pendiente</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% else %}
+<div class="tarjeta vacio"><p>No hay PIAR para mostrarte.</p></div>
+{% endif %}
+
+{% if es_docente %}
+<a class="tarjeta modulo" href="/orientacion/remitir">
+  <h2>¿Un estudiante necesita orientación?</h2>
+  <p>Envía una remisión corta a orientación escolar desde la lista de tus grupos.</p>
+  <span class="ir">Pedir atención →</span>
+</a>
+{% endif %}
+
+{% if puede_crear %}
+<form method="post" class="tarjeta formulario" id="crear">
+  <h2>Crear PIAR {{ colegio.anio }}</h2>
+  {% if opciones %}
+  <label for="estudiante_id">Estudiante</label>
+  <select id="estudiante_id" name="estudiante_id" required>
+    <option value="">Elige al estudiante</option>
+    {% for grupo in opciones %}
+    <optgroup label="{{ grupo.nombre }}">
+      {% for estudiante in grupo.estudiantes %}
+      <option value="{{ estudiante.id }}" {% if formulario.estudiante_id == estudiante.id|string %}selected{% endif %}>{{ estudiante.nombre }}</option>
+      {% endfor %}
+    </optgroup>
+    {% endfor %}
+  </select>
+  <label for="descripcion_estudiante">Descripción del estudiante</label>
+  <textarea id="descripcion_estudiante" name="descripcion_estudiante" maxlength="3000" required>{{ formulario.descripcion_estudiante }}</textarea>
+  <p class="ayuda">Gustos, intereses, fortalezas y cómo aprende mejor.</p>
+  <label for="barreras">Barreras para el aprendizaje y la participación</label>
+  <textarea id="barreras" name="barreras" maxlength="3000">{{ formulario.barreras }}</textarea>
+  <label for="apoyos_familia">Compromisos y apoyos de la familia</label>
+  <textarea id="apoyos_familia" name="apoyos_familia" maxlength="3000">{{ formulario.apoyos_familia }}</textarea>
+  <div class="acciones"><button class="boton" type="submit">Crear PIAR</button></div>
+  {% else %}
+  <p class="gris">Todos los estudiantes matriculados ya tienen PIAR este año.</p>
+  {% endif %}
+</form>
+{% endif %}
+{% endblock %}

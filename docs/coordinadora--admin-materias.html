@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materias · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/admin.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="coordinadora--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Diana Lorena Betancur</strong>
+    <span>Coordinación</span>
+  </div>
+  <a class="boton-salir" href="coordinadora--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="coordinadora--inicio.html" class="">Inicio</a>
+    
+    <a href="coordinadora--grupos.html" class="">Grupos</a>
+    
+    <a href="coordinadora--indicadores.html" class="">Indicadores</a>
+    
+    <a href="coordinadora--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="coordinadora--circulares.html" class="">Circulares</a>
+    
+    <a href="coordinadora--agenda.html" class="">Agenda</a>
+    
+    <a href="coordinadora--asistencia.html" class="">Asistencia</a>
+    
+    <a href="coordinadora--observador.html" class="">Observador</a>
+    
+    <a href="coordinadora--convivencia.html" class="">Convivencia</a>
+    
+    <a href="coordinadora--horas.html" class="">Horas sociales</a>
+    
+    <a href="coordinadora--certificados.html" class="">Certificados</a>
+    
+    <a href="coordinadora--orientacion.html" class="">Orientación</a>
+    
+    <a href="coordinadora--piar.html" class="">PIAR</a>
+    
+    <a href="coordinadora--elecciones.html" class="">Elecciones</a>
+    
+    <a href="coordinadora--porteria.html" class="">Portería</a>
+    
+    <a href="coordinadora--admin.html" class="activa">Administración</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="coordinadora--admin.html">← Administración</a>
+  <h1>Materias</h1>
+  <p>El nombre corto aparece en las columnas del consolidado y del boletín. Las materias se asignan a cada grupo desde Grupos.</p>
+</div>
+
+
+
+
+<div class="tarjeta">
+  <h2>Plan de estudios</h2>
+  
+  <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario fila-edicion">
+    <input type="hidden" name="accion" value="editar">
+    <input type="hidden" name="materia_id" value="1">
+    <div>
+      <label for="nombre-1">Nombre</label>
+      <input id="nombre-1" name="nombre" value="Matemáticas" maxlength="80" required>
+    </div>
+    <div>
+      <label for="corto-1">Nombre corto</label>
+      <input id="corto-1" name="corto" value="Mat" maxlength="8" required>
+    </div>
+    <div>
+      <label for="area-1">Área</label>
+      <input id="area-1" name="area" value="Matemáticas" maxlength="60">
+    </div>
+    <button class="boton secundario" type="submit">Guardar</button>
+    <p class="ayuda">Asignada en 2 grupos de 2026</p>
+  </form>
+  
+  <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario fila-edicion">
+    <input type="hidden" name="accion" value="editar">
+    <input type="hidden" name="materia_id" value="2">
+    <div>
+      <label for="nombre-2">Nombre</label>
+      <input id="nombre-2" name="nombre" value="Lengua Castellana" maxlength="80" required>
+    </div>
+    <div>
+      <label for="corto-2">Nombre corto</label>
+      <input id="corto-2" name="corto" value="Cast" maxlength="8" required>
+    </div>
+    <div>
+      <label for="area-2">Área</label>
+      <input id="area-2" name="area" value="Humanidades" maxlength="60">
+    </div>
+    <button class="boton secundario" type="submit">Guardar</button>
+    <p class="ayuda">Asignada en 2 grupos de 2026</p>
+  </form>
+  
+  <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario fila-edicion">
+    <input type="hidden" name="accion" value="editar">
+    <input type="hidden" name="materia_id" value="3">
+    <div>
+      <label for="nombre-3">Nombre</label>
+      <input id="nombre-3" name="nombre" value="Inglés" maxlength="80" required>
+    </div>
+    <div>
+      <label for="corto-3">Nombre corto</label>
+      <input id="corto-3" name="corto" value="Ing" maxlength="8" required>
+    </div>
+    <div>
+      <label for="area-3">Área</label>
+      <input id="area-3" name="area" value="Humanidades" maxlength="60">
+    </div>
+    <button class="boton secundario" type="submit">Guardar</button>
+    <p class="ayuda">Asignada en 2 grupos de 2026</p>
+  </form>
+  
+  <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario fila-edicion">
+    <input type="hidden" name="accion" value="editar">
+    <input type="hidden" name="materia_id" value="4">
+    <div>
+      <label for="nombre-4">Nombre</label>
+      <input id="nombre-4" name="nombre" value="Ciencias Naturales" maxlength="80" required>
+    </div>
+    <div>
+      <label for="corto-4">Nombre corto</label>
+      <input id="corto-4" name="corto" value="Nat" maxlength="8" required>
+    </div>
+    <div>
+      <label for="area-4">Área</label>
+      <input id="area-4" name="area" value="Ciencias naturales" maxlength="60">
+    </div>
+    <button class="boton secundario" type="submit">Guardar</button>
+    <p class="ayuda">Asignada en 2 grupos de 2026</p>
+  </form>
+  
+  <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario fila-edicion">
+    <input type="hidden" name="accion" value="editar">
+    <input type="hidden" name="materia_id" value="5">
+    <div>
+      <label for="nombre-5">Nombre</label>
+      <input id="nombre-5" name="nombre" value="Ciencias Sociales" maxlength="80" required>
+    </div>
+    <div>
+      <label for="corto-5">Nombre corto</label>
+      <input id="corto-5" name="corto" value="Soc" maxlength="8" required>
+    </div>
+    <div>
+      <label for="area-5">Área</label>
+      <input id="area-5" name="area" value="Ciencias sociales" maxlength="60">
+    </div>
+    <button class="boton secundario" type="submit">Guardar</button>
+    <p class="ayuda">Asignada en 2 grupos de 2026</p>
+  </form>
+  
+  <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario fila-edicion">
+    <input type="hidden" name="accion" value="editar">
+    <input type="hidden" name="materia_id" value="6">
+    <div>
+      <label for="nombre-6">Nombre</label>
+      <input id="nombre-6" name="nombre" value="Filosofía" maxlength="80" required>
+    </div>
+    <div>
+      <label for="corto-6">Nombre corto</label>
+      <input id="corto-6" name="corto" value="Filo" maxlength="8" required>
+    </div>
+    <div>
+      <label for="area-6">Área</label>
+      <input id="area-6" name="area" value="Filosofía" maxlength="60">
+    </div>
+    <button class="boton secundario" type="submit">Guardar</button>
+    <p class="ayuda">Asignada en 2 grupos de 2026</p>
+  </form>
+  
+  <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario fila-edicion">
+    <input type="hidden" name="accion" value="editar">
+    <input type="hidden" name="materia_id" value="7">
+    <div>
+      <label for="nombre-7">Nombre</label>
+      <input id="nombre-7" name="nombre" value="Educación Física" maxlength="80" required>
+    </div>
+    <div>
+      <label for="corto-7">Nombre corto</label>
+      <input id="corto-7" name="corto" value="E.F." maxlength="8" required>
+    </div>
+    <div>
+      <label for="area-7">Área</label>
+      <input id="area-7" name="area" value="Educación física" maxlength="60">
+    </div>
+    <button class="boton secundario" type="submit">Guardar</button>
+    <p class="ayuda">Asignada en 2 grupos de 2026</p>
+  </form>
+  
+  <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario fila-edicion">
+    <input type="hidden" name="accion" value="editar">
+    <input type="hidden" name="materia_id" value="8">
+    <div>
+      <label for="nombre-8">Nombre</label>
+      <input id="nombre-8" name="nombre" value="Tecnología e Informática" maxlength="80" required>
+    </div>
+    <div>
+      <label for="corto-8">Nombre corto</label>
+      <input id="corto-8" name="corto" value="Tec" maxlength="8" required>
+    </div>
+    <div>
+      <label for="area-8">Área</label>
+      <input id="area-8" name="area" value="Tecnología e informática" maxlength="60">
+    </div>
+    <button class="boton secundario" type="submit">Guardar</button>
+    <p class="ayuda">Asignada en 2 grupos de 2026</p>
+  </form>
+  
+</div>
+
+<form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="tarjeta formulario">
+  <h2>Nueva materia</h2>
+  <input type="hidden" name="accion" value="crear">
+  <div class="rejilla">
+    <div>
+      <label for="nombre">Nombre</label>
+      <input id="nombre" name="nombre" value="" maxlength="80" placeholder="Ética y Valores" required>
+    </div>
+    <div>
+      <label for="corto">Nombre corto</label>
+      <input id="corto" name="corto" value="" maxlength="8" placeholder="Ética" required>
+    </div>
+    <div>
+      <label for="area">Área</label>
+      <input id="area" name="area" value="" maxlength="60" placeholder="Educación ética y valores humanos">
+    </div>
+  </div>
+  <div class="acciones"><button class="boton" type="submit">Crear materia</button></div>
+</form>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

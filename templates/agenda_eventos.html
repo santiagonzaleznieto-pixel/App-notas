@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block titulo %}Agenda{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/circulares.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Agenda {{ colegio.anio }}</h1>
+  <p>Fechas importantes del año escolar.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+{% if gestiona %}
+<details class="tarjeta nuevo-evento" {% if errores %}open{% endif %}>
+  <summary>Agregar un evento</summary>
+  <form method="post" class="formulario">
+    <label for="titulo">Nombre del evento</label>
+    <input id="titulo" name="titulo" maxlength="150" value="{{ formulario.titulo }}" required>
+    <div class="rejilla">
+      <div>
+        <label for="fecha">Fecha</label>
+        <input id="fecha" name="fecha" type="date" value="{{ formulario.fecha }}" required>
+      </div>
+      <div>
+        <label for="hora">Hora (opcional)</label>
+        <input id="hora" name="hora" type="time" value="{{ formulario.hora }}">
+      </div>
+      <div>
+        <label for="para">Para</label>
+        <select id="para" name="para">
+          {% for clave in para_eventos %}
+          <option value="{{ clave }}" {% if formulario.para == clave %}selected{% endif %}>{{ para_eventos[clave] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <label for="lugar">Lugar (opcional)</label>
+    <input id="lugar" name="lugar" maxlength="150" value="{{ formulario.lugar }}">
+    <label for="descripcion">Descripción (opcional)</label>
+    <textarea id="descripcion" name="descripcion" maxlength="2000">{{ formulario.descripcion }}</textarea>
+    <div class="acciones"><button class="boton" type="submit">Agregar a la agenda</button></div>
+  </form>
+</details>
+{% endif %}
+
+<div class="dos-columnas">
+  <section class="tarjeta">
+    <h2>Próximos eventos</h2>
+    {% if proximos %}
+    <ul class="lista eventos">
+      {% for evento in proximos %}
+      <li>
+        <div class="fecha-evento {% if evento.fecha == hoy %}hoy{% endif %}"><strong>{{ evento.fecha[8:10]|int }}</strong><span>{{ meses_cortos[evento.fecha[5:7]|int - 1] }}</span></div>
+        <div class="evento-cuerpo">
+          <strong>{{ evento.titulo }}</strong>
+          <span class="fecha bloque">{% if evento.fecha == hoy %}Hoy · {% endif %}{{ fecha_larga(evento.fecha)|capitalize }}{% if evento.hora %} · {{ hora_texto(evento.hora) }}{% endif %}</span>
+          {% if evento.lugar %}<span class="fecha bloque">{{ evento.lugar }}</span>{% endif %}
+          {% if evento.descripcion %}<p class="texto-largo">{{ evento.descripcion }}</p>{% endif %}
+          <span class="chip para-{{ evento.para }}">{{ para_eventos[evento.para] }}</span>
+          {% if gestiona %}
+          <form method="post" action="/agenda/{{ evento.id }}/borrar" class="evento-acciones" onsubmit="return confirm('¿Borrar este evento de la agenda?')">
+            <button class="boton peligro pequeno" type="submit">Borrar</button>
+          </form>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">No hay eventos próximos en la agenda.</p>
+    {% endif %}
+  </section>
+
+  <section class="tarjeta">
+    <h2>Ya pasaron este año</h2>
+    {% if pasados %}
+    <ul class="lista eventos">
+      {% for evento in pasados %}
+      <li>
+        <div class="fecha-evento pasado"><strong>{{ evento.fecha[8:10]|int }}</strong><span>{{ meses_cortos[evento.fecha[5:7]|int - 1] }}</span></div>
+        <div class="evento-cuerpo">
+          <strong>{{ evento.titulo }}</strong>
+          <span class="fecha bloque">{{ fecha_larga(evento.fecha)|capitalize }}{% if evento.hora %} · {{ hora_texto(evento.hora) }}{% endif %}</span>
+          <span class="chip para-{{ evento.para }}">{{ para_eventos[evento.para] }}</span>
+          {% if gestiona %}
+          <form method="post" action="/agenda/{{ evento.id }}/borrar" class="evento-acciones" onsubmit="return confirm('¿Borrar este evento de la agenda?')">
+            <button class="boton peligro pequeno" type="submit">Borrar</button>
+          </form>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">Todavía no hay eventos pasados este año.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

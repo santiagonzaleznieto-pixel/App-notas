@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block titulo %}Resultados · {{ eleccion.titulo }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/gobierno.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/elecciones">← Elecciones</a>
+  <span class="etiqueta">{{ nombres_cargos[eleccion.cargo] }}{% if eleccion.grupo %} · {{ eleccion.grupo }}{% endif %}</span>
+  <h1>Resultados · {{ eleccion.titulo }}</h1>
+  <p>{{ estados[eleccion.estado].texto }} · {{ eleccion.apertura }} a {{ eleccion.cierre }}</p>
+</div>
+
+{% if eleccion.estado != "cerrada" %}<p class="parcial">Para proteger el voto secreto, los votos solo se cuentan y se muestran cuando se cierra la votación. Mientras tanto se ve la participación.</p>{% endif %}
+{% if organiza and descuadre %}<div class="aviso error">Revisión: hay {{ participacion.votantes }} votantes y {{ resultado.total }} votos contados.</div>{% endif %}
+
+<div class="cifras">
+  {% if eleccion.estado == "cerrada" %}
+  <div class="tarjeta cifra">
+    <span>Votos contados</span>
+    <strong>{{ resultado.total }}</strong>
+  </div>
+  {% endif %}
+  <div class="tarjeta cifra">
+    <span>Participación</span>
+    <strong>{{ participacion.porcentaje }} %</strong>
+    <small>{{ participacion.votantes }} de {{ participacion.habilitados }} habilitados</small>
+  </div>
+  {% if eleccion.estado == "cerrada" %}
+  <div class="tarjeta cifra alerta">
+    <span>Voto en blanco</span>
+    <strong>{{ resultado.blanco }}</strong>
+    <small>{{ resultado.porcentaje_blanco }} % de los votos</small>
+  </div>
+  {% endif %}
+</div>
+
+{% if eleccion.estado == "cerrada" %}
+{% if resultado.ganador %}
+<div class="tarjeta ganador">
+  <span class="inicial">{{ resultado.ganador.nombre[0] }}</span>
+  <div>
+    <p class="gris">Ganó la elección</p>
+    <h2>{{ resultado.ganador.nombre }}</h2>
+    <p>N.º {{ resultado.ganador.numero }} · {{ resultado.ganador.votos }} votos ({{ resultado.ganador.porcentaje }} %)</p>
+  </div>
+</div>
+{% elif resultado.empate %}
+<div class="tarjeta"><p><strong>Empate.</strong> Los primeros candidatos tienen los mismos votos: el comité electoral define el desempate.</p></div>
+{% endif %}
+{% if resultado.blanco_gana %}<p class="parcial">El voto en blanco superó al candidato con más votos. El comité electoral decide si se repite la elección.</p>{% endif %}
+{% endif %}
+
+{% if eleccion.estado == "cerrada" %}
+<section class="tarjeta">
+  <h2>Votos por candidato</h2>
+  <ul class="resultados">
+    {% for fila in resultado.filas %}
+    <li class="resultado {% if resultado.ganador and fila.id == resultado.ganador.id and eleccion.estado == 'cerrada' %}gana{% endif %}">
+      <span class="inicial mediana">{{ fila.nombre[0] }}</span>
+      <div>
+        <strong>N.º {{ fila.numero }} · {{ fila.nombre }}</strong> <small class="gris">{{ fila.grupo }}</small>
+        <div class="barra-progreso" role="img" aria-label="{{ fila.porcentaje }} % de los votos"><div style="width: {{ fila.porcentaje }}%"></div></div>
+      </div>
+      <span class="votos"><strong>{{ fila.votos }}</strong><small>{{ fila.porcentaje }} %</small></span>
+    </li>
+    {% endfor %}
+    <li class="resultado blanco">
+      <span class="inicial mediana blanco">B</span>
+      <div>
+        <strong>Voto en blanco</strong>
+        <div class="barra-progreso" role="img" aria-label="{{ resultado.porcentaje_blanco }} % de los votos"><div style="width: {{ resultado.porcentaje_blanco }}%"></div></div>
+      </div>
+      <span class="votos"><strong>{{ resultado.blanco }}</strong><small>{{ resultado.porcentaje_blanco }} %</small></span>
+    </li>
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

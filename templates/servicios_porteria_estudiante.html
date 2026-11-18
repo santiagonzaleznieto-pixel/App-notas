@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block titulo %}Portería · {{ estudiante.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/servicios.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/porteria">← Portería</a>
+  <h1>Salida anticipada</h1>
+  <p>Revisa el documento de quien recoge y compáralo con la lista antes de dejar salir al estudiante.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="tarjeta perfil-corto">
+  <span class="inicial">{{ estudiante.nombre[0] }}</span>
+  <div>
+    <h2>{{ estudiante.nombre }}</h2>
+    <p class="gris">{% if grupo %}Grupo {{ grupo.nombre }} · {{ grupo.grado }} · Director de grupo: {{ grupo.director or "sin asignar" }}{% else %}Sin matrícula activa este año{% endif %}</p>
+  </div>
+</div>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Pueden recogerlo</h2>
+    {% if opciones %}
+    <ul class="lista">
+      {% for opcion in opciones %}
+      <li>
+        <strong>{{ opcion.nombre }}</strong>
+        <span class="gris bloque">{{ opcion.detalle }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="aviso error">No hay acudientes ni personas autorizadas registradas. Solo puede salir con autorización de coordinación.</p>
+    {% endif %}
+
+    <h2 class="espacio-arriba">Últimas salidas</h2>
+    {% if salidas %}
+    <ul class="lista">
+      {% for salida in salidas %}
+      <li>
+        <span class="fecha">{{ fecha_corta(salida.fecha) }} · {{ salida.hora }}</span>
+        <span class="bloque">{{ salida.motivo }} · con {{ salida.recogido_por }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">No tiene salidas anticipadas registradas.</p>
+    {% endif %}
+  </div>
+
+  <form method="post" class="tarjeta formulario">
+    <h2>Registrar salida</h2>
+    <label for="motivo">Motivo</label>
+    <input id="motivo" name="motivo" value="{{ datos.motivo }}" list="motivos" maxlength="200" required>
+    <datalist id="motivos">{% for motivo in motivos %}<option value="{{ motivo }}">{% endfor %}</datalist>
+
+    <fieldset class="grupo-opciones">
+      <legend>¿Quién lo recoge?</legend>
+      <div class="opciones">
+        {% for opcion in opciones %}
+        <label class="opcion">
+          <input type="radio" name="recoge" value="{{ opcion.valor }}" {% if datos.recoge == opcion.valor %}checked{% endif %} required>
+          <span><strong>{{ opcion.nombre }}</strong><small>{{ opcion.detalle }}</small></span>
+        </label>
+        {% endfor %}
+        <label class="opcion opcion-otro">
+          <input type="radio" name="recoge" value="otro" {% if datos.recoge == "otro" %}checked{% endif %} required>
+          <span><strong>Otra persona</strong><small>No está en la lista: requiere autorización del colegio.</small></span>
+        </label>
+      </div>
+    </fieldset>
+    <div class="rejilla">
+      <div>
+        <label for="otro_nombre">Nombre de la otra persona</label>
+        <input id="otro_nombre" name="otro_nombre" value="{{ datos.otro_nombre }}" maxlength="120">
+      </div>
+      <div>
+        <label for="otro_documento">Su documento</label>
+        <input id="otro_documento" name="otro_documento" value="{{ datos.otro_documento }}" maxlength="20">
+      </div>
+    </div>
+    <p class="ayuda">Llénalos solo si elegiste «Otra persona».</p>
+
+    <label for="autorizado_por">¿Quién autorizó la salida en el colegio?</label>
+    <select id="autorizado_por" name="autorizado_por" required>
+      <option value="">Elige a la persona</option>
+      {% for persona in autorizan %}
+      <option value="{{ persona.id }}" {% if datos.autorizado_por == persona.id|string %}selected{% endif %}>{{ persona.nombre }} · {{ persona.rol }}</option>
+      {% endfor %}
+    </select>
+    <div class="acciones"><button class="boton" type="submit">Registrar salida</button></div>
+  </form>
+</div>
+{% endblock %}

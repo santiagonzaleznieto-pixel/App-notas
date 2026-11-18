@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block titulo %}Observador{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/observador.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Observador del estudiante</h1>
+  <p>Busca a un estudiante para ver su observador o escribir una anotación. Las situaciones de convivencia siguen la Ley 1620 de 2013 y el Decreto 1965 de 2013.</p>
+</div>
+
+<form method="get" class="tarjeta filtros formulario">
+  <div>
+    <label for="q">Nombre del estudiante</label>
+    <input id="q" name="q" value="{{ texto }}" placeholder="Ej.: Melany">
+  </div>
+  <div>
+    <label for="grupo">Grupo</label>
+    <select id="grupo" name="grupo">
+      <option value="">Todos mis grupos</option>
+      {% for grupo in grupos %}
+      <option value="{{ grupo.id }}"{% if grupo_elegido == grupo.id|string %} selected{% endif %}>{{ grupo.nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button class="boton" type="submit">Buscar</button>
+</form>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Estudiantes</h2>
+    {% if not grupos %}
+    <p class="gris">No tienes grupos asignados este año.</p>
+    {% elif not mostrar %}
+    <p class="gris">Tienes {{ total }} estudiantes. Escribe un nombre o elige un grupo.</p>
+    {% elif estudiantes %}
+    <div class="tabla-caja">
+      <table class="tabla simple">
+        <thead><tr><th class="izq">Estudiante</th><th>Grupo</th></tr></thead>
+        <tbody>
+          {% for estudiante in estudiantes %}
+          <tr>
+            <td class="izq"><a href="/observador/estudiante/{{ estudiante.id }}">{{ estudiante.nombre }}</a></td>
+            <td>{{ estudiante.grupo }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if total > estudiantes|length %}<p class="gris nota-pequena">Se muestran {{ estudiantes|length }} de {{ total }}. Afina la búsqueda.</p>{% endif %}
+    {% else %}
+    <p class="gris">Ningún estudiante coincide con la búsqueda.</p>
+    {% endif %}
+  </div>
+
+  <div class="tarjeta">
+    <h2>Últimas anotaciones</h2>
+    {% if recientes %}
+    <ul class="lista">
+      {% for observacion in recientes %}
+      <li>
+        <div class="anotacion-cabeza">
+          <span class="chip-tipo {{ observacion.clase }}">{{ observacion.nombre_tipo }}</span>
+          {% if observacion.confidencial %}<span class="estado mal">Confidencial</span>{% endif %}
+          <span class="fecha">{{ observacion.fecha }}</span>
+        </div>
+        <a class="enlace-fuerte" href="/observador/estudiante/{{ observacion.estudiante_id }}">{{ observacion.estudiante_nombre }}</a>
+        <p class="resumen-texto">{{ observacion.descripcion|truncate(140) }}</p>
+        <span class="fecha">Por {{ observacion.autor_nombre }}{% if observacion.abrir and observacion.tipo == "situacion" %} · <a href="/observador/caso/{{ observacion.id }}">Ver caso</a>{% endif %}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">Todavía no hay anotaciones que puedas ver.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

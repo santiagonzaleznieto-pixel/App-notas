@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block titulo %}Enfermería{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/servicios.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Enfermería</h1>
+  <p>Hoy, {{ fecha_corta(hoy) }}. Busca al estudiante para ver su ficha de salud y registrar la atención.</p>
+</div>
+
+<div class="aviso-privado">Datos de salud: información sensible (Ley 1581 de 2012). Solo la enfermería y el acudiente pueden verlos. Úsalos únicamente para atender al estudiante.</div>
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Atenciones de hoy</span>
+    <strong>{{ atenciones|length }}</strong>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Enviados a casa hoy</span>
+    <strong>{{ enviados }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Fichas de salud registradas</span>
+    <strong>{{ fichas }}</strong>
+  </div>
+</div>
+
+<div class="tarjeta">
+  <h2>Buscar estudiante</h2>
+  <form method="get" action="/enfermeria" class="filtros" role="search">
+    <div>
+      <label for="buscar">Nombre, usuario o documento</label>
+      <input id="buscar" name="buscar" value="{{ buscar }}" placeholder="Ej.: Melany" autocomplete="off">
+    </div>
+    <button class="boton" type="submit">Buscar</button>
+  </form>
+  {% if resultados %}
+  <ul class="lista resultados">
+    {% for estudiante in resultados %}
+    <li>
+      <a class="resultado" href="/enfermeria/estudiante/{{ estudiante.id }}">
+        <span class="inicial pequena">{{ estudiante.nombre[0] }}</span>
+        <span>
+          <strong>{{ estudiante.nombre }}</strong>
+          <small class="gris bloque">{% if estudiante.grupo %}Grupo {{ estudiante.grupo }}{% else %}Sin matrícula activa{% endif %}</small>
+          {% if estudiante.alerta %}<em class="estado mal">Alergias</em>{% endif %}
+        </span>
+        <span class="ir">Ver ficha →</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% elif buscar %}
+  <p class="gris">No encontramos estudiantes con «{{ buscar }}».</p>
+  {% endif %}
+</div>
+
+<div class="tarjeta">
+  <h2>Atenciones de hoy</h2>
+  {% if atenciones %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead><tr><th>Hora</th><th class="izq">Estudiante</th><th class="izq">Motivo</th><th>A casa</th></tr></thead>
+      <tbody>
+        {% for atencion in atenciones %}
+        <tr>
+          <td class="hora">{{ atencion.hora }}</td>
+          <td class="izq"><a href="/enfermeria/estudiante/{{ atencion.estudiante_id }}">{{ atencion.estudiante }}</a>{% if atencion.grupo %} <small class="gris">{{ atencion.grupo }}</small>{% endif %}</td>
+          <td class="izq">{{ atencion.motivo }}</td>
+          <td>{% if atencion.envio_a_casa %}<span class="estado atencion">Sí</span>{% else %}<span class="estado neutro">No</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="gris">Todavía no hay atenciones registradas hoy.</p>
+  {% endif %}
+</div>
+{% endblock %}

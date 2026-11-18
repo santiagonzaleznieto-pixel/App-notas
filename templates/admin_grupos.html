@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block titulo %}Grupos{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/admin">← Administración</a>
+  <h1>Grupos {{ colegio.anio }}</h1>
+  {% if academico %}
+  <p>Abre un grupo para cambiar su director, asignar docentes por materia y ver sus estudiantes.</p>
+  {% else %}
+  <p>Abre un grupo para matricular, retirar o trasladar estudiantes.</p>
+  {% endif %}
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="tarjeta">
+  {% if grupos %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th class="izq">Grupo</th><th class="izq">Sede</th><th class="izq">Director de grupo</th><th>Estudiantes</th><th>Materias</th></tr>
+      </thead>
+      <tbody>
+        {% for grupo in grupos %}
+        <tr>
+          <td class="izq"><a href="/admin/grupos/{{ grupo.id }}">{{ grupo.nombre }}</a> <small class="gris">{{ grupo.grado }}</small></td>
+          <td class="izq">{{ grupo.sede }}</td>
+          <td class="izq">{% if grupo.director %}{{ grupo.director }}{% else %}<span class="estado atencion">Sin director</span>{% endif %}</td>
+          <td>{{ grupo.estudiantes }}</td>
+          <td>{{ grupo.materias }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="vacio">Todavía no hay grupos en {{ colegio.anio }}.</p>
+  {% endif %}
+</div>
+
+{% if academico %}
+<form method="post" class="tarjeta formulario">
+  <h2>Nuevo grupo</h2>
+  <input type="hidden" name="accion" value="crear">
+  <div class="rejilla">
+    <div>
+      <label for="grado_id">Grado</label>
+      <select id="grado_id" name="grado_id" required>
+        <option value="">Elige el grado</option>
+        {% for grado in grados %}<option value="{{ grado.id }}" {% if grado.id|string == nuevo.grado_id %}selected{% endif %}>{{ grado.nombre }} · {{ grado.nivel }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="nombre">Nombre del grupo</label>
+      <input id="nombre" name="nombre" value="{{ nuevo.nombre }}" maxlength="20" placeholder="6-A" required>
+    </div>
+    <div>
+      <label for="sede_id">Sede</label>
+      <select id="sede_id" name="sede_id" required>
+        {% for sede in sedes %}<option value="{{ sede.id }}" {% if sede.id|string == nuevo.sede_id %}selected{% endif %}>{{ sede.nombre }} · {{ sede.jornada }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="director_id">Director de grupo</label>
+      <select id="director_id" name="director_id">
+        <option value="">Sin director por ahora</option>
+        {% for docente in docentes %}<option value="{{ docente.id }}" {% if docente.id|string == nuevo.director_id %}selected{% endif %}>{{ docente.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="acciones"><button class="boton" type="submit">Crear grupo</button></div>
+</form>
+{% endif %}
+{% endblock %}

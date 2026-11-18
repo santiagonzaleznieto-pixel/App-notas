@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block titulo %}Estado de cuenta de {{ estudiante.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/tesoreria.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  {% if ve_tesoreria %}<a class="volver" href="/tesoreria{% if grupo %}?grupo={{ grupo.id }}{% endif %}">← Tesorería</a>{% else %}<a class="volver" href="/mis-pagos">← Pagos</a>{% endif %}
+  <h1>Estado de cuenta</h1>
+  <p>{{ estudiante.nombre }} · {% if grupo %}Grupo {{ grupo.nombre }}{% else %}Sin matrícula activa este año{% endif %} · {{ colegio.nombre }}</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}{% if recibo_nuevo %} <a href="/tesoreria/recibo/{{ recibo_nuevo }}">Ver e imprimir el recibo</a>{% endif %}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="resumen-cuenta">
+  <div><span>Total cobrado</span><strong>{{ pesos(cuenta.cobrado) }}</strong></div>
+  <div><span>Pagado</span><strong>{{ pesos(cuenta.pagado) }}</strong></div>
+  <div><span>Descuentos</span><strong>{{ pesos(cuenta.descontado) }}</strong></div>
+  <div class="{% if cuenta.saldo > 0 %}rojo{% endif %}"><span>Saldo pendiente</span><strong>{{ pesos(cuenta.saldo) }}</strong></div>
+  <div class="{% if cuenta.vencido > 0 %}rojo{% endif %}"><span>Vencido</span><strong>{{ pesos(cuenta.vencido) }}</strong></div>
+</div>
+
+<div class="botonera">
+  <a class="boton secundario" href="/tesoreria/paz-y-salvo/{{ estudiante.id }}">{% if cuenta.saldo == 0 %}Ver paz y salvo{% else %}Ver qué falta para el paz y salvo{% endif %}</a>
+</div>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Cobros</h2>
+    {% include "tesoreria_cobros.html" %}
+  </div>
+
+  <div>
+    {% if ve_tesoreria %}
+    <div class="tarjeta">
+      <h2>Acudientes</h2>
+      {% if acudientes %}
+      <ul class="contactos">
+        {% for acudiente in acudientes %}
+        <li><strong>{{ acudiente.nombre }}</strong> ({{ acudiente.parentesco }}) · {% if acudiente.telefono %}<a href="tel:{{ acudiente.telefono }}">{{ acudiente.telefono }}</a>{% else %}<span class="gris">sin teléfono registrado</span>{% endif %}{% if acudiente.correo %} · {{ acudiente.correo }}{% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="gris">Este estudiante no tiene acudientes registrados.</p>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if puede_cobrar %}
+    <form method="post" class="tarjeta formulario">
+      <h2>Registrar pago</h2>
+      <input type="hidden" name="accion" value="pago">
+      {% if cuenta.pendientes %}
+      <label for="cobro_pago">Cobro</label>
+      <select id="cobro_pago" name="cobro_id" required>
+        {% for cobro in cuenta.pendientes %}<option value="{{ cobro.id }}">{{ cobro.descripcion }} · saldo {{ pesos(cobro.saldo) }}</option>{% endfor %}
+      </select>
+      <div class="rejilla">
+        <div>
+          <label for="valor_pago">Valor recibido (pesos)</label>
+          <input id="valor_pago" name="valor" inputmode="numeric" required placeholder="320.000">
+        </div>
+        <div>
+          <label for="fecha_pago">Fecha del pago</label>
+          <input id="fecha_pago" name="fecha" type="date" value="{{ hoy }}" max="{{ hoy }}" required>
+        </div>
+      </div>
+      <div class="rejilla">
+        <div>
+          <label for="medio">Medio de pago</label>
+          <select id="medio" name="medio">
+            {% for clave in medios %}<option value="{{ clave }}">{{ medios[clave] }}</option>{% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="referencia">Referencia o comprobante</label>
+          <input id="referencia" name="referencia" maxlength="60" placeholder="Obligatoria si no es efectivo">
+        </div>
+      </div>
+      <div class="acciones"><button class="boton" type="submit">Registrar pago y generar recibo</button></div>
+      {% else %}
+      <p class="gris">No hay cobros pendientes.</p>
+      {% endif %}
+    </form>
+    {% endif %}
+
+    {% if puede_descontar %}
+    <form method="post" class="tarjeta formulario">
+      <h2>Autorizar descuento</h2>
+      <input type="hidden" name="accion" value="descuento">
+      {% if cuenta.pendientes %}
+      <label for="cobro_descuento">Cobro</label>
+      <select id="cobro_descuento" name="cobro_id" required>
+        {% for cobro in cuenta.pendientes %}<option value="{{ cobro.id }}">{{ cobro.descripcion }} · saldo {{ pesos(cobro.saldo) }}</option>{% endfor %}
+      </select>
+      <label for="valor_descuento">Valor del descuento (pesos)</label>
+      <input id="valor_descuento" name="valor" inputmode="numeric" required placeholder="32.000">
+      <label for="motivo_descuento">Motivo</label>
+      <input id="motivo_descuento" name="motivo" maxlength="200" required placeholder="Ej.: Beca aprobada en el Acta 10 del Consejo Directivo">
+      <div class="acciones"><button class="boton secundario" type="submit">Autorizar descuento</button></div>
+      {% else %}
+      <p class="gris">No hay cobros pendientes.</p>
+      {% endif %}
+    </form>
+    {% endif %}
+
+    {% if puede_cobrar and anulables %}
+    <form method="post" class="tarjeta formulario">
+      <h2>Anular un cobro</h2>
+      <input type="hidden" name="accion" value="anular">
+      <p class="gris">Solo se pueden anular cobros sin pagos, por ejemplo si el estudiante se retiró o el cobro se generó por error.</p>
+      <label for="cobro_anular">Cobro</label>
+      <select id="cobro_anular" name="cobro_id" required>
+        {% for cobro in anulables %}<option value="{{ cobro.id }}">{{ cobro.descripcion }} · {{ pesos(cobro.valor) }}</option>{% endfor %}
+      </select>
+      <label for="motivo_anular">Motivo de la anulación</label>
+      <input id="motivo_anular" name="motivo" maxlength="200" required placeholder="Ej.: El estudiante se retiró el 30 de octubre">
+      <div class="acciones"><button class="boton peligro" type="submit">Anular cobro</button></div>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

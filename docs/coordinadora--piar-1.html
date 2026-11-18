@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIAR · Kevin Stiven Largo · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/orientacion.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="coordinadora--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Diana Lorena Betancur</strong>
+    <span>Coordinación</span>
+  </div>
+  <a class="boton-salir" href="coordinadora--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="coordinadora--inicio.html" class="">Inicio</a>
+    
+    <a href="coordinadora--grupos.html" class="">Grupos</a>
+    
+    <a href="coordinadora--indicadores.html" class="">Indicadores</a>
+    
+    <a href="coordinadora--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="coordinadora--circulares.html" class="">Circulares</a>
+    
+    <a href="coordinadora--agenda.html" class="">Agenda</a>
+    
+    <a href="coordinadora--asistencia.html" class="">Asistencia</a>
+    
+    <a href="coordinadora--observador.html" class="">Observador</a>
+    
+    <a href="coordinadora--convivencia.html" class="">Convivencia</a>
+    
+    <a href="coordinadora--horas.html" class="">Horas sociales</a>
+    
+    <a href="coordinadora--certificados.html" class="">Certificados</a>
+    
+    <a href="coordinadora--orientacion.html" class="">Orientación</a>
+    
+    <a href="coordinadora--piar.html" class="activa">PIAR</a>
+    
+    <a href="coordinadora--elecciones.html" class="">Elecciones</a>
+    
+    <a href="coordinadora--porteria.html" class="">Portería</a>
+    
+    <a href="coordinadora--admin.html" class="">Administración</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="coordinadora--piar.html">← PIAR</a>
+  <h1>PIAR 2026 · Kevin Stiven Largo</h1>
+  <p>Grupo 11-A · Once · Elaborado por Natalia Giraldo Ruiz el 2026-02-20</p>
+</div>
+
+<p class="confidencial"><strong>Documento reservado.</strong> Solo lo ven orientación, coordinación, los docentes del grupo, el estudiante y su familia (Decreto 1421 de 2017 y Ley 1581 de 2012).</p>
+
+
+
+
+<section class="tarjeta">
+  <h2>Información del estudiante</h2>
+  
+  <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario">
+    <input type="hidden" name="accion" value="general">
+    <label for="descripcion_estudiante">Descripción del estudiante</label>
+    <textarea id="descripcion_estudiante" name="descripcion_estudiante" maxlength="3000" required>Kevin es respetuoso, colaborador y muy hábil para el dibujo y el fútbol. Aprende mejor con ejemplos concretos, apoyos visuales y trabajo en parejas.</textarea>
+    <p class="ayuda">Gustos, intereses, fortalezas y cómo aprende mejor.</p>
+    <label for="barreras">Barreras para el aprendizaje y la participación</label>
+    <textarea id="barreras" name="barreras" maxlength="3000">Dificultad para comprender textos largos y para el cálculo de varios pasos. Se distrae con el ruido y necesita más tiempo para terminar las evaluaciones escritas.</textarea>
+    <label for="apoyos_familia">Compromisos y apoyos de la familia</label>
+    <textarea id="apoyos_familia" name="apoyos_familia" maxlength="3000">La familia revisa la agenda todos los días, acompaña media hora de tareas en casa y asiste a las citas de seguimiento con orientación.</textarea>
+    <div class="acciones"><button class="boton" type="submit">Guardar información</button></div>
+  </form>
+  
+</section>
+
+<section class="tarjeta">
+  <h2>Ajustes por materia</h2>
+  <p class="gris">Cada docente registra el objetivo, los ajustes razonables, cómo evalúa y el seguimiento de su materia.</p>
+  
+  
+  <article class="fila-piar editable">
+    <div class="fila-titulo">
+      <h3>Matemáticas</h3>
+      <span class="gris">Claudia Isabel Muñoz</span>
+    </div>
+    
+    
+    <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario">
+      <input type="hidden" name="accion" value="ajuste">
+      <input type="hidden" name="materia_id" value="1">
+      <div class="rejilla">
+        <div>
+          <label for="objetivo-1">Objetivo</label>
+          <textarea id="objetivo-1" name="objetivo" maxlength="2000" required>Resolver problemas de funciones y proporcionalidad con apoyo de material concreto.</textarea>
+        </div>
+        <div>
+          <label for="ajustes-1">Ajustes razonables</label>
+          <textarea id="ajustes-1" name="ajustes" maxlength="2000" required>Ubicarlo cerca del tablero, entregar guías con pasos numerados, permitir tabla de multiplicar y calculadora en problemas de varios pasos y dividir los talleres largos en partes cortas.</textarea>
+        </div>
+        <div>
+          <label for="evaluacion-1">Evaluación</label>
+          <textarea id="evaluacion-1" name="evaluacion" maxlength="2000">Evaluaciones más cortas con 30 % más de tiempo, preguntas leídas en voz alta y valoración del procedimiento.</textarea>
+        </div>
+        <div>
+          <label for="seguimiento-1">Seguimiento</label>
+          <textarea id="seguimiento-1" name="seguimiento" maxlength="2000">Tercer período: mejoró al plantear ecuaciones; aún necesita apoyo en problemas de varios pasos.</textarea>
+        </div>
+      </div>
+      <div class="acciones"><button class="boton pequeno" type="submit">Guardar Matemáticas</button></div>
+    </form>
+    
+    <p class="fecha">Actualizado por Claudia Isabel Muñoz el 2026-09-18 15:40</p>
+  </article>
+  
+  <article class="fila-piar editable">
+    <div class="fila-titulo">
+      <h3>Lengua Castellana</h3>
+      <span class="gris">Álvaro Trejos</span>
+    </div>
+    
+    
+    <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario">
+      <input type="hidden" name="accion" value="ajuste">
+      <input type="hidden" name="materia_id" value="2">
+      <div class="rejilla">
+        <div>
+          <label for="objetivo-2">Objetivo</label>
+          <textarea id="objetivo-2" name="objetivo" maxlength="2000" required>Identificar la idea principal y las ideas secundarias en textos argumentativos cortos.</textarea>
+        </div>
+        <div>
+          <label for="ajustes-2">Ajustes razonables</label>
+          <textarea id="ajustes-2" name="ajustes" maxlength="2000" required>Textos de máximo una página con el vocabulario clave resaltado, organizadores gráficos y lectura en pareja con un compañero tutor.</textarea>
+        </div>
+        <div>
+          <label for="evaluacion-2">Evaluación</label>
+          <textarea id="evaluacion-2" name="evaluacion" maxlength="2000">Opción de responder de forma oral, preguntas de selección y rúbrica conocida antes de la evaluación.</textarea>
+        </div>
+        <div>
+          <label for="seguimiento-2">Seguimiento</label>
+          <textarea id="seguimiento-2" name="seguimiento" maxlength="2000">Participa más en la lectura en voz alta y avanza en los resúmenes con organizadores gráficos.</textarea>
+        </div>
+      </div>
+      <div class="acciones"><button class="boton pequeno" type="submit">Guardar Lengua Castellana</button></div>
+    </form>
+    
+    <p class="fecha">Actualizado por Álvaro Trejos el 2026-09-20 11:05</p>
+  </article>
+  
+  <article class="fila-piar editable">
+    <div class="fila-titulo">
+      <h3>Inglés</h3>
+      <span class="gris">Sebastián Londoño</span>
+    </div>
+    
+    
+    <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario">
+      <input type="hidden" name="accion" value="ajuste">
+      <input type="hidden" name="materia_id" value="3">
+      <div class="rejilla">
+        <div>
+          <label for="objetivo-3">Objetivo</label>
+          <textarea id="objetivo-3" name="objetivo" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="ajustes-3">Ajustes razonables</label>
+          <textarea id="ajustes-3" name="ajustes" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="evaluacion-3">Evaluación</label>
+          <textarea id="evaluacion-3" name="evaluacion" maxlength="2000"></textarea>
+        </div>
+        <div>
+          <label for="seguimiento-3">Seguimiento</label>
+          <textarea id="seguimiento-3" name="seguimiento" maxlength="2000"></textarea>
+        </div>
+      </div>
+      <div class="acciones"><button class="boton pequeno" type="submit">Guardar Inglés</button></div>
+    </form>
+    
+    
+  </article>
+  
+  <article class="fila-piar editable">
+    <div class="fila-titulo">
+      <h3>Ciencias Naturales</h3>
+      <span class="gris">Sandra Milena Grajales</span>
+    </div>
+    
+    
+    <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario">
+      <input type="hidden" name="accion" value="ajuste">
+      <input type="hidden" name="materia_id" value="4">
+      <div class="rejilla">
+        <div>
+          <label for="objetivo-4">Objetivo</label>
+          <textarea id="objetivo-4" name="objetivo" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="ajustes-4">Ajustes razonables</label>
+          <textarea id="ajustes-4" name="ajustes" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="evaluacion-4">Evaluación</label>
+          <textarea id="evaluacion-4" name="evaluacion" maxlength="2000"></textarea>
+        </div>
+        <div>
+          <label for="seguimiento-4">Seguimiento</label>
+          <textarea id="seguimiento-4" name="seguimiento" maxlength="2000"></textarea>
+        </div>
+      </div>
+      <div class="acciones"><button class="boton pequeno" type="submit">Guardar Ciencias Naturales</button></div>
+    </form>
+    
+    
+  </article>
+  
+  <article class="fila-piar editable">
+    <div class="fila-titulo">
+      <h3>Ciencias Sociales</h3>
+      <span class="gris">Hernán Darío Aguirre</span>
+    </div>
+    
+    
+    <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario">
+      <input type="hidden" name="accion" value="ajuste">
+      <input type="hidden" name="materia_id" value="5">
+      <div class="rejilla">
+        <div>
+          <label for="objetivo-5">Objetivo</label>
+          <textarea id="objetivo-5" name="objetivo" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="ajustes-5">Ajustes razonables</label>
+          <textarea id="ajustes-5" name="ajustes" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="evaluacion-5">Evaluación</label>
+          <textarea id="evaluacion-5" name="evaluacion" maxlength="2000"></textarea>
+        </div>
+        <div>
+          <label for="seguimiento-5">Seguimiento</label>
+          <textarea id="seguimiento-5" name="seguimiento" maxlength="2000"></textarea>
+        </div>
+      </div>
+      <div class="acciones"><button class="boton pequeno" type="submit">Guardar Ciencias Sociales</button></div>
+    </form>
+    
+    
+  </article>
+  
+  <article class="fila-piar editable">
+    <div class="fila-titulo">
+      <h3>Filosofía</h3>
+      <span class="gris">Hernán Darío Aguirre</span>
+    </div>
+    
+    
+    <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario">
+      <input type="hidden" name="accion" value="ajuste">
+      <input type="hidden" name="materia_id" value="6">
+      <div class="rejilla">
+        <div>
+          <label for="objetivo-6">Objetivo</label>
+          <textarea id="objetivo-6" name="objetivo" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="ajustes-6">Ajustes razonables</label>
+          <textarea id="ajustes-6" name="ajustes" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="evaluacion-6">Evaluación</label>
+          <textarea id="evaluacion-6" name="evaluacion" maxlength="2000"></textarea>
+        </div>
+        <div>
+          <label for="seguimiento-6">Seguimiento</label>
+          <textarea id="seguimiento-6" name="seguimiento" maxlength="2000"></textarea>
+        </div>
+      </div>
+      <div class="acciones"><button class="boton pequeno" type="submit">Guardar Filosofía</button></div>
+    </form>
+    
+    
+  </article>
+  
+  <article class="fila-piar editable">
+    <div class="fila-titulo">
+      <h3>Educación Física</h3>
+      <span class="gris">Wilmar Tapasco</span>
+    </div>
+    
+    
+    <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario">
+      <input type="hidden" name="accion" value="ajuste">
+      <input type="hidden" name="materia_id" value="7">
+      <div class="rejilla">
+        <div>
+          <label for="objetivo-7">Objetivo</label>
+          <textarea id="objetivo-7" name="objetivo" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="ajustes-7">Ajustes razonables</label>
+          <textarea id="ajustes-7" name="ajustes" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="evaluacion-7">Evaluación</label>
+          <textarea id="evaluacion-7" name="evaluacion" maxlength="2000"></textarea>
+        </div>
+        <div>
+          <label for="seguimiento-7">Seguimiento</label>
+          <textarea id="seguimiento-7" name="seguimiento" maxlength="2000"></textarea>
+        </div>
+      </div>
+      <div class="acciones"><button class="boton pequeno" type="submit">Guardar Educación Física</button></div>
+    </form>
+    
+    
+  </article>
+  
+  <article class="fila-piar editable">
+    <div class="fila-titulo">
+      <h3>Tecnología e Informática</h3>
+      <span class="gris">Julián Estrada</span>
+    </div>
+    
+    
+    <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario">
+      <input type="hidden" name="accion" value="ajuste">
+      <input type="hidden" name="materia_id" value="8">
+      <div class="rejilla">
+        <div>
+          <label for="objetivo-8">Objetivo</label>
+          <textarea id="objetivo-8" name="objetivo" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="ajustes-8">Ajustes razonables</label>
+          <textarea id="ajustes-8" name="ajustes" maxlength="2000" required></textarea>
+        </div>
+        <div>
+          <label for="evaluacion-8">Evaluación</label>
+          <textarea id="evaluacion-8" name="evaluacion" maxlength="2000"></textarea>
+        </div>
+        <div>
+          <label for="seguimiento-8">Seguimiento</label>
+          <textarea id="seguimiento-8" name="seguimiento" maxlength="2000"></textarea>
+        </div>
+      </div>
+      <div class="acciones"><button class="boton pequeno" type="submit">Guardar Tecnología e Informática</button></div>
+    </form>
+    
+    
+  </article>
+  
+  
+</section>
+
+<section class="tarjeta revision">
+  <h2>Revisión de la familia</h2>
+  
+  <p><span class="estado atencion">Pendiente</span> La familia aún no confirma que revisó el PIAR.</p>
+  
+  
+</section>
+
+<div class="acciones">
+  <button class="boton secundario" type="button" onclick="window.print()">Imprimir PIAR</button>
+</div>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

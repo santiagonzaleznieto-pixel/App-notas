@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indicadores · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/tablero.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="coordinadora--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Diana Lorena Betancur</strong>
+    <span>Coordinación</span>
+  </div>
+  <a class="boton-salir" href="coordinadora--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="coordinadora--inicio.html" class="">Inicio</a>
+    
+    <a href="coordinadora--grupos.html" class="">Grupos</a>
+    
+    <a href="coordinadora--indicadores.html" class="activa">Indicadores</a>
+    
+    <a href="coordinadora--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="coordinadora--circulares.html" class="">Circulares</a>
+    
+    <a href="coordinadora--agenda.html" class="">Agenda</a>
+    
+    <a href="coordinadora--asistencia.html" class="">Asistencia</a>
+    
+    <a href="coordinadora--observador.html" class="">Observador</a>
+    
+    <a href="coordinadora--convivencia.html" class="">Convivencia</a>
+    
+    <a href="coordinadora--horas.html" class="">Horas sociales</a>
+    
+    <a href="coordinadora--certificados.html" class="">Certificados</a>
+    
+    <a href="coordinadora--orientacion.html" class="">Orientación</a>
+    
+    <a href="coordinadora--piar.html" class="">PIAR</a>
+    
+    <a href="coordinadora--elecciones.html" class="">Elecciones</a>
+    
+    <a href="coordinadora--porteria.html" class="">Portería</a>
+    
+    <a href="coordinadora--admin.html" class="">Administración</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <h1>Indicadores 2026</h1>
+  <p>Promedios acumulados del año con los porcentajes de cada período. Pasa el cursor por las barras para ver el detalle.</p>
+</div>
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Estudiantes matriculados</span>
+    <strong>16</strong>
+    <small>2 grupos · 7 docentes</small>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Promedio general del colegio</span>
+    <strong>3.8</strong>
+    <em class="chip Básico">Básico</em>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Estudiantes con promedio en Bajo</span>
+    <strong>12 %</strong>
+    <small>2 de 16</small>
+  </div>
+</div>
+
+
+<div class="tarjeta">
+  <h2>Alertas del colegio</h2>
+  <div class="cifras">
+    
+    <a class="alerta-tablero tarjeta cifra alerta" href="coordinadora--asistencia.html">
+      <strong>5</strong>
+      <span>Fallas sin excusa en los últimos 30 días</span>
+    </a>
+    
+    <a class="alerta-tablero tarjeta cifra alerta" href="coordinadora--asistencia-excusas.html">
+      <strong>1</strong>
+      <span>Excusas por revisar</span>
+    </a>
+    
+    <a class="alerta-tablero tarjeta cifra alerta" href="coordinadora--convivencia.html">
+      <strong>1</strong>
+      <span>Casos de convivencia tipo II y III abiertos</span>
+    </a>
+    
+    <a class="alerta-tablero tarjeta cifra alerta" href="coordinadora--horas.html">
+      <strong>5</strong>
+      <span>Estudiantes del último grado sin las 80 horas sociales</span>
+    </a>
+    
+  </div>
+</div>
+
+
+<div class="tarjeta">
+  <h2>Desempeño de cada grupo</h2>
+  <p class="gris">Cuántos estudiantes de cada grupo están en cada nivel según su promedio general.</p>
+  <ul class="leyenda" aria-label="Niveles de desempeño">
+    <li><span class="muestra n-Superior"></span>Superior</li><li><span class="muestra n-Alto"></span>Alto</li><li><span class="muestra n-Básico"></span>Básico</li><li><span class="muestra n-Bajo"></span>Bajo</li><li><span class="muestra n-Pendiente"></span>Pendiente</li>
+  </ul>
+  <div class="filas-grafica">
+    
+    <div class="fila-grafica">
+      <div class="rotulo">10-A<small>Décimo</small></div>
+      <div class="apilada" role="img" aria-label="Grupo 10-A: Superior 1, Alto 4, Básico 4, Bajo 1">
+        
+        <div class="segmento consejo n-Superior" style="flex: 1" tabindex="0"
+             data-consejo="Superior: 1 estudiante (10 %)"></div>
+        
+        <div class="segmento consejo n-Alto" style="flex: 4" tabindex="0"
+             data-consejo="Alto: 4 estudiantes (40 %)">4</div>
+        
+        <div class="segmento consejo n-Básico" style="flex: 4" tabindex="0"
+             data-consejo="Básico: 4 estudiantes (40 %)">4</div>
+        
+        <div class="segmento consejo n-Bajo" style="flex: 1" tabindex="0"
+             data-consejo="Bajo: 1 estudiante (10 %)"></div>
+        
+      </div>
+      <div class="total">10</div>
+    </div>
+    
+    <div class="fila-grafica">
+      <div class="rotulo">11-A<small>Once</small></div>
+      <div class="apilada" role="img" aria-label="Grupo 11-A: Alto 2, Básico 3, Bajo 1">
+        
+        <div class="segmento consejo n-Alto" style="flex: 2" tabindex="0"
+             data-consejo="Alto: 2 estudiantes (33 %)">2</div>
+        
+        <div class="segmento consejo n-Básico" style="flex: 3" tabindex="0"
+             data-consejo="Básico: 3 estudiantes (50 %)">3</div>
+        
+        <div class="segmento consejo n-Bajo" style="flex: 1" tabindex="0"
+             data-consejo="Bajo: 1 estudiante (17 %)">1</div>
+        
+      </div>
+      <div class="total">6</div>
+    </div>
+    
+  </div>
+  <details class="datos-tabla">
+    <summary>Ver los datos en tabla</summary>
+    <div class="tabla-caja">
+      <table class="tabla simple">
+        <thead><tr><th class="izq">Grupo</th><th>Superior</th><th>Alto</th><th>Básico</th><th>Bajo</th><th>Pendiente</th><th>Total</th></tr></thead>
+        <tbody>
+          
+          <tr><td class="izq"><a href="coordinadora--grupos-1.html">10-A</a></td><td>1</td><td>4</td><td>4</td><td>1</td><td>0</td><td>10</td></tr>
+          
+          <tr><td class="izq"><a href="coordinadora--grupos-2.html">11-A</a></td><td>0</td><td>2</td><td>3</td><td>1</td><td>0</td><td>6</td></tr>
+          
+        </tbody>
+      </table>
+    </div>
+  </details>
+</div>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Promedio por materia</h2>
+    <p class="gris">Todo el colegio, de mayor a menor. La línea marca la nota mínima para aprobar (3.0).</p>
+    <div class="eje" aria-hidden="true"><span style="left: 0.0%">0</span><span style="left: 20.0%">1</span><span style="left: 40.0%">2</span><span style="left: 60.0%">3</span><span style="left: 80.0%">4</span><span style="left: 100.0%">5</span></div>
+    <div class="filas-grafica">
+      
+      <div class="fila-grafica">
+        <div class="rotulo">Matemáticas</div>
+        <div class="pista">
+          <span class="rejilla" style="left: 0.0%"></span><span class="rejilla" style="left: 20.0%"></span><span class="rejilla" style="left: 40.0%"></span><span class="rejilla" style="left: 60.0%"></span><span class="rejilla" style="left: 80.0%"></span><span class="rejilla" style="left: 100.0%"></span>
+          <div class="barra-simple consejo" style="width: 78.0%" tabindex="0"
+               data-consejo="Matemáticas: 3.9 · 0 en Bajo"></div>
+          <span class="aprobacion" style="left: 60.0%"></span>
+        </div>
+        <div class="valor">3.9</div>
+      </div>
+      
+      <div class="fila-grafica">
+        <div class="rotulo">Ciencias Sociales</div>
+        <div class="pista">
+          <span class="rejilla" style="left: 0.0%"></span><span class="rejilla" style="left: 20.0%"></span><span class="rejilla" style="left: 40.0%"></span><span class="rejilla" style="left: 60.0%"></span><span class="rejilla" style="left: 80.0%"></span><span class="rejilla" style="left: 100.0%"></span>
+          <div class="barra-simple consejo" style="width: 78.0%" tabindex="0"
+               data-consejo="Ciencias Sociales: 3.9 · 1 en Bajo"></div>
+          <span class="aprobacion" style="left: 60.0%"></span>
+        </div>
+        <div class="valor">3.9</div>
+      </div>
+      
+      <div class="fila-grafica">
+        <div class="rotulo">Educación Física</div>
+        <div class="pista">
+          <span class="rejilla" style="left: 0.0%"></span><span class="rejilla" style="left: 20.0%"></span><span class="rejilla" style="left: 40.0%"></span><span class="rejilla" style="left: 60.0%"></span><span class="rejilla" style="left: 80.0%"></span><span class="rejilla" style="left: 100.0%"></span>
+          <div class="barra-simple consejo" style="width: 78.0%" tabindex="0"
+               data-consejo="Educación Física: 3.9 · 1 en Bajo"></div>
+          <span class="aprobacion" style="left: 60.0%"></span>
+        </div>
+        <div class="valor">3.9</div>
+      </div>
+      
+      <div class="fila-grafica">
+        <div class="rotulo">Lengua Castellana</div>
+        <div class="pista">
+          <span class="rejilla" style="left: 0.0%"></span><span class="rejilla" style="left: 20.0%"></span><span class="rejilla" style="left: 40.0%"></span><span class="rejilla" style="left: 60.0%"></span><span class="rejilla" style="left: 80.0%"></span><span class="rejilla" style="left: 100.0%"></span>
+          <div class="barra-simple consejo" style="width: 76.0%" tabindex="0"
+               data-consejo="Lengua Castellana: 3.8 · 0 en Bajo"></div>
+          <span class="aprobacion" style="left: 60.0%"></span>
+        </div>
+        <div class="valor">3.8</div>
+      </div>
+      
+      <div class="fila-grafica">
+        <div class="rotulo">Inglés</div>
+        <div class="pista">
+          <span class="rejilla" style="left: 0.0%"></span><span class="rejilla" style="left: 20.0%"></span><span class="rejilla" style="left: 40.0%"></span><span class="rejilla" style="left: 60.0%"></span><span class="rejilla" style="left: 80.0%"></span><span class="rejilla" style="left: 100.0%"></span>
+          <div class="barra-simple consejo" style="width: 76.0%" tabindex="0"
+               data-consejo="Inglés: 3.8 · 2 en Bajo"></div>
+          <span class="aprobacion" style="left: 60.0%"></span>
+        </div>
+        <div class="valor">3.8</div>
+      </div>
+      
+      <div class="fila-grafica">
+        <div class="rotulo">Filosofía</div>
+        <div class="pista">
+          <span class="rejilla" style="left: 0.0%"></span><span class="rejilla" style="left: 20.0%"></span><span class="rejilla" style="left: 40.0%"></span><span class="rejilla" style="left: 60.0%"></span><span class="rejilla" style="left: 80.0%"></span><span class="rejilla" style="left: 100.0%"></span>
+          <div class="barra-simple consejo" style="width: 76.0%" tabindex="0"
+               data-consejo="Filosofía: 3.8 · 2 en Bajo"></div>
+          <span class="aprobacion" style="left: 60.0%"></span>
+        </div>
+        <div class="valor">3.8</div>
+      </div>
+      
+      <div class="fila-grafica">
+        <div class="rotulo">Ciencias Naturales</div>
+        <div class="pista">
+          <span class="rejilla" style="left: 0.0%"></span><span class="rejilla" style="left: 20.0%"></span><span class="rejilla" style="left: 40.0%"></span><span class="rejilla" style="left: 60.0%"></span><span class="rejilla" style="left: 80.0%"></span><span class="rejilla" style="left: 100.0%"></span>
+          <div class="barra-simple consejo" style="width: 74.0%" tabindex="0"
+               data-consejo="Ciencias Naturales: 3.7 · 2 en Bajo"></div>
+          <span class="aprobacion" style="left: 60.0%"></span>
+        </div>
+        <div class="valor">3.7</div>
+      </div>
+      
+      <div class="fila-grafica">
+        <div class="rotulo">Tecnología e Informática</div>
+        <div class="pista">
+          <span class="rejilla" style="left: 0.0%"></span><span class="rejilla" style="left: 20.0%"></span><span class="rejilla" style="left: 40.0%"></span><span class="rejilla" style="left: 60.0%"></span><span class="rejilla" style="left: 80.0%"></span><span class="rejilla" style="left: 100.0%"></span>
+          <div class="barra-simple consejo" style="width: 74.0%" tabindex="0"
+               data-consejo="Tecnología e Informática: 3.7 · 2 en Bajo"></div>
+          <span class="aprobacion" style="left: 60.0%"></span>
+        </div>
+        <div class="valor">3.7</div>
+      </div>
+      
+    </div>
+    <details class="datos-tabla">
+      <summary>Ver los datos en tabla</summary>
+      <table class="tabla simple">
+        <thead><tr><th class="izq">Materia</th><th>Promedio</th><th>Estudiantes en Bajo</th></tr></thead>
+        <tbody><tr><td class="izq">Matemáticas</td><td>3.9</td><td>0</td></tr><tr><td class="izq">Ciencias Sociales</td><td>3.9</td><td>1</td></tr><tr><td class="izq">Educación Física</td><td>3.9</td><td>1</td></tr><tr><td class="izq">Lengua Castellana</td><td>3.8</td><td>0</td></tr><tr><td class="izq">Inglés</td><td>3.8</td><td>2</td></tr><tr><td class="izq">Filosofía</td><td>3.8</td><td>2</td></tr><tr><td class="izq">Ciencias Naturales</td><td>3.7</td><td>2</td></tr><tr><td class="izq">Tecnología e Informática</td><td>3.7</td><td>2</td></tr></tbody>
+      </table>
+    </details>
+  </div>
+
+  <div class="tarjeta">
+    <h2>Promedio del colegio por período</h2>
+    <p class="gris">Promedio general de todos los estudiantes en cada período.</p>
+    <div class="columnas" role="img" aria-label="Promedio por período: Primer período 3.8, Segundo período 3.8, Tercer período 3.8, Cuarto período 3.9">
+      
+      <div class="columna">
+        <span class="tapa">3.8</span>
+        <div class="cuerpo consejo" style="height: 76.0%" tabindex="0" data-consejo="Primer período: 3.8"></div>
+      </div>
+      
+      <div class="columna">
+        <span class="tapa">3.8</span>
+        <div class="cuerpo consejo" style="height: 76.0%" tabindex="0" data-consejo="Segundo período: 3.8"></div>
+      </div>
+      
+      <div class="columna">
+        <span class="tapa">3.8</span>
+        <div class="cuerpo consejo" style="height: 76.0%" tabindex="0" data-consejo="Tercer período: 3.8"></div>
+      </div>
+      
+      <div class="columna">
+        <span class="tapa">3.9</span>
+        <div class="cuerpo consejo" style="height: 78.0%" tabindex="0" data-consejo="Cuarto período: 3.9"></div>
+      </div>
+      
+    </div>
+    <div class="columnas-rotulos"><span>P1</span><span>P2</span><span>P3</span><span>P4</span></div>
+    <p class="nota-eje">Las barras empiezan en 0 y llegan hasta 5.0.</p>
+  </div>
+</div>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

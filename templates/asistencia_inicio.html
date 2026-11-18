@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block titulo %}Asistencia{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/asistencia.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Asistencia</h1>
+  <p>Semana del {{ lunes }} al {{ hoy }}. La lista se toma en cada clase. Las fallas con excusa aprobada no cuentan en las alertas.</p>
+</div>
+
+{% if pendientes is not none %}
+<div class="cifras">
+  <a class="tarjeta cifra enlace-cifra {% if pendientes %}alerta{% endif %}" href="/asistencia/excusas">
+    <span>Excusas por revisar</span>
+    <strong>{{ pendientes }}</strong>
+    <small>Revisar excusas →</small>
+  </a>
+</div>
+{% endif %}
+
+{% if clases %}
+<h2 class="seccion">Mis clases</h2>
+<div class="materias">
+  {% for clase in clases %}
+  <article class="tarjeta materia">
+    <span class="etiqueta">{{ clase.asignacion.grupo }}</span>
+    <h2>{{ clase.asignacion.materia }}</h2>
+    <div class="datos-materia">
+      <div>
+        <span>Listas esta semana</span>
+        <strong>{{ clase.semana }}</strong>
+      </div>
+      <div>
+        <span>Estudiantes</span>
+        <strong>{{ clase.total }}</strong>
+      </div>
+      <div>
+        <span>Lista de hoy</span>
+        {% if clase.hoy %}<em class="estado bien">Tomada</em>{% else %}<em class="estado neutro">Pendiente</em>{% endif %}
+      </div>
+    </div>
+    <p class="gris nota-pequena">Última lista: {{ clase.ultima or "ninguna todavía" }}</p>
+    <a class="boton" href="/asistencia/tomar/{{ clase.asignacion.id }}">Tomar lista</a>
+  </article>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if grupos %}
+<div class="tarjeta">
+  <div class="tarjeta-titulo">
+    <h2>Grupos</h2>
+    <span class="gris nota-pequena">Fallas sin excusa de los últimos 30 días</span>
+  </div>
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th class="izq">Grupo</th><th class="izq">Director de grupo</th><th>Estudiantes</th><th>Fallas 30 días</th><th>Con alertas</th></tr>
+      </thead>
+      <tbody>
+        {% for item in grupos %}
+        <tr>
+          <td class="izq"><a href="/asistencia/grupo/{{ item.grupo.id }}">{{ item.grupo.nombre }}</a> <small class="gris">{{ item.grupo.grado }}</small></td>
+          <td class="izq">{{ item.grupo.director or "Sin asignar" }}</td>
+          <td>{{ item.total }}</td>
+          <td>{{ item.fallas }}</td>
+          <td>{% if item.con_alerta %}<span class="estado mal">{{ item.con_alerta }}</span>{% else %}<span class="estado bien">0</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if not clases and not grupos %}
+<div class="tarjeta vacio"><p>No tienes clases ni grupos asignados este año. La coordinación los asigna desde Administración.</p></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+<div class="tarjeta credencial">
+  <h2>{{ titulo_credencial }}</h2>
+  <p>Entrégale estos datos a <strong>{{ credencial.nombre }}</strong>. La clave temporal se muestra <strong>solo esta vez</strong>; al entrar, la plataforma le pedirá cambiarla.</p>
+  <dl class="credencial-datos">
+    <dt>Usuario</dt>
+    <dd><strong>{{ credencial.usuario }}</strong></dd>
+    <dt>Clave temporal</dt>
+    <dd><code class="clave-temporal">{{ credencial.clave }}</code></dd>
+    {% if credencial.grupo %}
+    <dt>Matriculado en</dt>
+    <dd>{{ credencial.grupo }}</dd>
+    {% endif %}
+  </dl>
+</div>

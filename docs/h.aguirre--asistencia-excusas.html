@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excusas · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/asistencia.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="h.aguirre--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Hernán Darío Aguirre</strong>
+    <span>Docente · Director de grupo</span>
+  </div>
+  <a class="boton-salir" href="h.aguirre--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="h.aguirre--inicio.html" class="">Inicio</a>
+    
+    <a href="h.aguirre--mis-clases.html" class="">Mis clases</a>
+    
+    <a href="h.aguirre--grupos-1.html" class="">Grupos</a>
+    
+    <a href="h.aguirre--circulares.html" class="">Circulares</a>
+    
+    <a href="h.aguirre--agenda.html" class="">Agenda</a>
+    
+    <a href="h.aguirre--asistencia.html" class="activa">Asistencia</a>
+    
+    <a href="h.aguirre--observador.html" class="">Observador</a>
+    
+    <a href="h.aguirre--horas.html" class="">Horas sociales</a>
+    
+    <a href="h.aguirre--piar.html" class="">PIAR</a>
+    
+    <a href="h.aguirre--biblioteca.html" class="">Biblioteca</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="h.aguirre--asistencia.html">← Asistencia</a>
+  <h1>Excusas</h1>
+  <p>Al aprobar una excusa, las fallas del estudiante entre esas fechas quedan justificadas. Si la rechazas, escribe el motivo para la familia.</p>
+</div>
+
+
+
+
+<h2 class="seccion">Por revisar (1)</h2>
+
+<div class="excusas">
+  
+  <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="tarjeta formulario excusa">
+    <input type="hidden" name="excusa_id" value="1">
+    <div class="excusa-cabeza">
+      <h2><a href="h.aguirre--asistencia-estudiante-13.html">Melany Osorio Cárdenas</a></h2>
+      <span class="etiqueta">10-A</span>
+    </div>
+    <p><strong>2026-11-10</strong>
+      · Fallas que se justifican: <strong>1</strong></p>
+    <p class="motivo">Melany tuvo cita con el odontólogo en el hospital de Pijao a las 7 de la mañana. La constancia de la cita se la entrego al director de grupo.</p>
+    <span class="fecha">Enviada por Gloria Inés Cárdenas el 2026-11-10 18:25</span>
+    <label for="respuesta-1">Respuesta para la familia</label>
+    <textarea id="respuesta-1" name="respuesta" maxlength="500" class="corta" placeholder="Obligatoria si la rechazas"></textarea>
+    <div class="acciones">
+      <button class="boton peligro" type="submit" name="accion" value="rechazar">Rechazar</button>
+      <button class="boton" type="submit" name="accion" value="aprobar">Aprobar</button>
+    </div>
+  </form>
+  
+</div>
+
+
+
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

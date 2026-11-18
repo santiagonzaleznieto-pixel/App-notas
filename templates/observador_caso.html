@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block titulo %}{{ observacion.nombre_tipo }} · {{ estudiante.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/observador.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="{{ volver.ruta }}">{{ volver.texto }}</a>
+  {% if gestor and es_situacion %} <a class="volver separado" href="/convivencia">← Convivencia</a>{% endif %}
+  <h1>{{ observacion.nombre_tipo }} · {{ estudiante.nombre }}</h1>
+  <p>{% if grupo %}Grupo {{ grupo.nombre }} · {% endif %}{{ observacion.fecha }} · Registró {{ observacion.autor_nombre }}</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}
+<div class="aviso error">
+  {% for error in errores %}<div>{{ error }}</div>{% endfor %}
+</div>
+{% endif %}
+
+<article class="anotacion {{ observacion.clase }}">
+  <div class="anotacion-cabeza">
+    <span class="chip-tipo {{ observacion.clase }}">{{ observacion.nombre_tipo }}</span>
+    {% if es_situacion %}
+    {% if observacion.estado == "abierta" %}<span class="estado atencion">Abierto</span>{% else %}<span class="estado neutro">Cerrado</span>{% endif %}
+    {% endif %}
+    {% if observacion.confidencial %}<span class="estado mal">Confidencial</span>{% endif %}
+    {% if observacion.situacion_tipo >= 2 %}
+    {% if observacion.reportado_siuce %}<span class="estado bien">Reportado en el SIUCE</span>{% else %}<span class="estado mal">Sin reportar en el SIUCE</span>{% endif %}
+    {% endif %}
+  </div>
+  <p class="texto-largo">{{ observacion.descripcion }}</p>
+  {% if observacion.compromiso %}<p class="compromiso"><strong>Compromiso:</strong> {{ observacion.compromiso }}</p>{% endif %}
+</article>
+
+<div class="{% if es_situacion %}dos-columnas{% endif %}">
+  {% if es_situacion %}
+  <div class="tarjeta">
+    <div class="tarjeta-titulo">
+      <h2>Protocolo tipo {% if observacion.situacion_tipo == 1 %}I{% elif observacion.situacion_tipo == 2 %}II{% else %}III{% endif %}</h2>
+      <span class="estado {% if hechos == pasos|length %}bien{% else %}atencion{% endif %}">{{ hechos }} de {{ pasos|length }} pasos</span>
+    </div>
+    <ol class="pasos">
+      {% for paso in pasos %}
+      <li class="{% if paso.hecho %}hecho{% endif %}">
+        <span class="marca" aria-hidden="true">{% if paso.hecho %}✓{% else %}{{ loop.index }}{% endif %}</span>
+        <div class="paso-texto">
+          <strong>{{ paso.paso }}</strong>
+          {% if paso.hecho %}<span class="fecha bloque">{{ paso.hecho_por_nombre }} · {{ paso.hecho_en }}</span>{% endif %}
+        </div>
+        {% if gestor and observacion.estado == "abierta" %}
+        <form method="post" class="en-linea">
+          <input type="hidden" name="accion" value="paso">
+          <input type="hidden" name="paso_id" value="{{ paso.id }}">
+          {% if paso.hecho %}
+          <input type="hidden" name="hecho" value="0">
+          <button class="boton secundario pequeno" type="submit" aria-label="Desmarcar: {{ paso.paso }}">Desmarcar</button>
+          {% else %}
+          <input type="hidden" name="hecho" value="1">
+          <button class="boton pequeno" type="submit" aria-label="Marcar hecho: {{ paso.paso }}">Hecho</button>
+          {% endif %}
+        </form>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+    <p class="ayuda-texto">Protocolo de la Ley 1620 de 2013 y el Decreto 1965 de 2013.{% if observacion.situacion_tipo == 3 %} En situaciones tipo III se informa de inmediato a la Policía de Infancia y Adolescencia.{% endif %}</p>
+  </div>
+  {% endif %}
+
+  <div>
+    {% if gestor and es_situacion %}
+    <div class="tarjeta">
+      <h2>Gestión del caso</h2>
+      {% if observacion.situacion_tipo >= 2 %}
+      <form method="post" class="formulario fila-gestion">
+        <input type="hidden" name="accion" value="siuce">
+        {% if observacion.reportado_siuce %}
+        <input type="hidden" name="valor" value="0">
+        <p>El caso ya está reportado en el SIUCE.</p>
+        <button class="boton secundario pequeno" type="submit">Quitar marca del SIUCE</button>
+        {% else %}
+        <input type="hidden" name="valor" value="1">
+        <p>Las situaciones tipo II y III se reportan en el Sistema de Información Unificado de Convivencia Escolar (SIUCE).</p>
+        <button class="boton pequeno" type="submit">Marcar reportado en el SIUCE</button>
+        {% endif %}
+      </form>
+      {% endif %}
+      <form method="post" class="formulario">
+        {% if observacion.estado == "abierta" %}
+        <input type="hidden" name="accion" value="cerrar">
+        <label for="nota">Nota de cierre (opcional)</label>
+        <textarea id="nota" name="nota" maxlength="1000" class="corta"></textarea>
+        <div class="acciones"><button class="boton peligro" type="submit">Cerrar caso</button></div>
+        {% else %}
+        <input type="hidden" name="accion" value="reabrir">
+        <label for="nota">Motivo para reabrir (opcional)</label>
+        <textarea id="nota" name="nota" maxlength="1000" class="corta"></textarea>
+        <div class="acciones"><button class="boton secundario" type="submit">Reabrir caso</button></div>
+        {% endif %}
+      </form>
+    </div>
+    {% endif %}
+
+    <div class="tarjeta">
+      <h2>Seguimientos</h2>
+      {% if seguimientos %}
+      <ul class="lista seguimientos">
+        {% for seguimiento in seguimientos %}
+        <li>
+          <span class="fecha">{{ seguimiento.fecha }} · {{ seguimiento.autor_nombre }}</span>
+          <p class="texto-largo">{{ seguimiento.texto }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="gris">Todavía no hay seguimientos.</p>
+      {% endif %}
+      {% if puede_seguir %}
+      <form method="post" class="formulario">
+        <input type="hidden" name="accion" value="seguimiento">
+        <label for="texto">Nuevo seguimiento</label>
+        <textarea id="texto" name="texto" maxlength="2000" class="corta" required></textarea>
+        <div class="acciones"><button class="boton" type="submit">Agregar seguimiento</button></div>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

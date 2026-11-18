@@ -45,6 +45,35 @@ Pruebas automáticas (una por módulo): `py pruebas/prueba_notas.py`, `py prueba
 - `generar_demo.py`: crea la demo de solo lectura en `docs/` recorriendo la plataforma como cada usuario de acceso rápido. Correrlo (`py generar_demo.py`) después de cambiar diseño, módulos o datos de prueba.
 - `pruebas/`: `ayuda.py` (base temporal, `entrar`, `revisar`) y una prueba por módulo.
 
+## Módulos (archivo · rutas principales · tablas propias)
+
+| Módulo | Rutas | Tablas |
+| --- | --- | --- |
+| `modulo_inicio.py` | `/`, `/inicio`, `/mi-cuenta`, `/privacidad`, `/sin-conexion`, `/sw.js`, `/salir` | (núcleo) |
+| `modulo_notas.py` | `/mis-clases`, `/calificar/<asignacion>`, `/grupos`, `/grupos/<id>`, `/boletin/<estudiante>`, `/mis-notas` | (núcleo) |
+| `modulo_tablero.py` | `/indicadores` | ninguna (lee las de otros módulos si existen) |
+| `modulo_familias.py` | `/familia`, `/escuela-familias`, `/escuela-familias/<id>`, `/escuela-familias/caracterizacion` | `compromisos_familia`, `encuentros_familias`, `asistencia_encuentros`, `caracterizacion_familias` |
+| `modulo_circulares.py` | `/circulares`, `/circulares/nueva`, `/circulares/<id>`, `/agenda` | `circulares`, `lecturas_circular`, `eventos` |
+| `modulo_asistencia.py` | `/asistencia`, `/asistencia/tomar/<asignacion>`, `/asistencia/grupo/<id>`, `/asistencia/estudiante/<id>`, `/asistencia/excusas`, `/mi-asistencia` | `asistencia`, `excusas` |
+| `modulo_observador.py` | `/observador`, `/observador/estudiante/<id>`, `/observador/caso/<id>`, `/convivencia` | `observaciones`, `seguimientos`, `pasos_protocolo` |
+| `modulo_horas.py` | `/horas`, `/horas/proyecto/<id>`, `/mis-horas`, `/horas/estudiante/<id>` | `proyectos_sociales`, `inscripciones_sociales`, `horas_registradas` |
+| `modulo_certificados.py` | `/certificados`, `/certificados/<codigo>`, `/verificar` (pública) | `certificados` |
+| `modulo_orientacion.py` | `/orientacion`, `/orientacion/estudiante/<id>`, `/orientacion/remitir`, `/piar`, `/piar/<id>` | `atenciones_orientacion`, `remisiones_docentes`, `piar`, `piar_ajustes` |
+| `modulo_gobierno.py` | `/elecciones`, `/elecciones/<id>/votar`, `/elecciones/<id>` | `elecciones`, `candidatos`, `votantes`, `votos` |
+| `modulo_tesoreria.py` | `/tesoreria`, `/tesoreria/conceptos`, `/tesoreria/generar`, `/tesoreria/estudiante/<id>`, `/tesoreria/recibo/<n>`, `/tesoreria/paz-y-salvo/<id>`, `/tesoreria/cartera`, `/mis-pagos` | `conceptos_cobro`, `cobros`, `pagos`, `descuentos`, `parametros_tesoreria` |
+| `modulo_servicios.py` | `/biblioteca`, `/enfermeria`, `/mi-ficha-salud`, `/porteria`, `/autorizados` | `libros`, `prestamos`, `fichas_salud`, `atenciones_enfermeria`, `autorizados_recoger`, `salidas`, `ingresos_visitantes` |
+| `modulo_admin.py` | `/admin`, `/admin/colegio`, `/admin/sedes`, `/admin/periodos`, `/admin/materias`, `/admin/grupos`, `/admin/usuarios`, `/admin/cargue`, `/admin/registro` | (núcleo) |
+
+Reglas de privacidad que no se deben romper:
+- Orientación: las atenciones solo las ve el rol `orientador`; rectoría y coordinación ven cifras sin nombres.
+- Enfermería: las fichas de salud solo las ven `enfermeria` y los acudientes del estudiante. Nunca poner datos de salud en el registro de accesos.
+- Convivencia: casos tipo II y III y anotaciones confidenciales solo para coordinación, rectoría, orientación y su autor; familias y estudiantes solo ven que hay un caso en manejo.
+- Elecciones: la tabla `votos` no guarda quién votó y `votantes` no guarda por quién; los votos se cuentan y muestran solo al cerrar la votación.
+- Administración: la secretaría no gestiona usuarios con roles directivos ni con datos sensibles (`ROLES_SOLO_ADMINISTRADOR`).
+- Tesorería: solo tesorería, administración, rectoría y los acudientes del estudiante ven datos de pagos.
+
+Las pruebas de cada módulo fijan la fecha (`nucleo.hoy`) para no depender del reloj. Varias funciones de ayuda (`fecha_valida`, `entero`, etc.) están repetidas en varios módulos: pasarlas a `nucleo.py` es una limpieza pendiente.
+
 ## Tablas del núcleo
 
 `colegios` (datos y escala), `sedes`, `grados` (Transición a Once, con `orden`), `usuarios` (clave cifrada, `activo`, `debe_cambiar_clave`), `roles_usuario` (varios roles por persona), `grupos` (por año, con director), `matriculas` (estudiante en grupo por año, `activa` o `retirada`), `acudientes` (acudiente ↔ estudiante con parentesco), `materias`, `asignaciones` (grupo + materia + docente + horas), `periodos` (fechas, porcentaje, abierto o cerrado), `notas` (año, estudiante, materia, período, valor; `NULL` = pendiente), `registro_accesos`.
@@ -87,4 +116,4 @@ Los botones de acceso rápido solo aparecen en modo pruebas: sin la variable `CL
 
 ## Estado
 
-Ver la sección "Avance" del plan maestro y la lista de pendientes del dueño en `PENDIENTES.md`.
+Fases 1, 2, 3, 5 y 6 construidas con pruebas (13 pruebas, más de 1.000 revisiones). Fase 4: seguridad, política de datos (borrador), modo real y `crear_colegio.py` listos; falta publicar en PythonAnywhere y la revisión legal. Fase 7: app instalable y aviso sin conexión listos; falta el modo sin conexión para asistencia y notas, y los avisos por WhatsApp y correo. Ver la sección "Avance" del plan maestro y los pendientes del dueño en `PENDIENTES.md`.

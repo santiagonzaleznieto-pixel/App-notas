@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block titulo %}Pedir atención de orientación{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/orientacion.css">{% endblock %}
+{% block contenido %}
+{% if estudiante %}
+<div class="encabezado">
+  <a class="volver" href="/orientacion/remitir">← Mis estudiantes</a>
+  <h1>Pedir atención de orientación</h1>
+  <p>{{ estudiante.nombre }}{% if grupo %} · Grupo {{ grupo.nombre }}{% endif %}</p>
+</div>
+
+{% if enviado %}<div class="aviso exito">Tu solicitud fue enviada a orientación escolar. La orientadora buscará al estudiante.</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<form method="post" class="tarjeta formulario">
+  <label for="motivo">¿Por qué pides la atención?</label>
+  <textarea id="motivo" name="motivo" maxlength="600" required>{{ motivo }}</textarea>
+  <p class="ayuda">Cuenta lo que observaste en clase: hechos, no diagnósticos. Por confidencialidad no verás el seguimiento que haga orientación.</p>
+  <div class="acciones"><button class="boton" type="submit">Enviar a orientación</button></div>
+</form>
+{% else %}
+<div class="encabezado">
+  <h1>Pedir atención de orientación</h1>
+  <p>Elige al estudiante que necesita apoyo de orientación escolar. Solo aparecen los grupos donde dictas clase o que diriges.</p>
+</div>
+
+{% for item in grupos %}
+<section class="tarjeta">
+  <h2>Grupo {{ item.grupo.nombre }}</h2>
+  {% if item.estudiantes %}
+  <ul class="lista estudiantes-remitir">
+    {% for estudiante in item.estudiantes %}
+    <li>
+      <span>{{ estudiante.nombre }}</span>
+      <a class="boton secundario pequeno" href="/orientacion/remitir/{{ estudiante.id }}">Remitir</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="gris">Este grupo no tiene estudiantes matriculados.</p>
+  {% endif %}
+</section>
+{% endfor %}
+{% endif %}
+{% endblock %}

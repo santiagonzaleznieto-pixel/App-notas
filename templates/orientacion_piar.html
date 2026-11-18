@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block titulo %}PIAR · {{ plan.estudiante }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/orientacion.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/piar">← PIAR</a>
+  <h1>PIAR {{ plan.anio }} · {{ plan.estudiante }}</h1>
+  <p>{% if grupo %}Grupo {{ grupo.nombre }} · {{ grupo.grado }} · {% endif %}Elaborado por {{ plan.autor or "orientación" }} el {{ plan.elaborado_en[:10] }}</p>
+</div>
+
+<p class="confidencial"><strong>Documento reservado.</strong> Solo lo ven orientación, coordinación, los docentes del grupo, el estudiante y su familia (Decreto 1421 de 2017 y Ley 1581 de 2012).</p>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<section class="tarjeta">
+  <h2>Información del estudiante</h2>
+  {% if permisos.editar_todo %}
+  <form method="post" class="formulario">
+    <input type="hidden" name="accion" value="general">
+    <label for="descripcion_estudiante">Descripción del estudiante</label>
+    <textarea id="descripcion_estudiante" name="descripcion_estudiante" maxlength="3000" required>{{ plan.descripcion_estudiante }}</textarea>
+    <p class="ayuda">Gustos, intereses, fortalezas y cómo aprende mejor.</p>
+    <label for="barreras">Barreras para el aprendizaje y la participación</label>
+    <textarea id="barreras" name="barreras" maxlength="3000">{{ plan.barreras }}</textarea>
+    <label for="apoyos_familia">Compromisos y apoyos de la familia</label>
+    <textarea id="apoyos_familia" name="apoyos_familia" maxlength="3000">{{ plan.apoyos_familia }}</textarea>
+    <div class="acciones"><button class="boton" type="submit">Guardar información</button></div>
+  </form>
+  {% else %}
+  <dl class="datos-piar">
+    <dt>Descripción del estudiante</dt>
+    <dd class="texto-largo">{{ plan.descripcion_estudiante or "Sin registrar" }}</dd>
+    <dt>Barreras para el aprendizaje y la participación</dt>
+    <dd class="texto-largo">{{ plan.barreras or "Sin registrar" }}</dd>
+    <dt>Compromisos y apoyos de la familia</dt>
+    <dd class="texto-largo">{{ plan.apoyos_familia or "Sin registrar" }}</dd>
+  </dl>
+  {% endif %}
+</section>
+
+<section class="tarjeta">
+  <h2>Ajustes por materia</h2>
+  <p class="gris">Cada docente registra el objetivo, los ajustes razonables, cómo evalúa y el seguimiento de su materia.</p>
+  {% if filas %}
+  {% for fila in filas %}
+  <article class="fila-piar {% if fila.editable %}editable{% endif %}">
+    <div class="fila-titulo">
+      <h3>{{ fila.asignacion.materia }}</h3>
+      <span class="gris">{{ fila.asignacion.docente }}</span>
+    </div>
+    {% if fila.editable %}
+    {% set materia = fila.asignacion.materia_id %}
+    <form method="post" class="formulario">
+      <input type="hidden" name="accion" value="ajuste">
+      <input type="hidden" name="materia_id" value="{{ materia }}">
+      <div class="rejilla">
+        <div>
+          <label for="objetivo-{{ materia }}">Objetivo</label>
+          <textarea id="objetivo-{{ materia }}" name="objetivo" maxlength="2000" required>{% if fila.ajuste %}{{ fila.ajuste.objetivo }}{% endif %}</textarea>
+        </div>
+        <div>
+          <label for="ajustes-{{ materia }}">Ajustes razonables</label>
+          <textarea id="ajustes-{{ materia }}" name="ajustes" maxlength="2000" required>{% if fila.ajuste %}{{ fila.ajuste.ajustes }}{% endif %}</textarea>
+        </div>
+        <div>
+          <label for="evaluacion-{{ materia }}">Evaluación</label>
+          <textarea id="evaluacion-{{ materia }}" name="evaluacion" maxlength="2000">{% if fila.ajuste %}{{ fila.ajuste.evaluacion }}{% endif %}</textarea>
+        </div>
+        <div>
+          <label for="seguimiento-{{ materia }}">Seguimiento</label>
+          <textarea id="seguimiento-{{ materia }}" name="seguimiento" maxlength="2000">{% if fila.ajuste %}{{ fila.ajuste.seguimiento }}{% endif %}</textarea>
+        </div>
+      </div>
+      <div class="acciones"><button class="boton pequeno" type="submit">Guardar {{ fila.asignacion.materia }}</button></div>
+    </form>
+    {% elif fila.ajuste %}
+    <dl class="campos-piar">
+      <div><dt>Objetivo</dt><dd class="texto-largo">{{ fila.ajuste.objetivo }}</dd></div>
+      <div><dt>Ajustes razonables</dt><dd class="texto-largo">{{ fila.ajuste.ajustes }}</dd></div>
+      <div><dt>Evaluación</dt><dd class="texto-largo">{{ fila.ajuste.evaluacion or "Sin registrar" }}</dd></div>
+      <div><dt>Seguimiento</dt><dd class="texto-largo">{{ fila.ajuste.seguimiento or "Sin registrar" }}</dd></div>
+    </dl>
+    {% else %}
+    <p class="gris">Sin ajustes: la materia se trabaja con el plan del grupo.</p>
+    {% endif %}
+    {% if fila.ajuste and fila.ajuste.actualizado_en %}<p class="fecha">Actualizado por {{ fila.ajuste.autor or "un docente" }} el {{ fila.ajuste.actualizado_en }}</p>{% endif %}
+  </article>
+  {% endfor %}
+  {% else %}
+  <p class="vacio">El estudiante no tiene matrícula activa en {{ plan.anio }}: no hay materias para ajustar.</p>
+  {% endif %}
+</section>
+
+<section class="tarjeta revision">
+  <h2>Revisión de la familia</h2>
+  {% if plan.revisado_acudiente_en %}
+  <p><span class="estado bien">Revisado</span> El acudiente revisó el PIAR el {{ plan.revisado_acudiente_en }}.</p>
+  {% else %}
+  <p><span class="estado atencion">Pendiente</span> La familia aún no confirma que revisó el PIAR.</p>
+  {% endif %}
+  {% if permisos.revisar %}
+  <form method="post">
+    <input type="hidden" name="accion" value="revisado">
+    <button class="boton" type="submit">Revisé el PIAR</button>
+  </form>
+  {% endif %}
+</section>
+
+<div class="acciones">
+  <button class="boton secundario" type="button" onclick="window.print()">Imprimir PIAR</button>
+</div>
+{% endblock %}

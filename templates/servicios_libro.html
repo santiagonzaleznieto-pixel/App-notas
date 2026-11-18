@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}{% if libro %}Editar libro{% else %}Agregar libro{% endif %}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/servicios.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/biblioteca">← Biblioteca</a>
+  <h1>{% if libro %}Editar «{{ libro.titulo }}»{% else %}Agregar libro{% endif %}</h1>
+  <p>{% if libro %}Hay {{ libro.prestados }} ejemplar{% if libro.prestados != 1 %}es{% endif %} prestado{% if libro.prestados != 1 %}s{% endif %} de este libro.{% else %}Registra un libro nuevo en el catálogo del colegio.{% endif %}</p>
+</div>
+
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<form method="post" class="tarjeta formulario formulario-angosto">
+  <label for="titulo">Título</label>
+  <input id="titulo" name="titulo" value="{{ datos.titulo }}" maxlength="200" required>
+  <div class="rejilla">
+    <div>
+      <label for="autor">Autor</label>
+      <input id="autor" name="autor" value="{{ datos.autor }}" maxlength="150">
+    </div>
+    <div>
+      <label for="editorial">Editorial</label>
+      <input id="editorial" name="editorial" value="{{ datos.editorial }}" maxlength="100">
+    </div>
+    <div>
+      <label for="isbn">ISBN (opcional)</label>
+      <input id="isbn" name="isbn" value="{{ datos.isbn }}" maxlength="20" inputmode="numeric">
+    </div>
+    <div>
+      <label for="ejemplares">Ejemplares</label>
+      <input id="ejemplares" name="ejemplares" type="number" min="0" max="500" step="1" value="{{ datos.ejemplares }}" required>
+    </div>
+  </div>
+  <label for="ubicacion">Ubicación en la biblioteca</label>
+  <input id="ubicacion" name="ubicacion" value="{{ datos.ubicacion }}" maxlength="100" placeholder="Ej.: Estante A1 · Literatura colombiana">
+  {% if libro %}
+  <div class="casillas">
+    <label><input type="checkbox" name="activo" value="1" {% if datos.activo %}checked{% endif %}> Visible en el catálogo (quítalo si el libro se retiró)</label>
+  </div>
+  {% endif %}
+  <div class="acciones">
+    <a class="boton secundario" href="/biblioteca">Cancelar</a>
+    <button class="boton" type="submit">Guardar libro</button>
+  </div>
+</form>
+{% endblock %}

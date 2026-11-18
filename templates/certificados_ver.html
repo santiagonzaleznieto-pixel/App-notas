@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block titulo %}{{ certificado.titulo }} {{ certificado.codigo }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/certificados.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado no-imprimir">
+  <a class="volver" href="/certificados">← Certificados</a>
+  <h1>{{ certificado.titulo }}</h1>
+  <p>{{ certificado.estudiante }} · emitido el {{ certificado.fecha }} por {{ certificado.emisor }}</p>
+</div>
+
+{% if certificado.anulado %}
+<div class="aviso error no-imprimir">Este certificado fue anulado el {{ anulado_en }}{% if certificado.anulador %} por {{ certificado.anulador }}{% endif %}. Ya no tiene validez.</div>
+{% endif %}
+
+<div class="acciones izquierda no-imprimir">
+  <button class="boton" type="button" onclick="window.print()">Imprimir</button>
+  <a class="boton secundario" href="/verificar?codigo={{ certificado.codigo }}">Ver cómo se verifica</a>
+</div>
+
+<article class="documento{% if certificado.anulado %} anulado{% endif %}">
+  {% if certificado.anulado %}<div class="sello-anulado" aria-hidden="true">ANULADO</div>{% endif %}
+  <header class="documento-encabezado">
+    <img src="/static/escudo.png" alt="Escudo del colegio">
+    <div>
+      <strong>{{ colegio.nombre }}</strong>
+      <span>{{ colegio.municipio }}, {{ colegio.departamento }}{% if colegio.codigo_dane %} · DANE {{ colegio.codigo_dane }}{% endif %}</span>
+      {% if colegio.lema %}<em>"{{ colegio.lema }}"</em>{% endif %}
+    </div>
+  </header>
+
+  <h2 class="documento-titulo">{{ certificado.titulo }}</h2>
+  <p class="documento-intro">La rectoría de la institución {{ verbo }}:</p>
+
+  <div class="documento-texto">
+    {% for parrafo in partes.antes %}<p>{{ parrafo }}</p>{% endfor %}
+    {% if partes.filas %}
+    <table class="documento-tabla">
+      <thead><tr><th class="izq">Área o asignatura</th><th>Nota final</th><th>Desempeño</th></tr></thead>
+      <tbody>
+        {% for fila in partes.filas %}
+        <tr class="{% if loop.last %}total{% endif %}">
+          <td class="izq">{{ fila[0] }}</td>
+          <td>{{ fila[1] }}</td>
+          <td>{{ fila[2] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    {% for parrafo in partes.despues %}<p>{{ parrafo }}</p>{% endfor %}
+  </div>
+
+  <p class="documento-lugar">Se expide en {{ colegio.municipio }} ({{ colegio.departamento }}), el {{ certificado.fecha }}.</p>
+
+  <div class="firma">
+    <div class="firma-linea"></div>
+    <strong>{{ rector or "____________________" }}</strong>
+    <span>Rector(a)</span>
+  </div>
+
+  <footer class="documento-pie">
+    <div class="codigo-caja">
+      <span>Código de verificación</span>
+      <strong>{{ certificado.codigo }}</strong>
+    </div>
+    <p>Verifique este documento en {{ enlace_verificar }} con el código {{ certificado.codigo }}.</p>
+  </footer>
+</article>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}Registro de actividad{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  {% if "administrador" in yo.roles %}<a class="volver" href="/admin">← Administración</a>{% else %}<a class="volver" href="/inicio">← Inicio</a>{% endif %}
+  <h1>Registro de actividad</h1>
+  <p>Ingresos, intentos fallidos y cambios importantes en la plataforma, del más reciente al más antiguo.</p>
+</div>
+
+<form method="get" class="tarjeta filtros">
+  <div>
+    <label for="texto">Buscar en el registro</label>
+    <input id="texto" name="texto" value="{{ texto }}" placeholder="Persona, acción o detalle">
+  </div>
+  <button class="boton" type="submit">Filtrar</button>
+</form>
+
+<div class="tarjeta">
+  <p class="gris">{% if texto %}{{ registros|length }} resultados para «{{ texto }}» (máximo 200).{% else %}Últimos {{ registros|length }} movimientos (máximo 200).{% endif %}</p>
+  {% if registros %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead><tr><th class="izq">Fecha</th><th class="izq">Persona</th><th class="izq">Acción</th><th class="izq">Detalle</th></tr></thead>
+      <tbody>
+        {% for registro in registros %}
+        <tr>
+          <td class="izq gris">{{ registro.fecha }}</td>
+          <td class="izq">{{ registro.persona or "Sin sesión" }}{% if registro.usuario %}<small class="gris bloque">{{ registro.usuario }}</small>{% endif %}</td>
+          <td class="izq">{{ registro.accion }}</td>
+          <td class="izq gris">{{ registro.detalle }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="vacio">No hay movimientos{% if texto %} con ese texto{% endif %}.</p>
+  {% endif %}
+</div>
+{% endblock %}

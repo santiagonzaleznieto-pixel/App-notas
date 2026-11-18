@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grupos · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/admin.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="coordinadora--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Diana Lorena Betancur</strong>
+    <span>Coordinación</span>
+  </div>
+  <a class="boton-salir" href="coordinadora--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="coordinadora--inicio.html" class="">Inicio</a>
+    
+    <a href="coordinadora--grupos.html" class="">Grupos</a>
+    
+    <a href="coordinadora--indicadores.html" class="">Indicadores</a>
+    
+    <a href="coordinadora--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="coordinadora--circulares.html" class="">Circulares</a>
+    
+    <a href="coordinadora--agenda.html" class="">Agenda</a>
+    
+    <a href="coordinadora--asistencia.html" class="">Asistencia</a>
+    
+    <a href="coordinadora--observador.html" class="">Observador</a>
+    
+    <a href="coordinadora--convivencia.html" class="">Convivencia</a>
+    
+    <a href="coordinadora--horas.html" class="">Horas sociales</a>
+    
+    <a href="coordinadora--certificados.html" class="">Certificados</a>
+    
+    <a href="coordinadora--orientacion.html" class="">Orientación</a>
+    
+    <a href="coordinadora--piar.html" class="">PIAR</a>
+    
+    <a href="coordinadora--elecciones.html" class="">Elecciones</a>
+    
+    <a href="coordinadora--porteria.html" class="">Portería</a>
+    
+    <a href="coordinadora--admin.html" class="activa">Administración</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="coordinadora--admin.html">← Administración</a>
+  <h1>Grupos 2026</h1>
+  
+  <p>Abre un grupo para cambiar su director, asignar docentes por materia y ver sus estudiantes.</p>
+  
+</div>
+
+
+
+
+<div class="tarjeta">
+  
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th class="izq">Grupo</th><th class="izq">Sede</th><th class="izq">Director de grupo</th><th>Estudiantes</th><th>Materias</th></tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td class="izq"><a href="coordinadora--admin-grupos-1.html">10-A</a> <small class="gris">Décimo</small></td>
+          <td class="izq">Sede Principal</td>
+          <td class="izq">Hernán Darío Aguirre</td>
+          <td>10</td>
+          <td>8</td>
+        </tr>
+        
+        <tr>
+          <td class="izq"><a href="coordinadora--admin-grupos-2.html">11-A</a> <small class="gris">Once</small></td>
+          <td class="izq">Sede Principal</td>
+          <td class="izq">Sandra Milena Grajales</td>
+          <td>6</td>
+          <td>8</td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  
+</div>
+
+
+<form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="tarjeta formulario">
+  <h2>Nuevo grupo</h2>
+  <input type="hidden" name="accion" value="crear">
+  <div class="rejilla">
+    <div>
+      <label for="grado_id">Grado</label>
+      <select id="grado_id" name="grado_id" required>
+        <option value="">Elige el grado</option>
+        <option value="1" >Transición · Preescolar</option><option value="2" >Primero · Básica primaria</option><option value="3" >Segundo · Básica primaria</option><option value="4" >Tercero · Básica primaria</option><option value="5" >Cuarto · Básica primaria</option><option value="6" >Quinto · Básica primaria</option><option value="7" >Sexto · Básica secundaria</option><option value="8" >Séptimo · Básica secundaria</option><option value="9" >Octavo · Básica secundaria</option><option value="10" >Noveno · Básica secundaria</option><option value="11" >Décimo · Media</option><option value="12" >Once · Media</option>
+      </select>
+    </div>
+    <div>
+      <label for="nombre">Nombre del grupo</label>
+      <input id="nombre" name="nombre" value="" maxlength="20" placeholder="6-A" required>
+    </div>
+    <div>
+      <label for="sede_id">Sede</label>
+      <select id="sede_id" name="sede_id" required>
+        <option value="1" >Sede Principal · Mañana</option>
+      </select>
+    </div>
+    <div>
+      <label for="director_id">Director de grupo</label>
+      <select id="director_id" name="director_id">
+        <option value="">Sin director por ahora</option>
+        <option value="5" >Claudia Isabel Muñoz</option><option value="4" >Hernán Darío Aguirre</option><option value="10" >Julián Estrada</option><option value="8" >Sandra Milena Grajales</option><option value="7" >Sebastián Londoño</option><option value="9" >Wilmar Tapasco</option><option value="6" >Álvaro Trejos</option>
+      </select>
+    </div>
+  </div>
+  <div class="acciones"><button class="boton" type="submit">Crear grupo</button></div>
+</form>
+
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block titulo %}Administración{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Administración</h1>
+  <p>{{ colegio.nombre }} · Año escolar {{ colegio.anio }}</p>
+</div>
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Estudiantes matriculados</span>
+    <strong>{{ cifras.matriculados }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Docentes activos</span>
+    <strong>{{ cifras.docentes }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Grupos {{ colegio.anio }}</span>
+    <strong>{{ cifras.grupos }}</strong>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Usuarios inactivos</span>
+    <strong>{{ cifras.inactivos }}</strong>
+  </div>
+</div>
+
+{% if pendientes %}
+<div class="tarjeta">
+  <h2>Por revisar</h2>
+  <ul class="lista">
+    {% for pendiente in pendientes %}
+    <li><a href="{{ pendiente.ruta }}">{{ pendiente.texto }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<div class="tablero">
+  {% for seccion in secciones %}
+  <a class="tarjeta modulo" href="{{ seccion.ruta }}">
+    <h2>{{ seccion.titulo }}</h2>
+    <p>{{ seccion.descripcion }}</p>
+    <span class="ir">Abrir →</span>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

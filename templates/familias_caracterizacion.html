@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block titulo %}Caracterización de las familias{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/familias.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/escuela-familias">← Escuela para familias</a>
+  <h1>Caracterización de las familias</h1>
+  <p>Datos que cada familia actualiza en «Mi familia» (Decreto 459 de 2024). Úsalos para planear los encuentros y la comunicación.</p>
+</div>
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Familias caracterizadas</span>
+    <strong>{{ conteo.caracterizadas }}<small> de {{ total }}</small></strong>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Sin internet en casa</span>
+    <strong>{{ conteo.sin_internet }}</strong>
+    <small>Necesitan llamada o mensaje de texto</small>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Medio preferido</span>
+    <strong>{{ conteo.whatsapp }}<small> WhatsApp</small></strong>
+    <small>{{ conteo.llamada }} llamada · {{ conteo.correo }} correo</small>
+  </div>
+</div>
+
+<form method="get" class="tarjeta filtros" action="/escuela-familias/caracterizacion">
+  <div>
+    <label for="internet">Internet en casa</label>
+    <select id="internet" name="internet">
+      <option value="" {% if internet == "" %}selected{% endif %}>Todas las familias</option>
+      <option value="si" {% if internet == "si" %}selected{% endif %}>Con internet</option>
+      <option value="no" {% if internet == "no" %}selected{% endif %}>Sin internet</option>
+    </select>
+  </div>
+  <div>
+    <label for="medio">Medio preferido</label>
+    <select id="medio" name="medio">
+      <option value="" {% if medio == "" %}selected{% endif %}>Todos los medios</option>
+      {% for clave in medios %}
+      <option value="{{ clave }}" {% if medio == clave %}selected{% endif %}>{{ medios[clave] }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button class="boton" type="submit">Filtrar</button>
+</form>
+
+<div class="tarjeta">
+  {% if filas %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th class="izq">Acudiente</th>
+          <th class="izq">Estudiantes</th>
+          <th>Personas en el hogar</th>
+          <th>Internet en casa</th>
+          <th>Medio preferido</th>
+          <th class="izq">Necesidades</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+        <tr>
+          <td class="izq">
+            <strong>{{ fila.acudiente.nombre }}</strong>
+            {% if fila.acudiente.telefono %}<span class="contacto">{{ fila.acudiente.telefono }}</span>{% endif %}
+            {% if fila.acudiente.correo %}<span class="contacto">{{ fila.acudiente.correo }}</span>{% endif %}
+          </td>
+          <td class="izq">{{ fila.hijos|join(", ") }}</td>
+          {% if fila.ficha %}
+          <td>{{ fila.ficha.personas_hogar }}</td>
+          <td>{% if fila.ficha.tiene_internet == 1 %}<span class="estado bien">Sí</span>{% else %}<span class="estado mal">No</span>{% endif %}</td>
+          <td>{{ medios[fila.ficha.medio_preferido] }}</td>
+          <td class="izq texto-largo">{% if fila.ficha.necesidades %}{{ fila.ficha.necesidades }}{% else %}<span class="gris">—</span>{% endif %}</td>
+          {% else %}
+          <td colspan="4"><span class="estado neutro">Sin caracterizar</span></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="vacio">Ninguna familia coincide con el filtro.</p>
+  {% endif %}
+</div>
+{% endblock %}

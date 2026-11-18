@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}Verificar certificado{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/certificados.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Verificación de certificados</h1>
+  <p>Comprueba si una constancia o un certificado emitido por la plataforma es auténtico.</p>
+</div>
+<div class="tarjeta formulario verificar-tarjeta">
+  {% include "certificados_verificar_caja.html" %}
+</div>
+{% endblock %}
+{% block publico %}
+<div class="login verificar">
+  <section class="login-hero">
+    <img class="escudo-login" src="/static/escudo.png" alt="Escudo del colegio">
+    <h1>Verificación de certificados</h1>
+    <p class="subtitulo">Comprueba si una constancia o un certificado emitido por la plataforma escolar es auténtico.</p>
+    <svg class="colinas" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,200 L0,120 L160,80 L340,130 L520,55 L720,115 L900,70 L1080,125 L1200,95 L1200,200 Z" fill="#3F6B4A" opacity="0.55"/>
+      <path d="M0,200 L0,155 L220,115 L430,150 L640,95 L860,140 L1050,105 L1200,135 L1200,200 Z" fill="#2C4E35" opacity="0.8"/>
+      <path d="M0,200 L0,182 L260,166 L520,188 L780,162 L1000,184 L1200,172 L1200,200 Z" fill="#BD5B2E"/>
+    </svg>
+  </section>
+  <section class="login-panel verificar-panel">
+    {% include "certificados_verificar_caja.html" %}
+  </section>
+  <p class="verificar-pie">Esta página es pública: solo muestra el tipo de documento, el nombre del estudiante, el colegio y la fecha. <a href="/">Ir al inicio de sesión</a></p>
+</div>
+{% endblock %}

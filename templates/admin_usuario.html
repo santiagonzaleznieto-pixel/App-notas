@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block titulo %}{{ persona.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/admin/usuarios">← Usuarios</a>
+  <h1>{{ persona.nombre }}</h1>
+  <p>
+    Usuario <strong>{{ persona.usuario }}</strong> ·
+    {% for rol in persona.roles %}{{ nombres_roles[rol] or rol }}{% if not loop.last %} · {% endif %}{% endfor %}
+    {% if persona.activo %}<span class="estado bien">Activo</span>{% else %}<span class="estado neutro">Inactivo</span>{% endif %}
+    {% if persona.debe_cambiar_clave %}<span class="estado atencion">Clave temporal</span>{% endif %}
+  </p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+{% if clave_nueva %}
+{% set credencial = {"nombre": persona.nombre, "usuario": persona.usuario, "clave": clave_nueva, "grupo": ""} %}
+{% set titulo_credencial = "Nueva clave temporal" %}
+{% include "admin_credencial.html" %}
+{% endif %}
+{% if not gestionable %}
+<div class="aviso atencion">Esta persona tiene un rol directivo o con acceso a información sensible: solo la administración puede cambiar sus datos, su contraseña o su estado.</div>
+{% endif %}
+
+<div class="dos-columnas">
+  {% if gestionable %}
+  <form method="post" class="tarjeta formulario">
+    <h2>Datos y roles</h2>
+    <input type="hidden" name="accion" value="datos">
+    <label for="nombre">Nombre completo</label>
+    <input id="nombre" name="nombre" value="{{ datos.nombre }}" maxlength="100" required>
+    <div class="rejilla">
+      <div>
+        <label for="documento">Número de documento</label>
+        <input id="documento" name="documento" value="{{ datos.documento }}" maxlength="24" required>
+      </div>
+      <div>
+        <label for="telefono">Celular o WhatsApp</label>
+        <input id="telefono" name="telefono" value="{{ datos.telefono }}" maxlength="20" inputmode="tel">
+      </div>
+    </div>
+    <label for="correo">Correo</label>
+    <input id="correo" name="correo" type="email" value="{{ datos.correo }}" maxlength="120">
+    {% include "admin_casillas_roles.html" %}
+    <p class="ayuda">El usuario para entrar ({{ persona.usuario }}) no cambia aunque cambie el nombre.</p>
+    <div class="acciones"><button class="boton" type="submit">Guardar cambios</button></div>
+  </form>
+
+  <div class="tarjeta">
+    <h2>Acceso</h2>
+    {% if persona.id == yo.id %}
+    <p class="gris">Este es tu propio usuario: no puedes desactivarlo aquí. Tu contraseña se cambia en <a href="/mi-cuenta">Mi cuenta</a>.</p>
+    {% else %}
+    <p class="gris">«Restablecer contraseña» crea una clave temporal nueva y la muestra una sola vez. La clave anterior deja de servir.</p>
+    <div class="acciones izquierda">
+      <form method="post">
+        <input type="hidden" name="accion" value="restablecer">
+        <button class="boton secundario" type="submit">Restablecer contraseña</button>
+      </form>
+      {% if persona.activo %}
+      <form method="post" onsubmit="return confirm('¿Seguro que quieres desactivar este usuario?')">
+        <input type="hidden" name="accion" value="desactivar">
+        <button class="boton peligro" type="submit">Desactivar</button>
+      </form>
+      {% else %}
+      <form method="post">
+        <input type="hidden" name="accion" value="activar">
+        <button class="boton" type="submit">Activar</button>
+      </form>
+      {% endif %}
+    </div>
+    <p class="ayuda gris">Un usuario desactivado no puede entrar, pero sus datos y notas se conservan.</p>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="tarjeta">
+    <h2>Datos</h2>
+    <dl class="datos-persona">
+      <dt>Documento</dt><dd>{{ persona.documento or "—" }}</dd>
+      <dt>Correo</dt><dd>{{ persona.correo or "—" }}</dd>
+      <dt>Teléfono</dt><dd>{{ persona.telefono or "—" }}</dd>
+    </dl>
+  </div>
+  {% endif %}
+</div>
+
+{% if "acudiente" in persona.roles %}
+<div class="tarjeta">
+  <h2>Estudiantes a cargo</h2>
+  {% if a_cargo %}
+  <ul class="lista">
+    {% for hijo in a_cargo %}
+    <li class="fila-lista">
+      <span><a href="/admin/usuarios/{{ hijo.id }}">{{ hijo.nombre }}</a> <span class="gris">· {{ hijo.parentesco }}</span></span>
+      {% if gestionable %}
+      <form method="post">
+        <input type="hidden" name="accion" value="quitar_acudido">
+        <input type="hidden" name="estudiante_id" value="{{ hijo.id }}">
+        <button class="boton secundario pequeno" type="submit">Quitar</button>
+      </form>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="gris">Todavía no tiene estudiantes a cargo.</p>
+  {% endif %}
+  {% if gestionable and opciones_estudiantes %}
+  <form method="post" class="formulario fila-edicion tres">
+    <input type="hidden" name="accion" value="agregar_acudido">
+    <div>
+      <label for="estudiante_id">Estudiante</label>
+      <select id="estudiante_id" name="estudiante_id">
+        {% for estudiante in opciones_estudiantes %}<option value="{{ estudiante.id }}">{{ estudiante.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="parentesco">Parentesco</label>
+      <select id="parentesco" name="parentesco">
+        {% for parentesco in parentescos %}<option value="{{ parentesco }}">{{ parentesco }}</option>{% endfor %}
+      </select>
+    </div>
+    <button class="boton" type="submit">Agregar</button>
+  </form>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if "estudiante" in persona.roles %}
+<div class="tarjeta">
+  <h2>Matrícula {{ colegio.anio }}</h2>
+  {% if grupo %}
+  <p>Matriculado en <a href="/admin/grupos/{{ grupo.id }}">{{ grupo.nombre }}</a> · {{ grupo.grado }} · {{ grupo.sede }}</p>
+  {% else %}
+  <p class="gris">Sin matrícula activa este año. Se matricula desde la página de un grupo.</p>
+  {% endif %}
+  <h2 class="subtitulo-tarjeta">Acudientes</h2>
+  {% if acudientes %}
+  <ul class="lista">
+    {% for acudiente in acudientes %}
+    <li><a href="/admin/usuarios/{{ acudiente.id }}">{{ acudiente.nombre }}</a> <span class="gris">· {{ acudiente.parentesco }}{% if acudiente.telefono %} · {{ acudiente.telefono }}{% endif %}</span></li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="gris">No tiene acudientes registrados. Para asignarle uno, abre la página del acudiente.</p>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Períodos · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/admin.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="coordinadora--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Diana Lorena Betancur</strong>
+    <span>Coordinación</span>
+  </div>
+  <a class="boton-salir" href="coordinadora--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="coordinadora--inicio.html" class="">Inicio</a>
+    
+    <a href="coordinadora--grupos.html" class="">Grupos</a>
+    
+    <a href="coordinadora--indicadores.html" class="">Indicadores</a>
+    
+    <a href="coordinadora--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="coordinadora--circulares.html" class="">Circulares</a>
+    
+    <a href="coordinadora--agenda.html" class="">Agenda</a>
+    
+    <a href="coordinadora--asistencia.html" class="">Asistencia</a>
+    
+    <a href="coordinadora--observador.html" class="">Observador</a>
+    
+    <a href="coordinadora--convivencia.html" class="">Convivencia</a>
+    
+    <a href="coordinadora--horas.html" class="">Horas sociales</a>
+    
+    <a href="coordinadora--certificados.html" class="">Certificados</a>
+    
+    <a href="coordinadora--orientacion.html" class="">Orientación</a>
+    
+    <a href="coordinadora--piar.html" class="">PIAR</a>
+    
+    <a href="coordinadora--elecciones.html" class="">Elecciones</a>
+    
+    <a href="coordinadora--porteria.html" class="">Portería</a>
+    
+    <a href="coordinadora--admin.html" class="activa">Administración</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="coordinadora--admin.html">← Administración</a>
+  <h1>Períodos 2026</h1>
+  <p>Los docentes solo pueden calificar en los períodos abiertos. El porcentaje de cada período pesa en la nota final.</p>
+</div>
+
+
+
+
+<form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="tarjeta formulario">
+  <input type="hidden" name="accion" value="guardar">
+  <div class="tarjeta-titulo">
+    <h2>Fechas y porcentajes</h2>
+    <span class="estado bien">Suman 100 %</span>
+  </div>
+  
+  <fieldset class="periodo-caja">
+    <legend>Período 1</legend>
+    <div class="rejilla">
+      <div>
+        <label for="nombre-1">Nombre</label>
+        <input id="nombre-1" name="nombre-1" value="Primer período" maxlength="60" required>
+      </div>
+      <div>
+        <label for="inicio-1">Fecha de inicio</label>
+        <input id="inicio-1" name="inicio-1" type="date" value="2026-01-26" required>
+      </div>
+      <div>
+        <label for="fin-1">Fecha final</label>
+        <input id="fin-1" name="fin-1" type="date" value="2026-04-03" required>
+      </div>
+      <div>
+        <label for="porcentaje-1">Porcentaje (%)</label>
+        <input id="porcentaje-1" name="porcentaje-1" value="25" inputmode="decimal" maxlength="6" required>
+      </div>
+    </div>
+    <div class="casillas">
+      <label><input type="checkbox" name="abierto-1" value="1" > Abierto para calificar</label>
+    </div>
+  </fieldset>
+  
+  <fieldset class="periodo-caja">
+    <legend>Período 2</legend>
+    <div class="rejilla">
+      <div>
+        <label for="nombre-2">Nombre</label>
+        <input id="nombre-2" name="nombre-2" value="Segundo período" maxlength="60" required>
+      </div>
+      <div>
+        <label for="inicio-2">Fecha de inicio</label>
+        <input id="inicio-2" name="inicio-2" type="date" value="2026-04-06" required>
+      </div>
+      <div>
+        <label for="fin-2">Fecha final</label>
+        <input id="fin-2" name="fin-2" type="date" value="2026-06-12" required>
+      </div>
+      <div>
+        <label for="porcentaje-2">Porcentaje (%)</label>
+        <input id="porcentaje-2" name="porcentaje-2" value="25" inputmode="decimal" maxlength="6" required>
+      </div>
+    </div>
+    <div class="casillas">
+      <label><input type="checkbox" name="abierto-2" value="1" > Abierto para calificar</label>
+    </div>
+  </fieldset>
+  
+  <fieldset class="periodo-caja">
+    <legend>Período 3</legend>
+    <div class="rejilla">
+      <div>
+        <label for="nombre-3">Nombre</label>
+        <input id="nombre-3" name="nombre-3" value="Tercer período" maxlength="60" required>
+      </div>
+      <div>
+        <label for="inicio-3">Fecha de inicio</label>
+        <input id="inicio-3" name="inicio-3" type="date" value="2026-07-06" required>
+      </div>
+      <div>
+        <label for="fin-3">Fecha final</label>
+        <input id="fin-3" name="fin-3" type="date" value="2026-09-11" required>
+      </div>
+      <div>
+        <label for="porcentaje-3">Porcentaje (%)</label>
+        <input id="porcentaje-3" name="porcentaje-3" value="25" inputmode="decimal" maxlength="6" required>
+      </div>
+    </div>
+    <div class="casillas">
+      <label><input type="checkbox" name="abierto-3" value="1" > Abierto para calificar</label>
+    </div>
+  </fieldset>
+  
+  <fieldset class="periodo-caja">
+    <legend>Período 4</legend>
+    <div class="rejilla">
+      <div>
+        <label for="nombre-4">Nombre</label>
+        <input id="nombre-4" name="nombre-4" value="Cuarto período" maxlength="60" required>
+      </div>
+      <div>
+        <label for="inicio-4">Fecha de inicio</label>
+        <input id="inicio-4" name="inicio-4" type="date" value="2026-09-14" required>
+      </div>
+      <div>
+        <label for="fin-4">Fecha final</label>
+        <input id="fin-4" name="fin-4" type="date" value="2026-11-27" required>
+      </div>
+      <div>
+        <label for="porcentaje-4">Porcentaje (%)</label>
+        <input id="porcentaje-4" name="porcentaje-4" value="25" inputmode="decimal" maxlength="6" required>
+      </div>
+    </div>
+    <div class="casillas">
+      <label><input type="checkbox" name="abierto-4" value="1" checked> Abierto para calificar</label>
+    </div>
+  </fieldset>
+  
+  <div class="acciones"><button class="boton" type="submit">Guardar períodos</button></div>
+</form>
+
+<div class="tarjeta">
+  <h2>Agregar o quitar períodos</h2>
+  <p class="gris">El período nuevo queda al final, cerrado y con 0 %. Solo se puede quitar el último período, y únicamente si todavía no tiene notas.</p>
+  <div class="acciones izquierda">
+    <form onsubmit="alert('En la demo no se guarda nada.'); return false;">
+      <input type="hidden" name="accion" value="agregar">
+      <button class="boton secundario" type="submit">Agregar un período</button>
+    </form>
+    
+    <form onsubmit="alert('En la demo no se guarda nada.'); return false;" onsubmit="return confirm('¿Seguro que quieres quitar el último período?')">
+      <input type="hidden" name="accion" value="quitar">
+      <button class="boton peligro" type="submit">Quitar el último período</button>
+    </form>
+    
+  </div>
+</div>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

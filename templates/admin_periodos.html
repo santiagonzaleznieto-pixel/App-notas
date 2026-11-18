@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block titulo %}Períodos{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/admin">← Administración</a>
+  <h1>Períodos {{ colegio.anio }}</h1>
+  <p>Los docentes solo pueden calificar en los períodos abiertos. El porcentaje de cada período pesa en la nota final.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<form method="post" class="tarjeta formulario">
+  <input type="hidden" name="accion" value="guardar">
+  <div class="tarjeta-titulo">
+    <h2>Fechas y porcentajes</h2>
+    <span class="estado {% if suma == '100' %}bien{% else %}atencion{% endif %}">Suman {{ suma }} %</span>
+  </div>
+  {% for fila in filas %}
+  <fieldset class="periodo-caja">
+    <legend>Período {{ fila.numero }}</legend>
+    <div class="rejilla">
+      <div>
+        <label for="nombre-{{ fila.id }}">Nombre</label>
+        <input id="nombre-{{ fila.id }}" name="nombre-{{ fila.id }}" value="{{ fila.nombre }}" maxlength="60" required>
+      </div>
+      <div>
+        <label for="inicio-{{ fila.id }}">Fecha de inicio</label>
+        <input id="inicio-{{ fila.id }}" name="inicio-{{ fila.id }}" type="date" value="{{ fila.fecha_inicio }}" required>
+      </div>
+      <div>
+        <label for="fin-{{ fila.id }}">Fecha final</label>
+        <input id="fin-{{ fila.id }}" name="fin-{{ fila.id }}" type="date" value="{{ fila.fecha_fin }}" required>
+      </div>
+      <div>
+        <label for="porcentaje-{{ fila.id }}">Porcentaje (%)</label>
+        <input id="porcentaje-{{ fila.id }}" name="porcentaje-{{ fila.id }}" value="{{ fila.porcentaje }}" inputmode="decimal" maxlength="6" required>
+      </div>
+    </div>
+    <div class="casillas">
+      <label><input type="checkbox" name="abierto-{{ fila.id }}" value="1" {% if fila.abierto %}checked{% endif %}> Abierto para calificar</label>
+    </div>
+  </fieldset>
+  {% else %}
+  <p class="vacio">Este año todavía no tiene períodos.</p>
+  {% endfor %}
+  {% if filas %}<div class="acciones"><button class="boton" type="submit">Guardar períodos</button></div>{% endif %}
+</form>
+
+<div class="tarjeta">
+  <h2>Agregar o quitar períodos</h2>
+  <p class="gris">El período nuevo queda al final, cerrado y con 0 %. Solo se puede quitar el último período, y únicamente si todavía no tiene notas.</p>
+  <div class="acciones izquierda">
+    <form method="post">
+      <input type="hidden" name="accion" value="agregar">
+      <button class="boton secundario" type="submit">Agregar un período</button>
+    </form>
+    {% if filas|length > 1 %}
+    <form method="post" onsubmit="return confirm('¿Seguro que quieres quitar el último período?')">
+      <input type="hidden" name="accion" value="quitar">
+      <button class="boton peligro" type="submit">Quitar el último período</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

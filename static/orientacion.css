@@ -1,0 +1,48 @@
+.confidencial {
+  background: #FBF1EF;
+  border: 1px solid #E4B3AB;
+  border-left: 5px solid var(--terracota);
+  border-radius: 8px;
+  padding: 11px 14px;
+  margin-bottom: 20px;
+  font-size: .88rem;
+  color: #6B2A1E;
+}
+.confidencial strong { color: #A33227; }
+.texto-largo { white-space: pre-line; overflow-wrap: anywhere; }
+.fila-titulo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; margin-bottom: 4px; }
+.fila-titulo h3 { font-family: var(--titulos); color: var(--azul-oscuro); font-size: 1.02rem; margin: 0; font-weight: 600; }
+.detalle { font-size: .85rem; color: var(--gris); margin: 4px 0 8px; }
+.lista .texto-largo { margin: 6px 0; }
+.historial li { border-left: 4px solid var(--azul-suave); padding-left: 12px; margin-bottom: 4px; }
+.historial li.abierta { border-left-color: var(--dorado); }
+.bloque-lateral h2 { margin-bottom: 10px; }
+.bloque-lateral + .bloque-lateral { margin-top: 0; }
+
+.conteo { list-style: none; margin: 10px 0 0; padding: 0; }
+.conteo li { display: grid; grid-template-columns: 120px 1fr 40px; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid #F0EBE1; }
+.conteo li:last-child { border-bottom: none; }
+.conteo .barra-progreso { margin: 0; height: 12px; }
+.conteo strong { text-align: right; font-family: var(--titulos); font-size: 1.2rem; color: var(--azul-oscuro); }
+
+.estudiantes-remitir li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 0; }
+
+.fila-piar { border: 1px solid var(--borde); border-left: 5px solid var(--azul-suave); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
+.fila-piar.editable { border-left-color: var(--dorado); background: #FFFDF8; }
+.fila-piar .formulario label { margin-top: 8px; }
+.fila-piar .formulario textarea { min-height: 80px; }
+.campos-piar { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 18px; margin: 8px 0 0; }
+.campos-piar dt, .datos-piar dt { font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--verde-oscuro); }
+.campos-piar dd, .datos-piar dd { margin: 2px 0 0; font-size: .92rem; }
+.datos-piar dd { margin-bottom: 14px; }
+.revision { border-top: 5px solid var(--verde); }
+
+@media (max-width: 800px) {
+  .conteo li { grid-template-columns: 90px 1fr 32px; gap: 8px; }
+  .fila-piar { padding: 12px; }
+}
+
+@media print {
+  .confidencial { border-left-width: 3px; }
+  .fila-piar form, .revision form { display: none; }
+}

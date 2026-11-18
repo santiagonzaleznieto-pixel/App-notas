@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orientación · Andrés Felipe Quintero · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/orientacion.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="orientadora--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Natalia Giraldo Ruiz</strong>
+    <span>Orientación escolar</span>
+  </div>
+  <a class="boton-salir" href="orientadora--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="orientadora--inicio.html" class="">Inicio</a>
+    
+    <a href="orientadora--grupos.html" class="">Grupos</a>
+    
+    <a href="orientadora--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="orientadora--circulares.html" class="">Circulares</a>
+    
+    <a href="orientadora--agenda.html" class="">Agenda</a>
+    
+    <a href="orientadora--asistencia.html" class="">Asistencia</a>
+    
+    <a href="orientadora--observador.html" class="">Observador</a>
+    
+    <a href="orientadora--convivencia.html" class="">Convivencia</a>
+    
+    <a href="orientadora--horas.html" class="">Horas sociales</a>
+    
+    <a href="orientadora--orientacion.html" class="activa">Orientación</a>
+    
+    <a href="orientadora--piar.html" class="">PIAR</a>
+    
+    <a href="orientadora--elecciones.html" class="">Elecciones</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="orientadora--orientacion.html">← Orientación</a>
+  <h1>Andrés Felipe Quintero</h1>
+  <p>Grupo 11-A · Once · Director de grupo: Sandra Milena Grajales</p>
+</div>
+
+<p class="confidencial"><strong>Confidencial.</strong> Historial de orientación escolar protegido por la Ley 1581 de 2012 y la Ley 1098 de 2006. No lo imprimas ni lo compartas.</p>
+
+
+
+
+<div class="dos-columnas">
+  <section class="tarjeta">
+    <h2>Historial de atenciones</h2>
+    
+    <ul class="lista historial">
+      
+      <li class="abierta">
+        <div class="fila-titulo">
+          <span class="etiqueta">Académico</span>
+          <span class="estado atencion">Abierta</span>
+        </div>
+        <span class="fecha">2026-11-10 · Natalia Giraldo Ruiz</span>
+        <p class="texto-largo">Andrés llega remitido por la directora de grupo. Reconoce que en el tercer período bajó en casi todas las materias; dice que se siente cansado y que no le encuentra sentido a estudiar porque ayuda en la finca en época de cosecha de café.</p>
+        <p class="texto-largo"><strong>Acciones y acuerdos:</strong> Se acuerda un horario de estudio en casa, monitoría de Matemáticas con un compañero y llamada a la madre para citarla a la próxima sesión.</p>
+        <p class="detalle">Remisión externa: Sin remisión externa · Próxima cita: 2026-11-24</p>
+        
+        <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="en-linea">
+          <input type="hidden" name="accion" value="cerrar">
+          <input type="hidden" name="atencion_id" value="1">
+          <button class="boton secundario pequeno" type="submit">Cerrar atención</button>
+        </form>
+        
+      </li>
+      
+    </ul>
+    
+  </section>
+
+  <div>
+    <section class="tarjeta bloque-lateral">
+      <h2>Remisiones de docentes</h2>
+      
+      <ul class="lista">
+        
+        <li>
+          <div class="fila-titulo">
+            <strong>Claudia Isabel Muñoz</strong>
+            <span class="estado atencion">Pendiente</span>
+          </div>
+          <p class="texto-largo">Bajo rendimiento en Matemáticas (2.3 en el tercer período) y desmotivación: no entrega los talleres, se queda dormido en clase y dice que ya no le importa perder el año.</p>
+          <span class="fecha">2026-11-13</span>
+          
+          <form onsubmit="alert('En la demo no se guarda nada.'); return false;">
+            <input type="hidden" name="accion" value="remision_atendida">
+            <input type="hidden" name="remision_id" value="1">
+            <button class="boton secundario pequeno" type="submit">Marcar como atendida</button>
+          </form>
+          
+        </li>
+        
+      </ul>
+      
+    </section>
+
+    <section class="tarjeta bloque-lateral">
+      <h2>Familia y PIAR</h2>
+      
+      <p class="gris">No hay acudientes registrados.</p>
+      
+      <p><span class="gris">Sin PIAR en 2026.</span> <a href="orientadora--piar#crear.html">Crear PIAR</a></p>
+    </section>
+  </div>
+</div>
+
+<form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="tarjeta formulario" id="nueva">
+  <h2>Nueva atención</h2>
+  <input type="hidden" name="accion" value="nueva">
+  <div class="rejilla">
+    <div>
+      <label for="fecha">Fecha de la atención</label>
+      <input id="fecha" name="fecha" type="date" value="2026-11-18" max="2026-11-18" required>
+    </div>
+    <div>
+      <label for="motivo">Motivo</label>
+      <select id="motivo" name="motivo" required>
+        <option value="">Elige el motivo</option>
+        
+        <option value="académico" >Académico</option>
+        
+        <option value="emocional" >Emocional</option>
+        
+        <option value="familiar" >Familiar</option>
+        
+        <option value="convivencia" >Convivencia</option>
+        
+        <option value="salud" >Salud</option>
+        
+        <option value="otro" >Otro</option>
+        
+      </select>
+    </div>
+  </div>
+  <label for="descripcion">Descripción</label>
+  <textarea id="descripcion" name="descripcion" maxlength="4000" required></textarea>
+  <p class="ayuda">Escribe hechos y lo que dice el estudiante. Evita diagnósticos que no tengan soporte profesional.</p>
+  <label for="acciones">Acciones y acuerdos</label>
+  <textarea id="acciones" name="acciones" maxlength="2000"></textarea>
+  <div class="rejilla">
+    <div>
+      <label for="remision">Remisión externa</label>
+      <select id="remision" name="remision">
+        
+        <option value="ninguna" selected>Sin remisión externa</option>
+        
+        <option value="salud" >EPS o servicio de salud</option>
+        
+        <option value="icbf" >ICBF</option>
+        
+        <option value="comisaria" >Comisaría de Familia</option>
+        
+        <option value="policia" >Policía de Infancia y Adolescencia</option>
+        
+        <option value="otra" >Otra entidad</option>
+        
+      </select>
+    </div>
+    <div>
+      <label for="proxima_cita">Próxima cita (opcional)</label>
+      <input id="proxima_cita" name="proxima_cita" type="date" value="">
+    </div>
+  </div>
+  <p class="ayuda">Si hay presunta vulneración de derechos, activa la ruta de atención integral (Ley 1620 de 2013) y remite a ICBF o Comisaría de Familia.</p>
+  <div class="acciones"><button class="boton" type="submit">Guardar atención</button></div>
+</form>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

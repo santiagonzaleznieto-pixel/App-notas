@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block titulo %}Conceptos de cobro{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/tesoreria.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/tesoreria">← Tesorería</a>
+  <h1>Conceptos de cobro</h1>
+  <p>Matrícula, pensión y otros cobros (salidas pedagógicas, derechos de grado...). Cambiar el valor de un concepto no cambia los cobros ya generados.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+{% if advertencia %}<div class="aviso advertencia">{{ advertencia }}</div>{% endif %}
+{% for texto in advertencias %}<div class="aviso advertencia">{{ texto }}</div>{% endfor %}
+
+<div class="dos-columnas">
+  <form method="post" action="/tesoreria/conceptos" class="tarjeta formulario">
+    <h2>{% if editando %}Editar concepto{% else %}Nuevo concepto{% endif %}</h2>
+    <input type="hidden" name="accion" value="concepto">
+    <input type="hidden" name="concepto_id" value="{{ valores.concepto_id }}">
+    <label for="nombre">Nombre</label>
+    <input id="nombre" name="nombre" value="{{ valores.nombre }}" maxlength="80" required placeholder="Ej.: Pensión mensual">
+    <div class="rejilla">
+      <div>
+        <label for="tipo">Tipo</label>
+        <select id="tipo" name="tipo">
+          {% for clave in tipos %}<option value="{{ clave }}" {% if valores.tipo == clave %}selected{% endif %}>{{ tipos[clave] }}</option>{% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="anio">Año</label>
+        <select id="anio" name="anio">
+          {% for anio in anios %}<option value="{{ anio }}" {% if valores.anio == anio %}selected{% endif %}>{{ anio }}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="rejilla">
+      <div>
+        <label for="valor">Valor (pesos)</label>
+        <input id="valor" name="valor" value="{{ valores.valor }}" inputmode="numeric" required placeholder="320.000">
+      </div>
+      <div>
+        <label for="valor_anterior">Valor del año anterior (pesos)</label>
+        <input id="valor_anterior" name="valor_anterior" value="{{ valores.valor_anterior }}" inputmode="numeric" placeholder="300.000">
+      </div>
+    </div>
+    <p class="ayuda">Escribe el valor del año anterior solo para matrícula y pensión: así se calcula el porcentaje de aumento. Déjalo vacío si no aplica.</p>
+    <div class="casillas">
+      <label><input type="checkbox" name="activo" value="1" {% if valores.activo %}checked{% endif %}> Activo (se puede usar para generar cobros)</label>
+    </div>
+    <div class="acciones">
+      {% if editando %}<a class="boton secundario" href="/tesoreria/conceptos">Cancelar</a>{% endif %}
+      <button class="boton" type="submit">{% if editando %}Guardar cambios{% else %}Crear concepto{% endif %}</button>
+    </div>
+  </form>
+
+  <form method="post" action="/tesoreria/conceptos" class="tarjeta formulario">
+    <h2>Tope de aumento</h2>
+    <input type="hidden" name="accion" value="tope">
+    <p class="gris">En los colegios privados, el aumento de la matrícula y la pensión no puede pasar el porcentaje que fija cada año el Ministerio de Educación Nacional mediante resolución (para 2026, la Resolución 019805 de 2025; para 2027, la Resolución 020309 de 2026 permite hasta 11,24 %). El porcentaje exacto depende del régimen y la clasificación de tu colegio: consúltalo en la resolución vigente.</p>
+    <ul class="lista">
+      {% for item in topes %}
+      <li>{{ item.anio }}: {% if item.tope is none %}<span class="estado neutro">Sin tope registrado</span>{% else %}<strong>{{ porcentaje(item.tope) }} %</strong>{% endif %}</li>
+      {% endfor %}
+    </ul>
+    <div class="rejilla">
+      <div>
+        <label for="anio_tope">Año</label>
+        <select id="anio_tope" name="anio">
+          {% for anio in anios %}<option value="{{ anio }}">{{ anio }}</option>{% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="tope">Tope de aumento autorizado por el MEN (%)</label>
+        <input id="tope" name="tope" inputmode="decimal" required placeholder="9,1">
+      </div>
+    </div>
+    <div class="acciones"><button class="boton secundario" type="submit">Guardar tope</button></div>
+  </form>
+</div>
+
+<div class="tarjeta">
+  <h2>Conceptos registrados</h2>
+  {% if conceptos %}
+  <div class="tabla-caja">
+    <table class="tabla simple">
+      <thead><tr><th class="izq">Concepto</th><th>Año</th><th>Tipo</th><th class="dinero">Valor</th><th class="dinero">Año anterior</th><th>Aumento</th><th>Estado</th><th></th></tr></thead>
+      <tbody>
+        {% for concepto in conceptos %}
+        <tr>
+          <td class="izq"><strong>{{ concepto.nombre }}</strong></td>
+          <td>{{ concepto.anio }}</td>
+          <td>{{ tipos[concepto.tipo] }}</td>
+          <td class="dinero">{{ pesos(concepto.valor) }}</td>
+          <td class="dinero">{% if concepto.valor_anio_anterior > 0 %}{{ pesos(concepto.valor_anio_anterior) }}{% else %}<span class="vacia">—</span>{% endif %}</td>
+          <td>
+            {% if concepto.aumento is none %}<span class="vacia">—</span>
+            {% elif concepto.supera %}<span class="estado mal" title="Supera el tope de {{ porcentaje(concepto.tope) }} %">{{ porcentaje(concepto.aumento) }} % · supera el tope</span>
+            {% elif concepto.tope is none %}<span class="estado neutro">{{ porcentaje(concepto.aumento) }} %</span>
+            {% else %}<span class="estado bien">{{ porcentaje(concepto.aumento) }} %</span>{% endif %}
+          </td>
+          <td>{% if concepto.activo %}<span class="estado bien">Activo</span>{% else %}<span class="estado neutro">Inactivo</span>{% endif %}</td>
+          <td><a class="boton pequeno secundario" href="/tesoreria/conceptos?editar={{ concepto.id }}">Editar</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="vacio">Todavía no hay conceptos de cobro. Crea el primero con el formulario.</p>
+  {% endif %}
+</div>
+{% endblock %}

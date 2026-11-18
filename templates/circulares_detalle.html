@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block titulo %}{{ circular.titulo }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/circulares.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/circulares">← Circulares</a>
+  <h1>{{ circular.titulo }}</h1>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<article class="tarjeta circular-detalle">
+  <div class="circular-meta">
+    <span>{{ circular.autor }}</span>
+    <span>·</span>
+    <span>{{ fecha_larga(circular.publicada_en[:10])|capitalize }}, {{ hora_texto(circular.publicada_en[11:16]) }}</span>
+    <span class="chip Pendiente">Para: {% if circular.destinatarios == "grupo" %}grupo {{ circular.grupo }}{% else %}{{ destinatarios[circular.destinatarios]|lower }}{% endif %}</span>
+    {% if circular.requiere_confirmacion %}<span class="estado atencion">Pide confirmar la lectura</span>{% endif %}
+  </div>
+  <div class="cuerpo-circular">{{ circular.cuerpo }}</div>
+  <div class="acciones">
+    <button class="boton secundario" type="button" onclick="window.print()">Imprimir</button>
+  </div>
+</article>
+
+{% if mia and circular.requiere_confirmacion %}
+  {% if lectura and lectura.confirmada_en %}
+  <div class="tarjeta confirmacion hecha">
+    <p><span class="estado bien">Lectura confirmada</span> el {{ fecha_larga(lectura.confirmada_en[:10]) }}, {{ hora_texto(lectura.confirmada_en[11:16]) }}.</p>
+  </div>
+  {% else %}
+  <form method="post" class="tarjeta confirmacion">
+    <p>El colegio necesita saber que recibiste esta circular.</p>
+    <button class="boton" type="submit">{% if "acudiente" in yo.roles %}Confirmo que la leí y estoy enterado{% else %}Confirmo que la leí{% endif %}</button>
+  </form>
+  {% endif %}
+{% endif %}
+
+{% if reporte %}
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Destinatarios</span>
+    <strong>{{ reporte.total }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>La leyeron</span>
+    <strong>{{ reporte.leidas }}<small> · {{ reporte.porcentaje_leidas }} %</small></strong>
+    <div class="barra-lectura"><div style="width: {{ reporte.porcentaje_leidas }}%"></div></div>
+  </div>
+  {% if circular.requiere_confirmacion %}
+  <div class="tarjeta cifra">
+    <span>Confirmaron</span>
+    <strong>{{ reporte.confirmadas }}<small> · {{ reporte.porcentaje_confirmadas }} %</small></strong>
+    <div class="barra-lectura"><div style="width: {{ reporte.porcentaje_confirmadas }}%"></div></div>
+  </div>
+  {% endif %}
+  <div class="tarjeta cifra alerta">
+    <span>Faltan</span>
+    <strong>{{ reporte.faltan|length }}</strong>
+  </div>
+</div>
+
+<div class="tarjeta">
+  <h2>{% if circular.requiere_confirmacion %}Quiénes faltan por leer o confirmar{% else %}Quiénes faltan por leer{% endif %}</h2>
+  {% if reporte.faltan %}
+  <div class="tabla-caja">
+    <table class="tabla simple">
+      <thead><tr><th class="izq">Persona</th><th class="izq">Rol</th><th class="izq">Celular</th><th>Estado</th></tr></thead>
+      <tbody>
+        {% for falta in reporte.faltan %}
+        <tr>
+          <td class="izq">{{ falta.persona.nombre }}</td>
+          <td class="izq gris">{% for rol in falta.persona.roles %}{{ nombres_roles[rol] }}{% if not loop.last %} · {% endif %}{% endfor %}</td>
+          <td class="izq gris">{{ falta.persona.telefono or "—" }}</td>
+          <td><span class="estado {{ falta.clase }}">{{ falta.estado }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="gris">Todos los destinatarios ya {% if circular.requiere_confirmacion %}confirmaron{% else %}la leyeron{% endif %}.</p>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block titulo %}Grupo {{ grupo.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/admin/grupos">← Grupos</a>
+  <h1>Grupo {{ grupo.nombre }}</h1>
+  <p>{{ grupo.grado }} · {{ grupo.sede }} ({{ grupo.jornada }}) · Director de grupo: {{ grupo.director or "sin asignar" }}</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if avisos %}<div class="aviso atencion">{% for aviso in avisos %}<div>{{ aviso }}</div>{% endfor %}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+{% if academico %}
+<form method="post" class="tarjeta formulario">
+  <h2>Datos del grupo</h2>
+  <input type="hidden" name="accion" value="datos">
+  <div class="rejilla">
+    <div>
+      <label for="nombre">Nombre</label>
+      <input id="nombre" name="nombre" value="{{ grupo.nombre }}" maxlength="20" required>
+    </div>
+    <div>
+      <label for="sede_id">Sede</label>
+      <select id="sede_id" name="sede_id">
+        {% for sede in sedes %}<option value="{{ sede.id }}" {% if sede.id == grupo.sede_id %}selected{% endif %}>{{ sede.nombre }} · {{ sede.jornada }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="director_id">Director de grupo</label>
+      <select id="director_id" name="director_id">
+        <option value="">Sin director</option>
+        {% for docente in docentes %}<option value="{{ docente.id }}" {% if docente.id == grupo.director_id %}selected{% endif %}>{{ docente.nombre }}</option>{% endfor %}
+        {% if director_inactivo %}<option value="{{ grupo.director_id }}" selected>{{ grupo.director }} (inactivo)</option>{% endif %}
+      </select>
+    </div>
+  </div>
+  <div class="acciones"><button class="boton" type="submit">Guardar datos</button></div>
+</form>
+
+<form method="post" class="tarjeta">
+  <input type="hidden" name="accion" value="asignaciones">
+  <h2>Materias y docentes</h2>
+  <p class="gris">Elige quién dicta cada materia y cuántas horas a la semana. «Sin asignar» quita la materia del grupo, solo si sus estudiantes todavía no tienen notas en ella.</p>
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead><tr><th class="izq">Materia</th><th class="izq">Docente</th><th>Horas por semana</th></tr></thead>
+      <tbody>
+        {% for fila in asignaciones %}
+        <tr>
+          <td class="izq"><label for="docente-{{ fila.materia.id }}">{{ fila.materia.nombre }}</label></td>
+          <td class="izq">
+            <select class="campo-tabla" id="docente-{{ fila.materia.id }}" name="docente-{{ fila.materia.id }}">
+              <option value="">Sin asignar</option>
+              {% for docente in docentes %}<option value="{{ docente.id }}" {% if docente.id == fila.docente_id %}selected{% endif %}>{{ docente.nombre }}</option>{% endfor %}
+              {% if fila.inactivo %}<option value="{{ fila.docente_id }}" selected>{{ fila.docente }} (inactivo)</option>{% endif %}
+            </select>
+          </td>
+          <td>
+            <label class="oculta" for="horas-{{ fila.materia.id }}">Horas por semana de {{ fila.materia.nombre }}</label>
+            <input class="campo-tabla horas" id="horas-{{ fila.materia.id }}" name="horas-{{ fila.materia.id }}" type="number" min="1" max="40" value="{{ fila.horas }}">
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="vacio">El colegio todavía no tiene materias.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="acciones"><button class="boton" type="submit">Guardar asignaciones</button></div>
+</form>
+{% else %}
+<div class="tarjeta">
+  <h2>Materias y docentes</h2>
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead><tr><th class="izq">Materia</th><th class="izq">Docente</th><th>Horas por semana</th></tr></thead>
+      <tbody>
+        {% for fila in asignaciones %}
+        {% if fila.docente_id %}
+        <tr><td class="izq">{{ fila.materia.nombre }}</td><td class="izq">{{ fila.docente }}</td><td>{{ fila.horas }}</td></tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<div class="tarjeta">
+  <h2>Estudiantes matriculados ({{ estudiantes|length }})</h2>
+  {% if estudiantes %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th>#</th><th class="izq">Estudiante</th><th class="izq">Documento</th><th>Desde</th>{% if puede_matricular %}<th>Acciones</th>{% endif %}</tr>
+      </thead>
+      <tbody>
+        {% for fila in estudiantes %}
+        <tr>
+          <td class="numero">{{ loop.index }}</td>
+          <td class="izq">
+            {% if puede_matricular %}<a href="/admin/usuarios/{{ fila.estudiante_id }}">{{ fila.nombre }}</a>{% else %}{{ fila.nombre }}{% endif %}
+            <small class="gris bloque">{{ fila.usuario }}</small>
+          </td>
+          <td class="izq">{{ fila.documento or "—" }}</td>
+          <td>{{ fila.fecha_matricula }}</td>
+          {% if puede_matricular %}
+          <td>
+            <div class="acciones-fila">
+              {% if otros_grupos %}
+              <form method="post">
+                <input type="hidden" name="accion" value="trasladar">
+                <input type="hidden" name="matricula_id" value="{{ fila.id }}">
+                <label class="oculta" for="destino-{{ fila.id }}">Trasladar a otro grupo</label>
+                <select class="campo-tabla corto" id="destino-{{ fila.id }}" name="grupo_destino">
+                  {% for otro in otros_grupos %}<option value="{{ otro.id }}">{{ otro.nombre }}</option>{% endfor %}
+                </select>
+                <button class="boton secundario pequeno" type="submit">Trasladar</button>
+              </form>
+              {% endif %}
+              <form method="post" onsubmit="return confirm('¿Seguro que quieres retirar a este estudiante?')">
+                <input type="hidden" name="accion" value="retirar">
+                <input type="hidden" name="matricula_id" value="{{ fila.id }}">
+                <button class="boton peligro pequeno" type="submit">Retirar</button>
+              </form>
+            </div>
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="vacio">Este grupo todavía no tiene estudiantes matriculados.</p>
+  {% endif %}
+
+  {% if puede_matricular %}
+  <h2 class="subtitulo-tarjeta">Matricular</h2>
+  {% if sin_matricula %}
+  <form method="post" class="formulario fila-edicion dos">
+    <input type="hidden" name="accion" value="matricular">
+    <div>
+      <label for="estudiante_id">Estudiante activo sin matrícula en {{ colegio.anio }}</label>
+      <select id="estudiante_id" name="estudiante_id">
+        {% for estudiante in sin_matricula %}<option value="{{ estudiante.id }}">{{ estudiante.nombre }}{% if estudiante.documento %} · {{ estudiante.documento }}{% endif %}</option>{% endfor %}
+      </select>
+    </div>
+    <button class="boton" type="submit">Matricular en {{ grupo.nombre }}</button>
+  </form>
+  {% else %}
+  <p class="gris">Todos los estudiantes activos ya tienen matrícula este año. Para uno nuevo, créalo en <a href="/admin/usuarios/nuevo">Nuevo usuario</a> o en <a href="/admin/cargue">Cargue masivo</a>.</p>
+  {% endif %}
+  {% endif %}
+</div>
+
+{% if salidas %}
+<div class="tarjeta">
+  <h2>Retiros y traslados</h2>
+  <ul class="lista">
+    {% for salida in salidas %}
+    <li class="fila-lista">
+      <span>{{ salida.nombre }}</span>
+      <span>{% if salida.estado == "trasladada" %}<span class="estado neutro">Trasladado</span>{% else %}<span class="estado mal">Retirado</span>{% endif %} <span class="fecha">{{ salida.fecha_retiro }}</span></span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block titulo %}Cargue masivo{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado no-imprimir">
+  <a class="volver" href="/admin">← Administración</a>
+  <h1>Cargue masivo de estudiantes</h1>
+  <p>Pega una línea por estudiante. Cada línea crea el usuario, una clave temporal y la matrícula en el grupo.</p>
+</div>
+
+{% if errores %}
+<div class="aviso error">
+  <strong>Líneas con problemas (no se crearon):</strong>
+  <ul class="lista-simple">{% for error in errores %}<li>{{ error }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+{% if creados %}
+<div class="aviso exito">{{ creados|length }} {% if creados|length == 1 %}estudiante creado y matriculado{% else %}estudiantes creados y matriculados{% endif %}.</div>
+<div class="tarjeta credencial">
+  <div class="tarjeta-titulo">
+    <h2>Usuarios y claves temporales · {{ colegio.nombre_corto }}</h2>
+    <button class="boton secundario pequeno no-imprimir" type="button" onclick="window.print()">Imprimir</button>
+  </div>
+  <p class="gris">Las claves se muestran solo esta vez. Imprime la tabla y entrégale a cada estudiante su usuario; al entrar deberá cambiar la clave.</p>
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th>#</th><th class="izq">Nombre</th><th class="izq">Documento</th><th>Grupo</th><th class="izq">Usuario</th><th class="izq">Clave temporal</th></tr>
+      </thead>
+      <tbody>
+        {% for creado in creados %}
+        <tr>
+          <td class="numero">{{ loop.index }}</td>
+          <td class="izq">{{ creado.nombre }}</td>
+          <td class="izq">{{ creado.documento }}</td>
+          <td>{{ creado.grupo }}</td>
+          <td class="izq"><strong>{{ creado.usuario }}</strong></td>
+          <td class="izq"><code class="clave-temporal">{{ creado.clave }}</code></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% elif procesado and not errores %}
+<div class="aviso atencion">No había líneas para cargar.</div>
+{% endif %}
+
+<form method="post" class="tarjeta formulario no-imprimir">
+  <label for="lineas">{% if errores %}Corrige las líneas que fallaron y vuelve a cargarlas{% else %}Estudiantes (una línea por estudiante){% endif %}</label>
+  <textarea id="lineas" name="lineas" class="cargue-texto" placeholder="Ana María Peña Gómez;1094123456;10-A" required>{{ texto }}</textarea>
+  <p class="ayuda">Formato: <strong>Nombre completo;Documento;Grupo</strong>. También puedes copiar y pegar las tres columnas desde Excel. Grupos de {{ colegio.anio }}: {% for grupo in grupos %}{{ grupo.nombre }}{% if not loop.last %}, {% endif %}{% else %}todavía no hay grupos{% endfor %}. Máximo {{ maximo }} líneas.</p>
+  <div class="acciones"><button class="boton" type="submit">Crear estudiantes</button></div>
+</form>
+{% endblock %}

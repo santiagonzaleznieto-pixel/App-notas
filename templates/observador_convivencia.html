@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block titulo %}Convivencia{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/observador.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Convivencia escolar</h1>
+  <p>Casos tipo I, II y III según la Ley 1620 de 2013 y el Decreto 1965 de 2013. Las situaciones tipo II y III se reportan en el SIUCE.</p>
+</div>
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Tipo I abiertos</span>
+    <strong>{{ abiertos_por_tipo[1] }}</strong>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Tipo II abiertos</span>
+    <strong>{{ abiertos_por_tipo[2] }}</strong>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Tipo III abiertos</span>
+    <strong>{{ abiertos_por_tipo[3] }}</strong>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Por reportar en el SIUCE</span>
+    <strong>{{ por_reportar|length }}</strong>
+  </div>
+</div>
+
+{% if por_reportar %}
+<div class="tarjeta">
+  <h2>Pendientes de reportar en el SIUCE</h2>
+  <ul class="alertas">
+    {% for caso in por_reportar %}
+    <li>
+      <a href="/observador/caso/{{ caso.id }}">{{ caso.estudiante_nombre }}{% if caso.grupo %} · {{ caso.grupo }}{% endif %}</a>
+      <span>{{ caso.nombre_tipo }} del {{ caso.fecha }}{% if caso.estado == "cerrada" %} (cerrado){% endif %}{% if caso.confidencial %} · confidencial{% endif %}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<div class="tarjeta">
+  <h2>Casos abiertos</h2>
+  {% if abiertos %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead><tr><th class="izq">Estudiante</th><th>Grupo</th><th>Tipo</th><th>Fecha</th><th>Protocolo</th><th>SIUCE</th></tr></thead>
+      <tbody>
+        {% for caso in abiertos %}
+        <tr>
+          <td class="izq"><a href="/observador/caso/{{ caso.id }}">{{ caso.estudiante_nombre }}</a>{% if caso.confidencial %} <span class="estado mal">Confidencial</span>{% endif %}</td>
+          <td>{{ caso.grupo or "—" }}</td>
+          <td><span class="chip-tipo {{ caso.clase }}">{{ caso.nombre_tipo }}</span></td>
+          <td>{{ caso.fecha }}</td>
+          <td><span class="estado {% if caso.avance.hechos == caso.avance.total %}bien{% else %}atencion{% endif %}">{{ caso.avance.hechos }}/{{ caso.avance.total }}</span></td>
+          <td>{% if caso.situacion_tipo < 2 %}<span class="vacia">No aplica</span>{% elif caso.reportado_siuce %}<span class="estado bien">Reportado</span>{% else %}<span class="estado mal">Pendiente</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="gris">No hay casos abiertos.</p>
+  {% endif %}
+</div>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Últimos casos cerrados</h2>
+    {% if cerrados %}
+    <ul class="lista">
+      {% for caso in cerrados %}
+      <li>
+        <a class="enlace-fuerte" href="/observador/caso/{{ caso.id }}">{{ caso.estudiante_nombre }}</a>
+        <span class="chip-tipo {{ caso.clase }}">{{ caso.nombre_tipo }}</span>
+        <span class="fecha bloque">{{ caso.fecha }}{% if caso.grupo %} · {{ caso.grupo }}{% endif %}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">Todavía no hay casos cerrados.</p>
+    {% endif %}
+  </div>
+
+  <div class="tarjeta">
+    <h2>Anotaciones del año {{ colegio.anio }}</h2>
+    <table class="tabla simple">
+      <thead><tr><th class="izq">Tipo</th><th>Cantidad</th></tr></thead>
+      <tbody>
+        <tr><td class="izq"><span class="chip-tipo positiva">Positivas</span></td><td>{{ conteo.positiva }}</td></tr>
+        <tr><td class="izq"><span class="chip-tipo por-mejorar">Por mejorar</span></td><td>{{ conteo.por_mejorar }}</td></tr>
+        <tr><td class="izq"><span class="chip-tipo situacion-1">Situación tipo I</span></td><td>{{ conteo.tipo_1 }}</td></tr>
+        <tr><td class="izq"><span class="chip-tipo situacion-2">Situación tipo II</span></td><td>{{ conteo.tipo_2 }}</td></tr>
+        <tr><td class="izq"><span class="chip-tipo situacion-3">Situación tipo III</span></td><td>{{ conteo.tipo_3 }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

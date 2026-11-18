@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block titulo %}Quién recoge{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/servicios.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Quién recoge a tus hijos</h1>
+  <p>Portería solo deja salir a tus hijos antes de la hora con un acudiente o con las personas que autorices aquí. Mantén la lista al día.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+{% if not hijos %}
+<div class="tarjeta vacio"><p>No tienes estudiantes a cargo registrados en este colegio. Habla con la secretaría.</p></div>
+{% else %}
+<div class="dos-columnas">
+  <div>
+    {% for hijo in hijos %}
+    <div class="tarjeta">
+      <span class="etiqueta">{% if hijo.grupo %}Grupo {{ hijo.grupo }}{% else %}Sin grupo{% endif %}</span>
+      <h2>{{ hijo.nombre }}</h2>
+      <ul class="lista">
+        {% for acudiente in hijo.acudientes %}
+        <li class="autorizado">
+          <div>
+            <strong>{{ acudiente.nombre }}</strong>
+            <span class="gris bloque">{{ acudiente.parentesco }} · Acudiente</span>
+          </div>
+          <span class="estado bien">Siempre</span>
+        </li>
+        {% endfor %}
+        {% for autorizado in hijo.autorizados %}
+        <li class="autorizado">
+          <div>
+            <strong>{{ autorizado.nombre }}</strong>
+            <span class="gris bloque">{{ autorizado.parentesco }} · Doc. {{ autorizado.documento }} · Tel. {{ autorizado.telefono }}</span>
+          </div>
+          <form method="post" action="/autorizados" class="en-linea">
+            <input type="hidden" name="accion" value="desactivar">
+            <input type="hidden" name="autorizado_id" value="{{ autorizado.id }}">
+            <button class="boton pequeno peligro" type="submit">Quitar</button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+      {% if not hijo.autorizados %}<p class="gris">No has autorizado a otras personas.</p>{% endif %}
+      {% if hijo.salidas %}
+      <details class="historial">
+        <summary>Últimas salidas anticipadas</summary>
+        <ul class="lista">
+          {% for salida in hijo.salidas %}
+          <li><span class="fecha">{{ fecha_corta(salida.fecha) }} · {{ salida.hora }}</span><span class="bloque">{{ salida.motivo }} · con {{ salida.recogido_por }}</span></li>
+          {% endfor %}
+        </ul>
+      </details>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <form method="post" action="/autorizados" class="tarjeta formulario">
+    <h2>Autorizar a una persona</h2>
+    <input type="hidden" name="accion" value="agregar">
+    <label for="estudiante_id">Para recoger a</label>
+    <select id="estudiante_id" name="estudiante_id" required>
+      {% for hijo in hijos %}<option value="{{ hijo.id }}" {% if nuevo.estudiante_id == hijo.id|string %}selected{% endif %}>{{ hijo.nombre }}</option>{% endfor %}
+    </select>
+    <label for="nombre">Nombre completo</label>
+    <input id="nombre" name="nombre" value="{{ nuevo.nombre }}" maxlength="120" required>
+    <div class="rejilla">
+      <div>
+        <label for="documento">Número de documento</label>
+        <input id="documento" name="documento" value="{{ nuevo.documento }}" inputmode="numeric" maxlength="15" required>
+      </div>
+      <div>
+        <label for="telefono">Celular</label>
+        <input id="telefono" name="telefono" type="tel" value="{{ nuevo.telefono }}" maxlength="20" required>
+      </div>
+    </div>
+    <label for="parentesco">Parentesco</label>
+    <select id="parentesco" name="parentesco" required>
+      <option value="">Elige el parentesco</option>
+      {% for parentesco in parentescos %}<option value="{{ parentesco }}" {% if nuevo.parentesco == parentesco %}selected{% endif %}>{{ parentesco }}</option>{% endfor %}
+    </select>
+    <p class="ayuda">Portería le pedirá el documento original al recoger.</p>
+    <div class="acciones"><button class="boton" type="submit">Autorizar</button></div>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

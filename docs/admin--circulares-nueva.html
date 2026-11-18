@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nueva circular · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/circulares.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="admin--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Paula Andrea Rincón</strong>
+    <span>Administración</span>
+  </div>
+  <a class="boton-salir" href="admin--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="admin--inicio.html" class="">Inicio</a>
+    
+    <a href="admin--grupos.html" class="">Grupos</a>
+    
+    <a href="admin--indicadores.html" class="">Indicadores</a>
+    
+    <a href="admin--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="admin--circulares.html" class="activa">Circulares</a>
+    
+    <a href="admin--agenda.html" class="">Agenda</a>
+    
+    <a href="admin--asistencia.html" class="">Asistencia</a>
+    
+    <a href="admin--observador.html" class="">Observador</a>
+    
+    <a href="admin--horas.html" class="">Horas sociales</a>
+    
+    <a href="admin--certificados.html" class="">Certificados</a>
+    
+    <a href="admin--elecciones.html" class="">Elecciones</a>
+    
+    <a href="admin--tesoreria.html" class="">Tesorería</a>
+    
+    <a href="admin--biblioteca.html" class="">Biblioteca</a>
+    
+    <a href="admin--porteria.html" class="">Portería</a>
+    
+    <a href="admin--admin.html" class="">Administración</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="admin--circulares.html">← Circulares</a>
+  <h1>Nueva circular</h1>
+  <p>Escribe el comunicado y elige quién lo recibe.</p>
+</div>
+
+
+
+<form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="tarjeta formulario">
+  <label for="titulo">Título</label>
+  <input id="titulo" name="titulo" maxlength="150" value="" required>
+
+  <label for="cuerpo">Texto de la circular</label>
+  <textarea id="cuerpo" name="cuerpo" maxlength="6000" rows="12" required></textarea>
+  <p class="ayuda">Los saltos de línea se respetan tal como los escribas.</p>
+
+  <div class="rejilla">
+    <div>
+      <label for="destinatarios">¿Quién la recibe?</label>
+      <select id="destinatarios" name="destinatarios">
+        
+        <option value="todos" selected>Toda la comunidad</option>
+        
+        <option value="docentes" >Docentes y directivos</option>
+        
+        <option value="familias" >Familias</option>
+        
+        <option value="estudiantes" >Estudiantes</option>
+        
+        <option value="grupo" >Un grupo</option>
+        
+      </select>
+    </div>
+    <div>
+      <label for="grupo_id">Grupo</label>
+      <select id="grupo_id" name="grupo_id">
+        <option value="">Elige un grupo</option>
+        
+        <option value="1" >10-A · Décimo</option>
+        
+        <option value="2" >11-A · Once</option>
+        
+      </select>
+      <p class="ayuda">Solo si eliges «Un grupo».</p>
+    </div>
+  </div>
+
+  <div class="casillas">
+    <label class="confirmar"><input type="checkbox" name="requiere_confirmacion" value="1" > Pedir que confirmen la lectura</label>
+  </div>
+  <p class="ayuda">Úsalo para salidas, autorizaciones o cambios de horario: verás quién confirmó y a quién falta avisar.</p>
+
+  <div class="acciones">
+    <a class="boton secundario" href="admin--circulares.html">Cancelar</a>
+    <button class="boton" type="submit">Publicar circular</button>
+  </div>
+</form>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

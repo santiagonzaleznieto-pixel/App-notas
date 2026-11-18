@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block titulo %}Horas sociales de {{ ficha.estudiante.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/horas.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  {% if volver %}<a class="volver" href="{{ volver }}">← Horas sociales</a>{% elif activo == "familia" %}<a class="volver" href="/familia">← Mi familia</a>{% endif %}
+  <h1>Horas sociales</h1>
+  <p>Avance de {{ ficha.estudiante.nombre }} hacia las 80 horas de servicio social y las 50 de estudios constitucionales. Solo lectura.</p>
+</div>
+
+{% if not ficha.de_media %}
+<div class="tarjeta vacio">
+  <p>{{ ficha.estudiante.nombre }} {% if ficha.grupo %}está en {{ ficha.grupo.grado }} ({{ ficha.grupo.nombre }}){% else %}no tiene matrícula activa este año{% endif %}.</p>
+  <p>El servicio social y los estudios constitucionales se cumplen en la educación Media (10° y 11°).</p>
+</div>
+{% else %}
+{% include "horas_resumen.html" %}
+
+{% if ficha.inscripciones %}
+<div class="tarjeta">
+  <h2>Proyectos inscritos</h2>
+  <ul class="lista">
+    {% for proyecto in ficha.inscripciones %}
+    <li><strong>{{ proyecto.nombre }}</strong><small class="gris bloque">{{ proyecto.lugar }} · Responsable: {{ proyecto.responsable }} · {{ proyecto.anio }}</small></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% include "horas_registros.html" %}
+{% endif %}
+{% endblock %}

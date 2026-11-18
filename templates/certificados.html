@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block titulo %}Certificados{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/certificados.css">{% endblock %}
+{% macro lista_certificados(lista, vacio) %}
+{% if lista %}
+<ul class="lista certificados-lista">
+  {% for certificado in lista %}
+  <li>
+    <div>
+      <a href="/certificados/{{ certificado.codigo }}"><strong>{{ certificado.titulo }}</strong></a>
+      <span class="fecha bloque">{{ certificado.fecha }} · código {{ certificado.codigo }}</span>
+    </div>
+    {% if certificado.anulado %}<span class="estado mal">Anulado</span>{% else %}<span class="estado bien">Vigente</span>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="gris">{{ vacio }}</p>
+{% endif %}
+{% endmacro %}
+{% macro boton_constancia(ficha, texto) %}
+{% if ficha.grupo %}
+<form method="post">
+  <input type="hidden" name="accion" value="emitir">
+  <input type="hidden" name="tipo" value="constancia_estudio">
+  <input type="hidden" name="estudiante_id" value="{{ ficha.estudiante.id }}">
+  <button class="boton pequeno" type="submit">{{ texto }}</button>
+</form>
+{% endif %}
+{% endmacro %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Certificados</h1>
+  <p>Constancias y certificados con código de verificación. Cualquier persona puede comprobar si son auténticos en <a href="/verificar">la página de verificación</a>.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+{% if propios %}
+<div class="tarjeta">
+  <div class="tarjeta-titulo">
+    <h2>Mis certificados</h2>
+    {{ boton_constancia(propios, "Emitir constancia de estudio") }}
+  </div>
+  {% if not propios.grupo %}<p class="gris">No tienes matrícula activa este año, por eso no puedes emitir una constancia de estudio.</p>{% endif %}
+  {{ lista_certificados(propios.certificados, "Todavía no tienes certificados emitidos.") }}
+  <p class="ayuda-certificados">Los certificados de notas, servicio social y estudios constitucionales los emite la secretaría del colegio.</p>
+</div>
+{% endif %}
+
+{% for ficha in hijos %}
+<div class="tarjeta">
+  <div class="tarjeta-titulo">
+    <h2>{{ ficha.estudiante.nombre }} <small class="gris">{% if ficha.grupo %}Grupo {{ ficha.grupo.nombre }}{% else %}Sin matrícula activa{% endif %}</small></h2>
+    {{ boton_constancia(ficha, "Emitir constancia de estudio") }}
+  </div>
+  {{ lista_certificados(ficha.certificados, "Todavía no hay certificados emitidos.") }}
+</div>
+{% endfor %}
+
+{% if emite %}
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Buscar estudiante</h2>
+    <form method="get" action="/certificados" class="filtros formulario">
+      <div>
+        <label for="buscar">Nombre, documento o usuario</label>
+        <input id="buscar" name="buscar" value="{{ buscar }}" maxlength="60" placeholder="Ej.: Montoya">
+      </div>
+      <button class="boton" type="submit">Buscar</button>
+    </form>
+    {% if buscar %}
+    {% if resultados %}
+    <ul class="lista">
+      {% for persona in resultados %}
+      <li class="resultado-estudiante">
+        <div>
+          <strong>{{ persona.nombre }}</strong>
+          <small class="gris bloque">{% if persona.grupo %}Grupo {{ persona.grupo.nombre }}{% else %}Sin matrícula activa{% endif %}{% if persona.documento %} · Doc. {{ persona.documento }}{% endif %}</small>
+        </div>
+        <a class="boton pequeno secundario" href="/certificados?estudiante={{ persona.id }}">Elegir</a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">No hay estudiantes que coincidan con "{{ buscar }}".</p>
+    {% endif %}
+    {% endif %}
+  </div>
+
+  {% if seleccionado %}
+  <div class="tarjeta seleccionado">
+    <div class="perfil-nombre">
+      <span class="inicial">{{ seleccionado.estudiante.nombre[0] }}</span>
+      <div>
+        <h2>{{ seleccionado.estudiante.nombre }}</h2>
+        <p class="gris">{% if seleccionado.grupo %}Grupo {{ seleccionado.grupo.nombre }} · {{ seleccionado.grupo.grado }}{% else %}Sin matrícula activa en {{ colegio.anio }}{% endif %}</p>
+      </div>
+    </div>
+    <ul class="lista opciones-certificado">
+      {% for opcion in seleccionado.opciones %}
+      <li>
+        <div>
+          <strong>{{ opcion.titulo }}</strong>
+          <small class="gris bloque">{{ opcion.detalle }}</small>
+        </div>
+        {% if opcion.disponible %}
+        <form method="post" action="/certificados?estudiante={{ seleccionado.estudiante.id }}">
+          <input type="hidden" name="accion" value="emitir">
+          <input type="hidden" name="tipo" value="{{ opcion.tipo }}">
+          <input type="hidden" name="estudiante_id" value="{{ seleccionado.estudiante.id }}">
+          <button class="boton pequeno" type="submit">Emitir</button>
+        </form>
+        {% else %}
+        <span class="estado neutro">No disponible</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    <h2 class="separado">Emitidos a {{ seleccionado.estudiante.nombre.split(" ")[0] }}</h2>
+    {{ lista_certificados(seleccionado.certificados, "Todavía no tiene certificados.") }}
+  </div>
+  {% else %}
+  <div class="tarjeta vacio">
+    <p>Busca un estudiante y elígelo para emitir su constancia de estudio, su certificado de notas o, si ya cumplió las horas, sus certificados de servicio social y estudios constitucionales.</p>
+  </div>
+  {% endif %}
+</div>
+
+<div class="tarjeta">
+  <h2>Últimos certificados emitidos</h2>
+  {% if ultimos %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th class="izq">Código</th><th class="izq">Tipo</th><th class="izq">Estudiante</th><th class="izq">Emitido</th><th>Estado</th>{% if anula %}<th></th>{% endif %}</tr>
+      </thead>
+      <tbody>
+        {% for certificado in ultimos %}
+        <tr>
+          <td class="izq"><a class="codigo" href="/certificados/{{ certificado.codigo }}">{{ certificado.codigo }}</a></td>
+          <td class="izq">{{ certificado.titulo }}</td>
+          <td class="izq">{{ certificado.estudiante }}</td>
+          <td class="izq">{{ certificado.fecha }}<small class="gris bloque">{{ certificado.emisor }}</small></td>
+          <td>{% if certificado.anulado %}<span class="estado mal">Anulado</span>{% else %}<span class="estado bien">Vigente</span>{% endif %}</td>
+          {% if anula %}
+          <td>
+            {% if not certificado.anulado %}
+            <form method="post" onsubmit="return confirm('¿Anular el certificado {{ certificado.codigo }}? Ya no será válido.')">
+              <input type="hidden" name="accion" value="anular">
+              <input type="hidden" name="certificado_id" value="{{ certificado.id }}">
+              <button class="boton pequeno peligro" type="submit">Anular</button>
+            </form>
+            {% endif %}
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="gris">Todavía no se ha emitido ningún certificado.</p>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

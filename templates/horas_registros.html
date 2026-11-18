@@ -1,0 +1,26 @@
+<div class="tarjeta">
+  <h2>Registros de horas</h2>
+  {% if ficha.registros %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th class="izq">Fecha</th><th class="izq">Tipo</th><th class="izq">Actividad</th><th>Horas</th><th>Estado</th><th class="izq">Observación</th></tr>
+      </thead>
+      <tbody>
+        {% for registro in ficha.registros %}
+        <tr>
+          <td class="izq">{{ registro.fecha }}</td>
+          <td class="izq">{{ tipos[registro.tipo] }}{% if registro.proyecto %}<small class="gris bloque">{{ registro.proyecto }}</small>{% endif %}</td>
+          <td class="izq">{{ registro.actividad }}<small class="gris bloque evidencia">{{ registro.evidencia }}</small></td>
+          <td>{{ registro.horas|cifra_horas }}</td>
+          <td><span class="estado {{ clases_estados[registro.estado] }}">{{ estados[registro.estado] }}</span></td>
+          <td class="izq gris">{{ registro.observacion }}{% if registro.revisor %}<small class="bloque">{{ registro.revisor }}</small>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="gris">Todavía no hay horas registradas.</p>
+  {% endif %}
+</div>

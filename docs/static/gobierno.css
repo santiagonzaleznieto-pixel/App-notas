@@ -1,0 +1,77 @@
+.titulo-seccion { font-family: var(--titulos); color: var(--azul-oscuro); font-size: 1.25rem; margin: 6px 0 12px; }
+.texto-largo { white-space: pre-line; overflow-wrap: anywhere; }
+.elecciones { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.eleccion { display: flex; flex-direction: column; gap: 8px; border-top: 5px solid var(--azul); margin-bottom: 0; }
+.eleccion h2 { margin: 0; }
+.eleccion .boton { align-self: flex-start; }
+.eleccion .estados { display: flex; flex-wrap: wrap; gap: 6px; }
+.fecha { font-size: .8rem; color: var(--gris); margin: 0; }
+.ganador-mini { background: #FBF4E4; border-radius: 8px; padding: 10px 12px; font-size: .9rem; }
+.ganador-mini strong { color: var(--azul-oscuro); }
+
+.gestion { border-top: 5px solid var(--verde); }
+.gestion.abierta { border-top-color: var(--dorado); }
+.gestion.cerrada { border-top-color: var(--azul); }
+.gestion h3 { font-family: var(--titulos); color: var(--azul-oscuro); font-size: 1rem; margin: 16px 0 6px; font-weight: 600; }
+.participacion { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: center; margin: 12px 0 4px; font-size: .9rem; }
+.participacion .barra-progreso { grid-column: 1 / -1; margin-bottom: 0; }
+.candidatos li { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; }
+.candidatos p { margin: 4px 0 0; font-size: .88rem; color: var(--gris); }
+.inicial.mediana { width: 42px; height: 42px; font-size: 1.2rem; }
+.inicial.blanco { background: #EEEAE2; color: var(--gris); border: 2px dashed #BDB5A7; }
+.agregar { border-top: 1px dashed var(--borde); margin-top: 12px; padding-top: 4px; }
+.botones-estado { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+
+.tarjeton-caja { border: none; margin: 0; padding: 0; min-width: 0; }
+.tarjeton-caja legend { font-weight: 600; color: var(--azul-oscuro); margin-bottom: 12px; padding: 0; }
+.tarjeton { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+.opcion-voto { position: relative; display: block; cursor: pointer; }
+.opcion-voto input { position: absolute; top: 14px; left: 14px; width: 20px; height: 20px; accent-color: var(--verde); }
+.opcion-contenido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  height: 100%;
+  padding: 20px 16px 18px;
+  background: var(--blanco);
+  border: 2px solid var(--borde);
+  border-radius: 12px;
+  box-shadow: var(--sombra);
+  transition: border-color .15s, background .15s;
+}
+.opcion-voto:hover .opcion-contenido { border-color: var(--verde); }
+.opcion-voto input:checked + .opcion-contenido { border-color: var(--verde); background: #F1F6F1; box-shadow: 0 0 0 3px rgba(63, 107, 74, .25); }
+.opcion-voto input:focus-visible + .opcion-contenido { outline: 2px solid var(--azul); outline-offset: 2px; }
+.numero-candidato { font-family: var(--titulos); font-size: 2rem; font-weight: 700; color: var(--terracota); line-height: 1; }
+.opcion-contenido strong { color: var(--azul-oscuro); }
+.propuesta { font-size: .86rem; color: var(--gris); }
+
+.confirmacion { max-width: 560px; margin: 0 auto 20px; text-align: center; }
+.confirmacion .acciones { justify-content: center; }
+.elegido { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 16px 0; padding: 18px; background: var(--crema); border-radius: 12px; }
+.elegido .numero-candidato { font-size: 1.6rem; }
+.sello { display: inline-flex; align-items: center; justify-content: center; width: 72px; height: 72px; border-radius: 50%; background: var(--verde); color: var(--blanco); font-size: 2.2rem; margin-bottom: 10px; }
+.sello.aviso-sello { background: var(--dorado); }
+
+.parcial { background: #FBF4E4; color: #855810; border: 1px solid #EBD3A3; padding: 11px 14px; border-radius: 8px; margin-bottom: 16px; font-size: .9rem; }
+.ganador { display: flex; align-items: center; gap: 16px; border-left: 6px solid var(--dorado); }
+.ganador .inicial { background: var(--dorado); }
+.ganador p { margin: 0; }
+.resultados { list-style: none; margin: 0; padding: 0; }
+.resultado { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid #F0EBE1; }
+.resultado:last-child { border-bottom: none; }
+.resultado .barra-progreso { margin: 6px 0 0; height: 10px; }
+.resultado.gana .inicial { background: var(--dorado); }
+.resultado.blanco .barra-progreso div { background: #BDB5A7; }
+.votos { text-align: right; white-space: nowrap; }
+.votos strong { display: block; font-family: var(--titulos); font-size: 1.4rem; color: var(--azul-oscuro); line-height: 1.1; }
+.votos small { color: var(--gris); }
+
+@media (max-width: 800px) {
+  .tarjeton { grid-template-columns: 1fr; }
+  .candidatos li { grid-template-columns: auto 1fr; }
+  .candidatos li form { grid-column: 2; }
+  .botones-estado { justify-content: flex-start; }
+}

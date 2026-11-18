@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block titulo %}Ficha de salud{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/servicios.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Ficha de salud</h1>
+  <p>Con estos datos la enfermería del colegio puede atender bien a tus hijos y llamarte si algo pasa.</p>
+</div>
+
+<div class="aviso-privado">Datos sensibles (Ley 1581 de 2012): solo tú y la enfermería del colegio pueden ver esta ficha. Docentes, directores de grupo y portería no la ven. Entregarlos es voluntario y puedes cambiarlos cuando quieras.</div>
+
+{% if not hijos %}
+<div class="tarjeta vacio"><p>No tienes estudiantes a cargo registrados en este colegio. Habla con la secretaría.</p></div>
+{% else %}
+
+{% if hijos|length > 1 %}
+<div class="periodos">
+  {% for opcion in hijos %}
+  <a href="/mi-ficha-salud?estudiante={{ opcion.id }}" class="{% if opcion.id == hijo.id %}activo{% endif %}">{{ opcion.nombre }}</a>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="tarjeta perfil-corto">
+  <span class="inicial">{{ hijo.nombre[0] }}</span>
+  <div>
+    <h2>{{ hijo.nombre }}</h2>
+    <p class="gris">{% if hijo.grupo %}Grupo {{ hijo.grupo }} · {% endif %}{% if ficha %}Ficha actualizada el {{ fecha_corta(ficha.actualizado_en[0:10]) }}{% if ficha.quien_actualizo %} por {{ ficha.quien_actualizo }}{% endif %}{% else %}Aún no tiene ficha de salud{% endif %}</p>
+  </div>
+</div>
+
+<div class="dos-columnas">
+  <form method="post" action="/mi-ficha-salud" class="tarjeta formulario">
+    <h2>{% if ficha %}Actualizar ficha{% else %}Llenar ficha{% endif %}</h2>
+    <input type="hidden" name="estudiante_id" value="{{ hijo.id }}">
+    <div class="rejilla">
+      <div>
+        <label for="eps">EPS</label>
+        <input id="eps" name="eps" value="{{ datos_ficha.eps }}" maxlength="80" placeholder="Ej.: Nueva EPS">
+      </div>
+      <div>
+        <label for="tipo_sangre">Tipo de sangre</label>
+        <select id="tipo_sangre" name="tipo_sangre">
+          <option value="">No sé / prefiero no decir</option>
+          {% for tipo in tipos_sangre %}<option value="{{ tipo }}" {% if datos_ficha.tipo_sangre == tipo %}selected{% endif %}>{{ tipo }}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+    <label for="alergias">Alergias</label>
+    <input id="alergias" name="alergias" value="{{ datos_ficha.alergias }}" maxlength="500" placeholder="Medicamentos, alimentos, picaduras… Déjalo vacío si no tiene">
+    <label for="condiciones">Condiciones de salud</label>
+    <input id="condiciones" name="condiciones" value="{{ datos_ficha.condiciones }}" maxlength="500" placeholder="Ej.: asma, diabetes, epilepsia">
+    <label for="medicamentos">Medicamentos que toma</label>
+    <input id="medicamentos" name="medicamentos" value="{{ datos_ficha.medicamentos }}" maxlength="500">
+    <div class="rejilla">
+      <div>
+        <label for="contacto_emergencia">Contacto de emergencia</label>
+        <input id="contacto_emergencia" name="contacto_emergencia" value="{{ datos_ficha.contacto_emergencia }}" maxlength="120" required>
+      </div>
+      <div>
+        <label for="telefono_emergencia">Teléfono de emergencia</label>
+        <input id="telefono_emergencia" name="telefono_emergencia" type="tel" value="{{ datos_ficha.telefono_emergencia }}" maxlength="20" required>
+      </div>
+    </div>
+    <div class="casillas">
+      <label><input type="checkbox" name="autorizo" value="1" required> Autorizo al colegio a guardar y usar estos datos de salud solo para atender a {{ hijo.nombre.split(" ")[0] }} en la enfermería.</label>
+    </div>
+    <div class="acciones"><button class="boton" type="submit">Guardar ficha</button></div>
+  </form>
+
+  <div class="tarjeta">
+    <h2>Atenciones en enfermería</h2>
+    {% if atenciones %}
+    <ul class="lista">
+      {% for atencion in atenciones %}
+      <li>
+        <span class="fecha">{{ fecha_corta(atencion.fecha) }} · {{ atencion.hora }}</span>
+        <strong class="bloque-titulo">{{ atencion.motivo }}</strong>
+        <p>{{ atencion.atencion }}</p>
+        {% if atencion.envio_a_casa %}<span class="estado atencion">Enviado a casa</span>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">{{ hijo.nombre.split(" ")[0] }} no ha tenido atenciones en enfermería.</p>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

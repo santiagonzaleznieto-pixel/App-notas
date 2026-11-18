@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block titulo %}Lista de {{ asignacion.materia }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/asistencia.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/asistencia">← Asistencia</a>
+  <h1>Lista · {{ asignacion.materia }} · {{ asignacion.grupo }}</h1>
+  <p>Todos quedan en Presente por defecto: marca solo las fallas y los retardos. Si el estudiante tiene excusa aprobada ese día, la falla se guarda como falla con excusa.</p>
+</div>
+
+<form method="get" class="tarjeta filtros formulario">
+  <div>
+    <label for="fecha">Fecha de la clase</label>
+    <input id="fecha" name="fecha" type="date" value="{{ fecha }}" min="{{ minima }}" max="{{ maxima }}" required>
+  </div>
+  <button class="boton secundario" type="submit">Cambiar fecha</button>
+</form>
+
+{% if recientes %}
+<div class="dias" aria-label="Listas tomadas">
+  {% for dia in recientes %}
+  <a href="/asistencia/tomar/{{ asignacion.id }}?fecha={{ dia.fecha }}" class="{% if dia.fecha == fecha %}activo{% endif %}">{{ dia.fecha }}{% if dia.fallas %} · {{ dia.fallas }} F{% endif %}</a>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}
+<div class="aviso error">
+  {% for error in errores %}<div>{{ error }}</div>{% endfor %}
+</div>
+{% endif %}
+
+{% if fecha_ok %}
+<form method="post" class="tarjeta">
+  <input type="hidden" name="fecha" value="{{ fecha }}">
+  <div class="tarjeta-titulo">
+    <h2>{{ fecha }}{% if tomada %} <span class="estado bien">Lista guardada</span>{% else %} <span class="estado neutro">Sin tomar</span>{% endif %}</h2>
+    <button class="boton secundario pequeno" type="submit" name="accion" value="todos">Todos presentes</button>
+  </div>
+  {% if filas %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th>#</th><th class="izq">Estudiante</th><th>Asistencia</th></tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+        <tr>
+          <td class="numero">{{ loop.index }}</td>
+          <td class="izq">
+            {{ fila.estudiante.nombre }}
+            {% if fila.excusa %}<span class="estado neutro">Excusa aprobada</span>{% endif %}
+          </td>
+          <td>
+            <div class="opciones-lista" role="radiogroup" aria-label="Asistencia de {{ fila.estudiante.nombre }}">
+              <label class="opcion presente"><input type="radio" name="estado-{{ fila.estudiante.id }}" value="presente"{% if fila.estado == "presente" %} checked{% endif %}><span>Presente</span></label>
+              <label class="opcion falla"><input type="radio" name="estado-{{ fila.estudiante.id }}" value="falla"{% if fila.estado == "falla" %} checked{% endif %}><span>Falla</span></label>
+              <label class="opcion retardo"><input type="radio" name="estado-{{ fila.estudiante.id }}" value="retardo"{% if fila.estado == "retardo" %} checked{% endif %}><span>Retardo</span></label>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="acciones">
+    <button class="boton secundario" type="submit" name="accion" value="todos">Todos presentes</button>
+    <button class="boton" type="submit" name="accion" value="guardar">Guardar lista</button>
+  </div>
+  {% else %}
+  <p class="vacio">Este grupo no tiene estudiantes matriculados.</p>
+  {% endif %}
+</form>
+{% endif %}
+{% endblock %}

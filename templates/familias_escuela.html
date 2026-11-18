@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block titulo %}Escuela para familias{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/familias.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Escuela para familias {{ colegio.anio }}</h1>
+  <p>Escuela para padres, madres y cuidadores según la Ley 2025 de 2020 y el Decreto 459 de 2024.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Compromiso aceptado</span>
+    <strong>{{ con_compromiso }}<small> de {{ total }}</small></strong>
+    <small>{{ porcentaje(con_compromiso, total) }} % de las familias</small>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Asistencia promedio</span>
+    <strong>{% if asistencia_promedio is none %}—{% else %}{{ asistencia_promedio }} %{% endif %}</strong>
+    <small>{% if tomados == 1 %}En 1 encuentro con asistencia tomada{% else %}En {{ tomados }} encuentros con asistencia tomada{% endif %}</small>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Familias caracterizadas</span>
+    <strong>{{ caracterizadas }}<small> de {{ total }}</small></strong>
+    <small>{{ porcentaje(caracterizadas, total) }} % de las familias</small>
+  </div>
+</div>
+
+<div class="botones-escuela">
+  <a class="boton secundario" href="/escuela-familias/caracterizacion">Ver caracterización de las familias</a>
+</div>
+
+<div class="dos-columnas">
+  <section class="tarjeta">
+    <h2>Encuentros del año</h2>
+    {% if filas %}
+    <ul class="lista encuentros">
+      {% for fila in filas %}
+      <li>
+        <div class="dia {% if not fila.futuro %}pasado{% endif %}"><strong>{{ fila.encuentro.fecha[8:10]|int }}</strong><span>{{ meses_cortos[fila.encuentro.fecha[5:7]|int - 1] }}</span></div>
+        <div>
+          <a class="titulo-enlace" href="/escuela-familias/{{ fila.encuentro.id }}">{{ fila.encuentro.titulo }}</a>
+          <span class="fecha bloque">{{ fecha_larga(fila.encuentro.fecha)|capitalize }} · {{ hora_texto(fila.encuentro.hora) }} · {{ fila.encuentro.lugar }}</span>
+          <span class="gris bloque">Tema: {{ fila.encuentro.tema }}</span>
+          {% if fila.futuro %}<span class="estado neutro">Próximo</span>
+          {% elif fila.tomada %}<span class="estado {% if fila.porcentaje >= 60 %}bien{% elif fila.porcentaje >= 30 %}atencion{% else %}mal{% endif %}">Asistieron {{ fila.asistentes }} de {{ total }} · {{ fila.porcentaje }} %</span>
+          {% else %}<span class="estado atencion">Falta tomar asistencia</span>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">Todavía no hay encuentros este año. Crea el primero con el formulario.</p>
+    {% endif %}
+  </section>
+
+  <form method="post" class="tarjeta formulario">
+    <h2>Nuevo encuentro</h2>
+    <label for="titulo">Título</label>
+    <input id="titulo" name="titulo" maxlength="150" value="{{ formulario.titulo }}" required>
+    <label for="tema">Tema</label>
+    <input id="tema" name="tema" maxlength="150" value="{{ formulario.tema }}" required>
+    <p class="ayuda">Por ejemplo: pautas de crianza, salud mental, proyecto de vida, prevención del acoso escolar.</p>
+    <div class="rejilla">
+      <div>
+        <label for="fecha">Fecha</label>
+        <input id="fecha" name="fecha" type="date" min="{{ colegio.anio }}-01-01" max="{{ colegio.anio }}-12-31" value="{{ formulario.fecha }}" required>
+      </div>
+      <div>
+        <label for="hora">Hora</label>
+        <input id="hora" name="hora" type="time" value="{{ formulario.hora }}" required>
+      </div>
+    </div>
+    <label for="lugar">Lugar</label>
+    <input id="lugar" name="lugar" maxlength="150" value="{{ formulario.lugar }}" required>
+    <label for="descripcion">Descripción (opcional)</label>
+    <textarea id="descripcion" name="descripcion" maxlength="2000">{{ formulario.descripcion }}</textarea>
+    <div class="acciones"><button class="boton" type="submit">Crear encuentro</button></div>
+  </form>
+</div>
+{% endblock %}

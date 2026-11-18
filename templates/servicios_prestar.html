@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block titulo %}Prestar un libro{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/servicios.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/biblioteca">← Biblioteca</a>
+  <h1>Prestar un libro</h1>
+  <p>Busca a la persona, elige el libro y confirma la fecha de devolución. No se presta a quien tenga préstamos vencidos.</p>
+</div>
+
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="tarjeta">
+  <h2><span class="paso">1</span> ¿Quién se lleva el libro?</h2>
+  <form method="get" action="/biblioteca/prestar" class="filtros" role="search">
+    <div>
+      <label for="persona">Nombre, usuario o documento</label>
+      <input id="persona" name="persona" value="{{ buscar }}" placeholder="Ej.: Melany" autocomplete="off">
+    </div>
+    {% if libro_elegido %}<input type="hidden" name="libro" value="{{ libro_elegido }}">{% endif %}
+    <button class="boton" type="submit">Buscar persona</button>
+  </form>
+  {% if buscar and not personas %}<p class="gris">No encontramos personas activas del colegio con «{{ buscar }}».</p>{% endif %}
+  {% if not buscar %}<p class="gris">Escribe al menos una parte del nombre para ver a quién prestarle.</p>{% endif %}
+</div>
+
+{% if personas %}
+<form method="post" action="/biblioteca/prestar" class="tarjeta formulario">
+  <input type="hidden" name="buscar" value="{{ buscar }}">
+  <h2><span class="paso">2</span> Persona, libro y fecha</h2>
+  <fieldset class="grupo-opciones">
+    <legend>Persona</legend>
+    <div class="opciones">
+      {% for persona in personas %}
+      <label class="opcion">
+        <input type="radio" name="persona_id" value="{{ persona.id }}" {% if persona.id == persona_elegida or personas|length == 1 %}checked{% endif %} required>
+        <span>
+          <strong>{{ persona.nombre }}</strong>
+          <small>{{ persona.roles|join(" · ") }}{% if persona.grupo %} · {{ persona.grupo }}{% endif %}</small>
+          {% if persona.vencidos %}<em class="estado mal">{{ persona.vencidos }} préstamo{% if persona.vencidos != 1 %}s{% endif %} vencido{% if persona.vencidos != 1 %}s{% endif %}</em>{% endif %}
+        </span>
+      </label>
+      {% endfor %}
+    </div>
+  </fieldset>
+  <div class="rejilla">
+    <div>
+      <label for="libro_id">Libro</label>
+      <select id="libro_id" name="libro_id" required>
+        <option value="">Elige un libro</option>
+        {% for libro in libros %}
+        <option value="{{ libro.id }}" {% if libro.id == libro_elegido %}selected{% endif %}>{{ libro.titulo }} — {% if libro.disponibles > 0 %}{{ libro.disponibles }} disponible{% if libro.disponibles != 1 %}s{% endif %}{% else %}agotado{% endif %}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="fecha_devolucion">Fecha de devolución</label>
+      <input id="fecha_devolucion" name="fecha_devolucion" type="date" value="{{ fecha_devolucion }}" min="{{ manana }}" max="{{ maxima }}" required>
+      <p class="ayuda">Plazo normal: {{ dias_prestamo }} días ({{ fecha_corta(por_defecto) }}).</p>
+    </div>
+  </div>
+  <div class="acciones"><button class="boton" type="submit">Registrar préstamo</button></div>
+</form>
+{% endif %}
+{% endblock %}

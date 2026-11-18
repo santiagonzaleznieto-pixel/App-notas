@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block titulo %}Portería{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/servicios.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Portería</h1>
+  <p>{% if es_hoy %}Hoy, {{ fecha_corta(fecha) }}.{% else %}Consultando el {{ fecha_corta(fecha) }}. <a href="/porteria">Volver a hoy</a>{% endif %} Un estudiante solo sale con su acudiente o con una persona autorizada.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="cifras">
+  <div class="tarjeta cifra alerta">
+    <span>Salidas anticipadas</span>
+    <strong>{{ salidas|length }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Visitantes del día</span>
+    <strong>{{ visitantes|length }}</strong>
+    <small>{{ adentro }} todavía adentro</small>
+  </div>
+</div>
+
+<div class="tarjeta">
+  <h2>Buscar estudiante</h2>
+  <form method="get" action="/porteria" class="filtros" role="search">
+    <div>
+      <label for="buscar">Nombre, usuario o documento</label>
+      <input id="buscar" name="buscar" value="{{ buscar }}" placeholder="Ej.: Melany" autocomplete="off">
+    </div>
+    <button class="boton" type="submit">Buscar</button>
+  </form>
+  {% if resultados %}
+  <ul class="lista resultados">
+    {% for estudiante in resultados %}
+    <li>
+      <a class="resultado" href="/porteria/estudiante/{{ estudiante.id }}">
+        <span class="inicial pequena">{{ estudiante.nombre[0] }}</span>
+        <span>
+          <strong>{{ estudiante.nombre }}</strong>
+          <small class="gris bloque">{% if estudiante.grupo %}Grupo {{ estudiante.grupo }}{% else %}Sin matrícula activa{% endif %} · {{ estudiante.autorizados }} autorizado{% if estudiante.autorizados != 1 %}s{% endif %} para recoger</small>
+        </span>
+        <span class="ir">Registrar salida →</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% elif buscar %}
+  <p class="gris">No encontramos estudiantes con «{{ buscar }}».</p>
+  {% endif %}
+</div>
+
+<div class="tarjeta">
+  <div class="tarjeta-titulo">
+    <h2>Salidas anticipadas</h2>
+    <form method="get" action="/porteria" class="filtros fecha-consulta">
+      <div>
+        <label for="fecha">Ver otro día</label>
+        <input id="fecha" name="fecha" type="date" value="{{ fecha }}">
+      </div>
+      <button class="boton pequeno secundario" type="submit">Ver</button>
+    </form>
+  </div>
+  {% if salidas %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead><tr><th>Hora</th><th class="izq">Estudiante</th><th class="izq">Motivo</th><th class="izq">Recogido por</th><th class="izq">Autorizó</th></tr></thead>
+      <tbody>
+        {% for salida in salidas %}
+        <tr>
+          <td class="hora">{{ salida.hora }}</td>
+          <td class="izq"><strong>{{ salida.estudiante }}</strong>{% if salida.grupo %} <small class="gris">{{ salida.grupo }}</small>{% endif %}</td>
+          <td class="izq">{{ salida.motivo }}</td>
+          <td class="izq">{{ salida.recogido_por }}</td>
+          <td class="izq gris">{{ salida.autorizo or "—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="gris">No hay salidas anticipadas registradas este día.</p>
+  {% endif %}
+</div>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Visitantes</h2>
+    {% if visitantes %}
+    <ul class="lista">
+      {% for persona in visitantes %}
+      <li class="visitante">
+        <div>
+          <strong>{{ persona.nombre }}</strong> <small class="gris">doc. {{ persona.documento }}</small>
+          <span class="gris bloque">{{ persona.motivo }} · visita a {{ persona.a_quien_visita }}</span>
+          <span class="fecha">Entró {{ persona.hora_entrada }}{% if persona.hora_salida %} · salió {{ persona.hora_salida }}{% endif %}</span>
+        </div>
+        {% if persona.hora_salida %}
+        <span class="estado neutro">Salió</span>
+        {% elif es_hoy %}
+        <form method="post" action="/porteria" class="en-linea">
+          <input type="hidden" name="accion" value="salida_visitante">
+          <input type="hidden" name="visitante_id" value="{{ persona.id }}">
+          <button class="boton pequeno secundario" type="submit">Marcar salida</button>
+        </form>
+        {% else %}
+        <span class="estado atencion">Sin salida</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">No hay visitantes registrados este día.</p>
+    {% endif %}
+  </div>
+
+  <form method="post" action="/porteria" class="tarjeta formulario">
+    <h2>Registrar entrada de visitante</h2>
+    <input type="hidden" name="accion" value="visitante">
+    <label for="nombre">Nombre completo</label>
+    <input id="nombre" name="nombre" value="{{ visitante.nombre }}" maxlength="120" required>
+    <label for="documento">Documento</label>
+    <input id="documento" name="documento" value="{{ visitante.documento }}" maxlength="20" required>
+    <label for="motivo">Motivo de la visita</label>
+    <input id="motivo" name="motivo" value="{{ visitante.motivo }}" maxlength="200" required>
+    <label for="a_quien_visita">¿A quién visita?</label>
+    <input id="a_quien_visita" name="a_quien_visita" value="{{ visitante.a_quien_visita }}" maxlength="120" placeholder="Ej.: Coordinación, rectoría, un docente" required>
+    <div class="acciones"><button class="boton" type="submit">Registrar entrada</button></div>
+  </form>
+</div>
+{% endblock %}

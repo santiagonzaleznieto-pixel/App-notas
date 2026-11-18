@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo %}Nueva circular{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/circulares.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/circulares">← Circulares</a>
+  <h1>Nueva circular</h1>
+  <p>{% if opciones|length == 1 %}Como director de grupo puedes enviar circulares a tu grupo: estudiantes, acudientes y docentes.{% else %}Escribe el comunicado y elige quién lo recibe.{% endif %}</p>
+</div>
+
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<form method="post" class="tarjeta formulario">
+  <label for="titulo">Título</label>
+  <input id="titulo" name="titulo" maxlength="150" value="{{ formulario.titulo }}" required>
+
+  <label for="cuerpo">Texto de la circular</label>
+  <textarea id="cuerpo" name="cuerpo" maxlength="6000" rows="12" required>{{ formulario.cuerpo }}</textarea>
+  <p class="ayuda">Los saltos de línea se respetan tal como los escribas.</p>
+
+  <div class="rejilla">
+    <div>
+      <label for="destinatarios">¿Quién la recibe?</label>
+      <select id="destinatarios" name="destinatarios">
+        {% for clave in opciones %}
+        <option value="{{ clave }}" {% if formulario.destinatarios == clave %}selected{% endif %}>{{ destinatarios[clave] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="grupo_id">Grupo</label>
+      <select id="grupo_id" name="grupo_id">
+        <option value="">Elige un grupo</option>
+        {% for grupo in grupos %}
+        <option value="{{ grupo.id }}" {% if formulario.grupo_id == grupo.id|string %}selected{% endif %}>{{ grupo.nombre }}{% if grupo.grado %} · {{ grupo.grado }}{% endif %}</option>
+        {% endfor %}
+      </select>
+      <p class="ayuda">Solo si eliges «Un grupo».</p>
+    </div>
+  </div>
+
+  <div class="casillas">
+    <label class="confirmar"><input type="checkbox" name="requiere_confirmacion" value="1" {% if formulario.requiere_confirmacion %}checked{% endif %}> Pedir que confirmen la lectura</label>
+  </div>
+  <p class="ayuda">Úsalo para salidas, autorizaciones o cambios de horario: verás quién confirmó y a quién falta avisar.</p>
+
+  <div class="acciones">
+    <a class="boton secundario" href="/circulares">Cancelar</a>
+    <button class="boton" type="submit">Publicar circular</button>
+  </div>
+</form>
+{% endblock %}

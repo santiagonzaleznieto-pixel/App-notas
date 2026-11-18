@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block titulo %}{{ proyecto.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/horas.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/horas">← Horas sociales</a>
+  <span class="etiqueta">Proyecto {{ proyecto.anio }}</span>
+  <h1>{{ proyecto.nombre }}</h1>
+  <p>{{ proyecto.lugar }}{% if proyecto.entidad_aliada %} · {{ proyecto.entidad_aliada }}{% endif %} · Responsable: {{ proyecto.responsable }}</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Inscritos</span>
+    <strong>{{ proyecto.inscritos }}<small> de {{ proyecto.cupos }}</small></strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Horas aprobadas en el proyecto</span>
+    <strong>{{ total_aprobadas|cifra_horas }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Estado</span>
+    <strong>{% if proyecto.activo %}Activo{% else %}Inactivo{% endif %}</strong>
+    <small>{% if proyecto.activo %}{{ proyecto.libres }} cupos libres{% else %}No recibe inscripciones{% endif %}</small>
+  </div>
+</div>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Inscritos</h2>
+    {% if inscritos %}
+    <div class="tabla-caja">
+      <table class="tabla simple">
+        <thead><tr><th class="izq">Estudiante</th><th>Grupo</th><th>Aprobadas</th><th>Pendientes</th></tr></thead>
+        <tbody>
+          {% for persona in inscritos %}
+          <tr>
+            <td class="izq">{% if persona.visible %}<a href="/horas/estudiante/{{ persona.id }}">{{ persona.nombre }}</a>{% else %}{{ persona.nombre }}{% endif %}</td>
+            <td>{{ persona.grupo or "—" }}</td>
+            <td>{{ persona.aprobadas|cifra_horas }}</td>
+            <td>{% if persona.pendientes %}<span class="estado atencion">{{ persona.pendientes|cifra_horas }}</span>{% else %}<span class="vacia">—</span>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="gris">Todavía no hay estudiantes inscritos.</p>
+    {% endif %}
+    <h2 class="separado">Descripción</h2>
+    <p>{{ proyecto.descripcion }}</p>
+  </div>
+
+  {% if gestiona %}
+  <form method="post" class="tarjeta formulario">
+    <h2>Editar proyecto</h2>
+    <label for="nombre">Nombre del proyecto</label>
+    <input id="nombre" name="nombre" maxlength="120" value="{{ valores.nombre }}" required>
+    <label for="entidad_aliada">Entidad aliada (opcional)</label>
+    <input id="entidad_aliada" name="entidad_aliada" maxlength="150" value="{{ valores.entidad_aliada }}">
+    <label for="lugar">Lugar</label>
+    <input id="lugar" name="lugar" maxlength="150" value="{{ valores.lugar }}" required>
+    <label for="responsable_id">Docente responsable</label>
+    <select id="responsable_id" name="responsable_id" required>
+      {% for docente in docentes %}
+      <option value="{{ docente.id }}" {% if valores.responsable_id == docente.id|string %}selected{% endif %}>{{ docente.nombre }}</option>
+      {% endfor %}
+    </select>
+    <label for="cupos">Cupos</label>
+    <input id="cupos" name="cupos" type="number" min="1" max="200" step="1" value="{{ valores.cupos }}" required>
+    <label for="descripcion">Descripción</label>
+    <textarea id="descripcion" name="descripcion" maxlength="1000" required>{{ valores.descripcion }}</textarea>
+    <div class="casillas">
+      <label for="activo"><input id="activo" type="checkbox" name="activo" value="1" {% if valores.activo == "1" %}checked{% endif %}> Proyecto activo (recibe inscripciones)</label>
+    </div>
+    <div class="acciones"><button class="boton" type="submit">Guardar cambios</button></div>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

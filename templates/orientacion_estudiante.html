@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block titulo %}Orientación · {{ estudiante.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/orientacion.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/orientacion">← Orientación</a>
+  <h1>{{ estudiante.nombre }}</h1>
+  <p>{% if grupo %}Grupo {{ grupo.nombre }} · {{ grupo.grado }} · Director de grupo: {{ grupo.director or "sin asignar" }}{% else %}Sin matrícula activa en {{ colegio.anio }}{% endif %}</p>
+</div>
+
+<p class="confidencial"><strong>Confidencial.</strong> Historial de orientación escolar protegido por la Ley 1581 de 2012 y la Ley 1098 de 2006. No lo imprimas ni lo compartas.</p>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="dos-columnas">
+  <section class="tarjeta">
+    <h2>Historial de atenciones</h2>
+    {% if atenciones %}
+    <ul class="lista historial">
+      {% for atencion in atenciones %}
+      <li class="{{ atencion.estado }}">
+        <div class="fila-titulo">
+          <span class="etiqueta">{{ nombres_motivos[atencion.motivo] }}</span>
+          {% if atencion.estado == "abierta" %}<span class="estado atencion">Abierta</span>{% else %}<span class="estado neutro">Cerrada</span>{% endif %}
+        </div>
+        <span class="fecha">{{ atencion.fecha }} · {{ atencion.orientador }}</span>
+        <p class="texto-largo">{{ atencion.descripcion }}</p>
+        {% if atencion.acciones %}<p class="texto-largo"><strong>Acciones y acuerdos:</strong> {{ atencion.acciones }}</p>{% endif %}
+        <p class="detalle">Remisión externa: {{ nombres_remisiones[atencion.remision] }}{% if atencion.proxima_cita %} · Próxima cita: {{ atencion.proxima_cita }}{% endif %}</p>
+        {% if atencion.estado == "abierta" %}
+        <form method="post" class="en-linea">
+          <input type="hidden" name="accion" value="cerrar">
+          <input type="hidden" name="atencion_id" value="{{ atencion.id }}">
+          <button class="boton secundario pequeno" type="submit">Cerrar atención</button>
+        </form>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">Todavía no hay atenciones registradas.</p>
+    {% endif %}
+  </section>
+
+  <div>
+    <section class="tarjeta bloque-lateral">
+      <h2>Remisiones de docentes</h2>
+      {% if remisiones %}
+      <ul class="lista">
+        {% for remision in remisiones %}
+        <li>
+          <div class="fila-titulo">
+            <strong>{{ remision.docente }}</strong>
+            {% if remision.estado == "pendiente" %}<span class="estado atencion">Pendiente</span>{% else %}<span class="estado bien">Atendida</span>{% endif %}
+          </div>
+          <p class="texto-largo">{{ remision.motivo }}</p>
+          <span class="fecha">{{ remision.fecha }}{% if remision.atendida_en %} · atendida el {{ remision.atendida_en }}{% endif %}</span>
+          {% if remision.estado == "pendiente" %}
+          <form method="post">
+            <input type="hidden" name="accion" value="remision_atendida">
+            <input type="hidden" name="remision_id" value="{{ remision.id }}">
+            <button class="boton secundario pequeno" type="submit">Marcar como atendida</button>
+          </form>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="gris">Ningún docente ha remitido a este estudiante.</p>
+      {% endif %}
+    </section>
+
+    <section class="tarjeta bloque-lateral">
+      <h2>Familia y PIAR</h2>
+      {% if acudientes %}
+      <ul class="lista">
+        {% for acudiente in acudientes %}
+        <li><strong>{{ acudiente.nombre }}</strong> <span class="gris">· {{ acudiente.parentesco }}</span>{% if acudiente.telefono %}<span class="fecha bloque">Celular: {{ acudiente.telefono }}</span>{% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="gris">No hay acudientes registrados.</p>
+      {% endif %}
+      <p>{% if plan %}<a class="boton secundario pequeno" href="/piar/{{ plan.id }}">Ver PIAR {{ colegio.anio }}</a>{% else %}<span class="gris">Sin PIAR en {{ colegio.anio }}.</span> <a href="/piar#crear">Crear PIAR</a>{% endif %}</p>
+    </section>
+  </div>
+</div>
+
+<form method="post" class="tarjeta formulario" id="nueva">
+  <h2>Nueva atención</h2>
+  <input type="hidden" name="accion" value="nueva">
+  <div class="rejilla">
+    <div>
+      <label for="fecha">Fecha de la atención</label>
+      <input id="fecha" name="fecha" type="date" value="{{ formulario.fecha }}" max="{{ hoy }}" required>
+    </div>
+    <div>
+      <label for="motivo">Motivo</label>
+      <select id="motivo" name="motivo" required>
+        <option value="">Elige el motivo</option>
+        {% for motivo in motivos %}
+        <option value="{{ motivo.clave }}" {% if formulario.motivo == motivo.clave %}selected{% endif %}>{{ motivo.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <label for="descripcion">Descripción</label>
+  <textarea id="descripcion" name="descripcion" maxlength="4000" required>{{ formulario.descripcion }}</textarea>
+  <p class="ayuda">Escribe hechos y lo que dice el estudiante. Evita diagnósticos que no tengan soporte profesional.</p>
+  <label for="acciones">Acciones y acuerdos</label>
+  <textarea id="acciones" name="acciones" maxlength="2000">{{ formulario.acciones }}</textarea>
+  <div class="rejilla">
+    <div>
+      <label for="remision">Remisión externa</label>
+      <select id="remision" name="remision">
+        {% for remision in remisiones_externas %}
+        <option value="{{ remision.clave }}" {% if formulario.remision == remision.clave %}selected{% endif %}>{{ remision.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="proxima_cita">Próxima cita (opcional)</label>
+      <input id="proxima_cita" name="proxima_cita" type="date" value="{{ formulario.proxima_cita }}">
+    </div>
+  </div>
+  <p class="ayuda">Si hay presunta vulneración de derechos, activa la ruta de atención integral (Ley 1620 de 2013) y remite a ICBF o Comisaría de Familia.</p>
+  <div class="acciones"><button class="boton" type="submit">Guardar atención</button></div>
+</form>
+{% endblock %}

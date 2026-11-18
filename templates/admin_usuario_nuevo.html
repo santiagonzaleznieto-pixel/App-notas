@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block titulo %}Nuevo usuario{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/admin/usuarios">← Usuarios</a>
+  <h1>Nuevo usuario</h1>
+  <p>El usuario se crea solo con el primer nombre y el primer apellido (por ejemplo, <strong>ana.pena</strong>), sin tildes ni eñes.</p>
+</div>
+
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+{% if creado %}
+<div class="aviso exito">Usuario creado.</div>
+{% set credencial = creado %}
+{% set titulo_credencial = "Usuario creado" %}
+{% include "admin_credencial.html" %}
+<div class="acciones izquierda">
+  <a class="boton secundario" href="/admin/usuarios/{{ creado.id }}">Ver a {{ creado.nombre }}</a>
+</div>
+{% endif %}
+
+<form method="post" class="tarjeta formulario">
+  <h2>Datos de la persona</h2>
+  <div class="rejilla">
+    <div>
+      <label for="nombre">Nombre completo</label>
+      <input id="nombre" name="nombre" value="{{ datos.nombre }}" maxlength="100" placeholder="Ana María Peña Gómez" required>
+    </div>
+    <div>
+      <label for="documento">Número de documento</label>
+      <input id="documento" name="documento" value="{{ datos.documento }}" maxlength="24" required>
+    </div>
+    <div>
+      <label for="correo">Correo</label>
+      <input id="correo" name="correo" type="email" value="{{ datos.correo }}" maxlength="120">
+    </div>
+    <div>
+      <label for="telefono">Celular o WhatsApp</label>
+      <input id="telefono" name="telefono" value="{{ datos.telefono }}" maxlength="20" inputmode="tel">
+    </div>
+  </div>
+  {% include "admin_casillas_roles.html" %}
+  <label for="grupo_id">Matricular en el grupo (solo estudiantes)</label>
+  <select id="grupo_id" name="grupo_id">
+    <option value="">No matricular todavía</option>
+    {% for grupo in grupos %}<option value="{{ grupo.id }}" {% if grupo.id|string == grupo_elegido %}selected{% endif %}>{{ grupo.nombre }} · {{ grupo.grado }}</option>{% endfor %}
+  </select>
+  <div class="acciones"><button class="boton" type="submit">Crear usuario</button></div>
+</form>
+{% endblock %}
