@@ -1,0 +1,93 @@
+.certificados-lista li, .opciones-certificado li, .resultado-estudiante { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.certificados-lista a { text-decoration: none; }
+.certificados-lista a:hover { text-decoration: underline; }
+.seleccionado .perfil-nombre { margin-bottom: 8px; }
+.separado { margin-top: 18px; }
+.ayuda-certificados { font-size: .82rem; color: var(--gris); margin: 12px 0 0; }
+.codigo { font-family: 'Courier New', monospace; font-weight: 700; letter-spacing: .08em; }
+
+.documento {
+  position: relative;
+  max-width: 800px;
+  margin: 20px auto 0;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-top: 6px solid var(--azul);
+  border-radius: 12px;
+  padding: 40px 48px;
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  font-size: 1rem;
+}
+.documento-encabezado { display: flex; align-items: center; gap: 16px; padding-bottom: 16px; border-bottom: 2px solid var(--dorado); }
+.documento-encabezado img { width: 76px; height: 76px; object-fit: contain; flex-shrink: 0; }
+.documento-encabezado div { display: flex; flex-direction: column; line-height: 1.3; }
+.documento-encabezado strong { font-family: var(--titulos); font-size: 1.3rem; color: var(--azul-oscuro); }
+.documento-encabezado span { color: var(--gris); font-size: .88rem; }
+.documento-encabezado em { font-family: var(--titulos); color: var(--gris); font-size: .85rem; }
+.documento-titulo { text-align: center; text-transform: uppercase; letter-spacing: .06em; font-size: 1.15rem; margin: 28px 0 10px; }
+.documento-intro { text-align: center; font-weight: 600; text-transform: uppercase; font-size: .9rem; color: var(--azul-oscuro); margin-bottom: 20px; }
+.documento-texto p { text-align: justify; line-height: 1.7; margin-bottom: 14px; }
+.documento-tabla { width: 100%; border-collapse: collapse; margin: 6px 0 18px; font-size: .92rem; }
+.documento-tabla th { border-bottom: 2px solid var(--azul); padding: 6px 8px; text-align: center; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--azul-oscuro); }
+.documento-tabla td { border-bottom: 1px solid #ECE6DA; padding: 6px 8px; text-align: center; }
+.documento-tabla .izq { text-align: left; }
+.documento-tabla tr.total td { font-weight: 700; border-top: 2px solid var(--azul); border-bottom: none; }
+.documento-lugar { margin-top: 18px; }
+.firma { display: flex; flex-direction: column; align-items: center; margin: 70px auto 30px; width: 280px; max-width: 100%; text-align: center; }
+.firma-linea { width: 100%; border-top: 1.5px solid var(--carbon); margin-bottom: 6px; }
+.firma span { color: var(--gris); font-size: .88rem; }
+.documento-pie { display: flex; align-items: center; gap: 16px; border-top: 1px dashed var(--borde); padding-top: 16px; }
+.documento-pie p { margin: 0; font-size: .82rem; color: var(--gris); overflow-wrap: anywhere; }
+.codigo-caja { display: flex; flex-direction: column; border: 1.5px solid var(--azul); border-radius: 8px; padding: 6px 12px; flex-shrink: 0; }
+.codigo-caja span { font-size: .68rem; text-transform: uppercase; letter-spacing: .05em; color: var(--gris); }
+.codigo-caja strong { font-family: 'Courier New', monospace; font-size: 1.15rem; letter-spacing: .12em; color: var(--azul-oscuro); }
+.sello-anulado {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-24deg);
+  font-family: var(--titulos);
+  font-size: 5.5rem;
+  font-weight: 700;
+  color: rgba(163, 50, 39, .18);
+  border: 6px solid rgba(163, 50, 39, .18);
+  border-radius: 12px;
+  padding: 0 24px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.verificar-tarjeta { max-width: 560px; }
+.verificar-tarjeta .boton { margin-top: 14px; }
+.verificar-ayuda { font-size: .88rem; }
+.verificar-panel h2 { margin-bottom: 6px; }
+.verificar-panel .verificar-ayuda { text-align: center; }
+.verificar-panel input { text-transform: uppercase; letter-spacing: .08em; }
+.resultado { margin-top: 20px; padding: 16px; border-radius: 10px; border: 1px solid var(--borde); background: var(--crema); }
+.resultado p { margin: 10px 0 0; }
+.resultado.valido { border-color: #B9D2BF; background: #F1F6F1; }
+.resultado.anulado { border-color: #E4B3AB; background: #FBF1EF; }
+.resultado dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 14px 0 0; }
+.resultado dt { font-size: .8rem; font-weight: 600; color: var(--gris); }
+.resultado dd { margin: 0; font-weight: 600; color: var(--azul-oscuro); }
+.verificar-pie { text-align: center; font-size: .82rem; color: var(--gris); padding: 0 20px 40px; margin: -20px auto 0; max-width: 520px; }
+
+@media (max-width: 800px) {
+  .documento { padding: 24px 18px; }
+  .documento-encabezado img { width: 56px; height: 56px; }
+  .documento-pie { flex-direction: column; align-items: flex-start; }
+  .sello-anulado { font-size: 3rem; }
+  .certificados-lista li, .opciones-certificado li, .resultado-estudiante { flex-wrap: wrap; }
+  .resultado dl { grid-template-columns: 1fr; gap: 2px; }
+  .resultado dd { margin-bottom: 8px; }
+}
+
+@page { margin: 2cm; }
+
+@media print {
+  .no-imprimir, .encabezado, .aviso { display: none !important; }
+  .contenedor { max-width: none; padding: 0; }
+  .documento { border: none; box-shadow: none; border-radius: 0; padding: 0; margin: 0; max-width: none; }
+  .firma { margin-top: 90px; }
+}

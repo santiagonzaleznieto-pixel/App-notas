@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block titulo %}Orientación escolar{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/orientacion.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Orientación escolar</h1>
+  <p>Remisiones de docentes, atenciones abiertas y seguimiento de estudiantes · {{ colegio.anio }}</p>
+  <div class="acciones izquierda">
+    <a class="boton" href="#buscar">Nueva atención</a>
+    <a class="boton secundario" href="/piar">PIAR</a>
+  </div>
+</div>
+
+<p class="confidencial"><strong>Confidencial.</strong> Información sensible de menores de edad (Ley 1581 de 2012 y Ley 1098 de 2006). Solo orientación escolar ve las atenciones. No compartas esta pantalla.</p>
+
+<div class="cifras">
+  <div class="tarjeta cifra alerta">
+    <span>Remisiones pendientes</span>
+    <strong>{{ remisiones|length }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Atenciones abiertas</span>
+    <strong>{{ abiertas|length }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Atenciones en {{ colegio.anio }}</span>
+    <strong>{{ total_anio }}</strong>
+  </div>
+</div>
+
+<div class="dos-columnas">
+  <section class="tarjeta">
+    <h2>Remisiones de docentes</h2>
+    {% if remisiones %}
+    <ul class="lista">
+      {% for remision in remisiones %}
+      <li>
+        <div class="fila-titulo">
+          <a href="/orientacion/estudiante/{{ remision.estudiante_id }}"><strong>{{ remision.estudiante }}</strong></a>
+          <span class="chip Pendiente">{{ remision.grupo }}</span>
+        </div>
+        <p class="texto-largo">{{ remision.motivo }}</p>
+        <span class="fecha">{{ remision.fecha }} · Pedida por {{ remision.docente }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">No hay remisiones pendientes.</p>
+    {% endif %}
+  </section>
+
+  <section class="tarjeta">
+    <h2>Atenciones abiertas</h2>
+    {% if abiertas %}
+    <ul class="lista">
+      {% for atencion in abiertas %}
+      <li>
+        <div class="fila-titulo">
+          <a href="/orientacion/estudiante/{{ atencion.estudiante_id }}"><strong>{{ atencion.estudiante }}</strong></a>
+          <span class="estado {{ atencion.cita.clase }}">{{ atencion.cita.texto }}</span>
+        </div>
+        <span class="fecha">{{ atencion.grupo }} · {{ nombres_motivos[atencion.motivo] }} · desde {{ atencion.fecha }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="gris">No hay atenciones abiertas.</p>
+    {% endif %}
+  </section>
+</div>
+
+<section class="tarjeta" id="buscar">
+  <h2>Buscar estudiante</h2>
+  <p class="gris">Busca por nombre, documento o usuario para ver su historial o registrar una nueva atención.</p>
+  <form method="get" action="/orientacion" class="filtros formulario">
+    <div>
+      <label for="texto-buscar">Estudiante</label>
+      <input id="texto-buscar" name="buscar" value="{{ buscar }}" maxlength="60" placeholder="Ej.: Quintero" autocomplete="off">
+    </div>
+    <button class="boton" type="submit">Buscar</button>
+  </form>
+  {% if buscar %}
+    {% if resultados %}
+    <div class="tabla-caja">
+      <table class="tabla">
+        <thead>
+          <tr><th class="izq">Estudiante</th><th>Grupo</th><th>Atenciones</th><th>Abiertas</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for fila in resultados %}
+          <tr>
+            <td class="izq"><a href="/orientacion/estudiante/{{ fila.estudiante.id }}">{{ fila.estudiante.nombre }}</a></td>
+            <td>{{ fila.grupo }}</td>
+            <td>{{ fila.atenciones }}</td>
+            <td>{{ fila.abiertas }}</td>
+            <td><a class="boton pequeno" href="/orientacion/estudiante/{{ fila.estudiante.id }}#nueva">Nueva atención</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="vacio">No se encontraron estudiantes con «{{ buscar }}».</p>
+    {% endif %}
+  {% endif %}
+</section>
+{% endblock %}

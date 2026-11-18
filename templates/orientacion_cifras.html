@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block titulo %}Orientación escolar{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/orientacion.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Orientación escolar</h1>
+  <p>Resumen del año {{ colegio.anio }}.</p>
+</div>
+
+<p class="confidencial"><strong>Solo cifras.</strong> Por la Ley 1581 de 2012 y la Ley 1098 de 2006, los nombres, las descripciones y los seguimientos de las atenciones los ve únicamente orientación escolar.</p>
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Atenciones en {{ colegio.anio }}</span>
+    <strong>{{ total }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Atenciones abiertas</span>
+    <strong>{{ abiertas }}</strong>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Remisiones de docentes pendientes</span>
+    <strong>{{ pendientes }}</strong>
+  </div>
+</div>
+
+<section class="tarjeta">
+  <h2>Atenciones del año por motivo</h2>
+  {% if total %}
+  <ul class="conteo">
+    {% for fila in conteo %}
+    <li>
+      <span>{{ fila.nombre }}</span>
+      <div class="barra-progreso" role="img" aria-label="{{ fila.nombre }}: {{ fila.porcentaje }} %"><div style="width: {{ fila.porcentaje }}%"></div></div>
+      <strong>{{ fila.cantidad }}</strong>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="vacio">Todavía no hay atenciones registradas este año.</p>
+  {% endif %}
+</section>
+{% endblock %}
