@@ -5,7 +5,7 @@
     <div class="cobro-cabeza">
       <div>
         <strong>{{ cobro.descripcion }}</strong>
-        <small>{{ cobro.concepto }} · fecha límite {{ fecha_larga(cobro.fecha_limite) }}</small>
+        <small>{% if cobro.concepto != cobro.descripcion %}{{ cobro.concepto }} · {% endif %}fecha límite {{ fecha_larga(cobro.fecha_limite) }}</small>
       </div>
       <span class="estado {{ cobro.clase }}">{{ cobro.situacion }}{% if cobro.vencido %} · {{ cobro.dias_mora }} día{% if cobro.dias_mora != 1 %}s{% endif %} de mora{% endif %}</span>
     </div>
