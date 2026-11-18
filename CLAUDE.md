@@ -121,4 +121,4 @@ Los botones de acceso rápido solo aparecen en modo pruebas: sin la variable `CL
 
 ## Estado
 
-Fases 1, 2, 3, 5 y 6 construidas con pruebas (13 pruebas, más de 1.000 revisiones). Fase 4: seguridad, política de datos (borrador), modo real y `crear_colegio.py` listos; falta publicar en PythonAnywhere y la revisión legal. Fase 7: app instalable y aviso sin conexión listos; falta el modo sin conexión para asistencia y notas, y los avisos por WhatsApp y correo. Ver la sección "Avance" del plan maestro y los pendientes del dueño en `PENDIENTES.md`.
+Fases 1, 2, 3, 5 y 6 construidas con pruebas (13 pruebas, más de 1.000 revisiones). Fase 4: seguridad, política de datos (borrador), modo real, `crear_colegio.py` y publicación en Vercel con Supabase listos; falta la revisión legal y el dominio propio. Fase 7: app instalable y aviso sin conexión listos; falta el modo sin conexión para asistencia y notas, y los avisos por WhatsApp y correo. Ver la sección "Avance" del plan maestro y los pendientes del dueño en `PENDIENTES.md`.

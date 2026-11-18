@@ -4,11 +4,7 @@ Cosas que solo puede hacer el dueño del proyecto (necesitan su cuenta, su firma
 
 ## Ya mismo
 
-- [ ] **Unir Supabase con Vercel** (el proyecto "App notas" de Supabase ya existe; falta que Vercel sepa dónde está):
-  1. En Supabase abre el proyecto **App notas → Project Settings → Integrations → Vercel → Connect** (o desde Vercel: **app-notas → Settings → Integrations → Supabase**).
-  2. Elige el proyecto de Vercel **app-notas** y confirma. La integración crea sola la variable `POSTGRES_URL` en Vercel, sin copiar contraseñas.
-  3. En Vercel ve a **Deployments**, abre el último y oprime **Redeploy**.
-  4. Avísale a Claude para que revise que las tablas y los datos quedaron en Supabase.
+- [x] **Supabase unido con Vercel.** La plataforma guarda los datos en el proyecto "App notas" de Supabase (50 tablas, con seguridad por filas).
 - [ ] **Dominio propio** (cuando lo compres): Vercel → app-notas → **Settings → Domains → Add**.
 - [ ] **Activar GitHub Pages.** Entra a https://github.com/santiagonzaleznieto-pixel/App-notas/settings/pages. En **Source** elige **Deploy from a branch**, en **Branch** elige **main** y la carpeta **/docs**, y oprime **Save**. La demo queda en https://santiagonzaleznieto-pixel.github.io/App-notas/
 - [ ] **Preguntar al instructor del SENA** quién es dueño del código hecho en el proyecto de formación, antes de venderlo.
