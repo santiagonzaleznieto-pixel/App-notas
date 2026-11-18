@@ -1,7 +1,7 @@
 from datetime import date
 from flask import g, render_template, request, redirect
 from nucleo import (app, agregar_menu, tiene_rol, tiene_alguno, promedio, nota_final, grupo_del_estudiante,
-                    registrar, hoy, ahora, CON_DATOS_DE_EJEMPLO)
+                    registrar, hoy, ahora, SEMBRAR)
 import base_datos
 
 TABLAS_FAMILIAS = """
@@ -565,5 +565,5 @@ def sembrar_familias():
     )
 
 
-if CON_DATOS_DE_EJEMPLO:
+if SEMBRAR:
     sembrar_familias()

@@ -13,9 +13,6 @@ import modulo_gobierno
 import modulo_tesoreria
 import modulo_servicios
 import modulo_admin
-import base_datos
-
-base_datos.soltar_preparacion()
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 from flask import g, render_template, request, redirect
 from nucleo import (app, agregar_menu, tiene_rol, tiene_alguno, numero, estudiante_del_colegio,
-                    grupo_del_estudiante, registrar, NOMBRES_ROLES, CON_DATOS_DE_EJEMPLO)
+                    grupo_del_estudiante, registrar, NOMBRES_ROLES, SEMBRAR)
 import nucleo
 import base_datos
 
@@ -687,7 +687,7 @@ def sembrar_servicios():
     )
 
 
-if CON_DATOS_DE_EJEMPLO:
+if SEMBRAR:
     sembrar_servicios()
 
 

@@ -13,9 +13,9 @@ if os.environ.get("CLAVE_SECRETA", "") != "":
 
 CON_DATOS_DE_EJEMPLO = os.environ.get("DATOS_DE_EJEMPLO", "1") == "1"
 
-base_datos.bloquear_preparacion()
 base_datos.crear_tablas(base_datos.TABLAS)
-if CON_DATOS_DE_EJEMPLO and base_datos.tabla_vacia("colegios"):
+SEMBRAR = CON_DATOS_DE_EJEMPLO and base_datos.reclamar_siembra()
+if SEMBRAR and base_datos.tabla_vacia("colegios"):
     semilla.sembrar()
 
 COLEGIO_PILOTO = int(os.environ.get("COLEGIO_PORTADA", "1"))

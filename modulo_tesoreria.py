@@ -2,7 +2,7 @@ from datetime import date
 from flask import g, render_template, request, redirect
 import nucleo
 from nucleo import (app, agregar_menu, tiene_rol, tiene_alguno, estudiante_del_colegio, grupo_del_estudiante,
-                    registrar, numero, CON_DATOS_DE_EJEMPLO)
+                    registrar, numero, SEMBRAR)
 import base_datos
 
 TABLAS_TESORERIA = """
@@ -1007,5 +1007,5 @@ def sembrar_tesoreria():
                           tesorero["id"], "11:" + dos_digitos(10 + posicion))
 
 
-if CON_DATOS_DE_EJEMPLO:
+if SEMBRAR:
     sembrar_tesoreria()

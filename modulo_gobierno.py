@@ -1,7 +1,7 @@
 import secrets
 from flask import g, render_template, request, redirect
 from nucleo import (app, agregar_menu, tiene_rol, tiene_alguno, estudiante_del_colegio, registrar, ahora,
-                    DIRECTIVOS, CON_DATOS_DE_EJEMPLO)
+                    DIRECTIVOS, SEMBRAR)
 import base_datos
 
 TABLAS_GOBIERNO = """
@@ -703,5 +703,5 @@ def sembrar_gobierno():
     )
 
 
-if CON_DATOS_DE_EJEMPLO:
+if SEMBRAR:
     sembrar_gobierno()

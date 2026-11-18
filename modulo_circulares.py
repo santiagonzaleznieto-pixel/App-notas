@@ -1,6 +1,6 @@
 from flask import g, render_template, request, redirect
 from nucleo import (app, agregar_menu, tiene_rol, tiene_alguno, dicta_en_grupo, registrar, hoy, ahora, DIRECTIVOS,
-                    CON_DATOS_DE_EJEMPLO)
+                    SEMBRAR)
 from modulo_familias import fecha_valida, hora_valida, fecha_larga, hora_texto, entero, porcentaje, MESES_CORTOS
 import base_datos
 
@@ -532,6 +532,6 @@ def sembrar_agenda():
         )
 
 
-if CON_DATOS_DE_EJEMPLO:
+if SEMBRAR:
     sembrar_circulares()
     sembrar_agenda()

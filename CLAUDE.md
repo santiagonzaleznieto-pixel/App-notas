@@ -113,7 +113,8 @@ Los botones de acceso rápido solo aparecen en modo pruebas: sin la variable `CL
 ## Publicación
 
 - Demo en GitHub Pages: carpeta `docs/` de la rama `main` (páginas fijas; no se inicia sesión de verdad ni se guarda nada).
-- Plataforma en internet: Vercel (conectado al repositorio de GitHub) con la base de datos en Supabase. Variables en Vercel: `URL_BASE_DATOS` (cadena de conexión del *Session pooler* de Supabase), `CLAVE_SECRETA`, `MODO_PRUEBAS=1` solo para demos y `AVISO_DEMO` (texto de la franja de aviso). Sin `URL_BASE_DATOS`, en Vercel la base va a `/tmp` y se borra sola. Alternativa: PythonAnywhere (pasos en `README.md`).
+- Plataforma en internet: Vercel (conectado al repositorio de GitHub) con la base de datos en Supabase. Supabase: proyecto "App notas" (región us-west-2); Vercel corre en `pdx1` (Portland) para estar al lado. Variables en Vercel: `URL_BASE_DATOS` (cadena de conexión de Supabase) o `POSTGRES_URL` (la crea sola la integración Supabase ↔ Vercel; `base_datos.limpiar_url` le quita los parámetros que PostgreSQL no entiende), `CLAVE_SECRETA`, `MODO_PRUEBAS=1` solo para demos y `AVISO_DEMO` (texto de la franja de aviso). Sin `URL_BASE_DATOS`, en Vercel la base va a `/tmp` y se borra sola. Alternativa: PythonAnywhere (pasos en `README.md`).
+- Arranque en PostgreSQL: la creación de tablas va en fila (bloqueo de transacción) y solo el primer servidor que se apunta en `control_siembra` carga los datos de prueba (`nucleo.SEMBRAR`). Los módulos siembran con `if SEMBRAR:`.
 - Hora: `nucleo.hoy()` y `nucleo.ahora()` usan siempre la hora de Colombia (UTC-5), aunque el servidor esté en otro país.
 - `/privacidad`: política de tratamiento de datos (borrador para revisión de un abogado).
 

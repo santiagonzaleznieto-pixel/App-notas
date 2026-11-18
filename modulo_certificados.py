@@ -1,7 +1,7 @@
 import secrets
 from flask import g, render_template, request, redirect
 from nucleo import (app, agregar_menu, tiene_rol, tiene_alguno, numero, ahora, registrar, promedio, nota_final,
-                    desempeno, estudiante_del_colegio, grupo_del_estudiante, DIRECTIVOS, CON_DATOS_DE_EJEMPLO)
+                    desempeno, estudiante_del_colegio, grupo_del_estudiante, DIRECTIVOS, SEMBRAR)
 import base_datos
 
 LETRAS_CODIGO = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
@@ -517,5 +517,5 @@ def sembrar_certificados():
         guardar_certificado(colegio["id"], "servicio_social", luisa["id"], secretaria["id"], "2026-11-12 10:15", armado["texto"])
 
 
-if CON_DATOS_DE_EJEMPLO:
+if SEMBRAR:
     sembrar_certificados()

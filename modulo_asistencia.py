@@ -2,7 +2,7 @@ from datetime import date, timedelta
 from flask import g, render_template, request, redirect
 import nucleo
 from nucleo import (app, agregar_menu, tiene_rol, tiene_alguno, puede_ver_grupo, puede_ver_estudiante,
-                    estudiante_del_colegio, grupo_del_estudiante, registrar, CON_DATOS_DE_EJEMPLO)
+                    estudiante_del_colegio, grupo_del_estudiante, registrar, SEMBRAR)
 import base_datos
 
 TABLAS_ASISTENCIA = """
@@ -684,5 +684,5 @@ def sembrar_asistencia():
     conexion.close()
 
 
-if CON_DATOS_DE_EJEMPLO:
+if SEMBRAR:
     sembrar_asistencia()
