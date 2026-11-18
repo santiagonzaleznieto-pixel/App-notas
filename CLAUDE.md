@@ -16,7 +16,8 @@ Este repositorio es solo para la plataforma escolar. El sitio del restaurante Am
 - Evitar lo que no se ha visto: clases propias, `lambda`, listas por comprensión, `try`/`except`, `with`, operador ternario, `sorted` con `key`, decoradores propios, f-strings (se usa `+` y `str()`), librerías externas.
 - Todo debe servir para cualquier colegio: cada tabla lleva `colegio_id` y cada consulta comprueba que el registro es del colegio del usuario (`g.colegio["id"]`). Nunca confiar en ids que llegan por la URL o el formulario.
 - Lo que cambia de un colegio a otro (escala, períodos, grados, materias, sedes) se guarda en la base de datos, no en el código.
-- Base de datos: SQLite hasta la fase 4 del plan maestro; luego PostgreSQL.
+- Base de datos: SQLite en el computador y PostgreSQL (Supabase) en internet. El código se escribe para SQLite (con `?`) y `base_datos.py` lo traduce solo a PostgreSQL cuando existe la variable `URL_BASE_DATOS`. Única librería externa permitida además de Flask: `psycopg` (para hablar con PostgreSQL), y solo dentro de `base_datos.py`.
+- Nunca hablar directo con la conexión: usar `base_datos.consultar`, `consultar_uno`, `ejecutar`, o `base_datos.en(conexion, sql, valores)` cuando se necesite una transacción. Escribir SQL que funcione en las dos bases: `GROUP BY` con todas las columnas que no son de suma o conteo, `ORDER BY` cuando el orden importe, y nada de funciones de fecha de SQLite (las fechas se calculan en Python con `nucleo.hoy()`).
 - El repositorio es público: nunca escribir claves ni contraseñas reales en el código.
 - Mantener el diseño (ver "Diseño"). Todo debe verse bien en celular.
 - Soy principiante: explica cada cambio con palabras sencillas y dime cómo probarlo.
@@ -32,7 +33,7 @@ py app.py
 
 Abrir http://127.0.0.1:5000. La primera vez se crea `plataforma.db` (al lado de `base_datos.py`) con los datos de `datos.py` y los ejemplos de cada módulo. Para volver a empezar: cerrar el programa, borrar `plataforma.db` y abrirlo otra vez. Si cambia la estructura de alguna tabla, también hay que borrar `plataforma.db`.
 
-Pruebas automáticas (una por módulo): `py pruebas/prueba_notas.py`, `py pruebas/prueba_admin.py`, etc. Cada una usa una base temporal y no toca `plataforma.db`.
+Pruebas automáticas (una por módulo): `py pruebas/prueba_notas.py`, `py pruebas/prueba_admin.py`, etc. Cada una usa una base temporal y no toca `plataforma.db`. Para probar con PostgreSQL: definir `URL_PRUEBAS_POSTGRES` (por ejemplo `postgresql://postgres:clave@127.0.0.1:5432/postgres`); cada prueba crea su propia base `prueba_...`.
 
 ## Arquitectura
 
@@ -111,7 +112,8 @@ Los botones de acceso rápido solo aparecen en modo pruebas: sin la variable `CL
 ## Publicación
 
 - Demo en GitHub Pages: carpeta `docs/` de la rama `main` (páginas fijas; no se inicia sesión de verdad ni se guarda nada).
-- Plataforma real: PythonAnywhere (pasos en `README.md`). Variables: `CLAVE_SECRETA` (obligatoria en internet) y `MODO_PRUEBAS=1` solo para demos.
+- Plataforma en internet: Vercel (conectado al repositorio de GitHub) con la base de datos en Supabase. Variables en Vercel: `URL_BASE_DATOS` (cadena de conexión del *Session pooler* de Supabase), `CLAVE_SECRETA`, `MODO_PRUEBAS=1` solo para demos y `AVISO_DEMO` (texto de la franja de aviso). Sin `URL_BASE_DATOS`, en Vercel la base va a `/tmp` y se borra sola. Alternativa: PythonAnywhere (pasos en `README.md`).
+- Hora: `nucleo.hoy()` y `nucleo.ahora()` usan siempre la hora de Colombia (UTC-5), aunque el servidor esté en otro país.
 - `/privacidad`: política de tratamiento de datos (borrador para revisión de un abogado).
 
 ## Estado

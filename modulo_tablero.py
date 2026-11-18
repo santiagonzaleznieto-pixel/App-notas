@@ -1,5 +1,6 @@
+from datetime import date, timedelta
 from flask import g, render_template, redirect
-from nucleo import app, agregar_menu, tiene_alguno, promedio, nota_final, desempeno
+from nucleo import app, agregar_menu, tiene_alguno, promedio, nota_final, desempeno, hoy
 from modulo_notas import tabla_grupo, periodos_actuales
 import base_datos
 
@@ -39,7 +40,8 @@ def ordenar_de_mayor_a_menor(lista, campo):
 def alertas_del_colegio(colegio_id):
     alertas = []
     if existe_tabla("asistencia"):
-        fallas = contar("SELECT COUNT(*) AS total FROM asistencia WHERE colegio_id = ? AND estado = 'falla' AND fecha >= date('now', '-30 day')", [colegio_id])
+        desde = (date.fromisoformat(hoy()) - timedelta(days=30)).isoformat()
+        fallas = contar("SELECT COUNT(*) AS total FROM asistencia WHERE colegio_id = ? AND estado = 'falla' AND fecha >= ?", [colegio_id, desde])
         alertas.append({"titulo": "Fallas sin excusa en los últimos 30 días", "valor": fallas, "ruta": "/asistencia"})
     if existe_tabla("excusas"):
         pendientes = contar("SELECT COUNT(*) AS total FROM excusas WHERE colegio_id = ? AND estado = 'pendiente'", [colegio_id])

@@ -14,7 +14,11 @@ def contar(sql, valores):
 
 def columnas(tabla):
     lista = []
-    for fila in base_datos.consultar("PRAGMA table_info(" + tabla + ")", []):
+    if base_datos.usa_postgres():
+        filas = base_datos.consultar("SELECT column_name AS name FROM information_schema.columns WHERE table_name = ?", [tabla])
+    else:
+        filas = base_datos.consultar("PRAGMA table_info(" + tabla + ")", [])
+    for fila in filas:
         lista.append(fila["name"])
     return lista
 

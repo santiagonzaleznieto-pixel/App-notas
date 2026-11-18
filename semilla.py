@@ -84,7 +84,7 @@ def sembrar():
             lista = NOTAS[estudiante][clave]
             for p in range(len(lista)):
                 if lista[p] is not None:
-                    conexion.execute(
+                    base_datos.en(conexion, 
                         "INSERT INTO notas (colegio_id, anio, estudiante_id, materia_id, periodo, valor) VALUES (?, ?, ?, ?, ?, ?)",
                         [colegio_id, anio, usuarios[estudiante], materias[clave], p + 1, lista[p]],
                     )

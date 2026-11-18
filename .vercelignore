@@ -1,0 +1,5 @@
+docs/
+pruebas/
+*.db
+__pycache__/
+PENDIENTES.md

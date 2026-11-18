@@ -811,7 +811,7 @@ def sembrar_horas():
 
     conexion = base_datos.conectar()
     for inscripcion in INSCRIPCIONES_EJEMPLO:
-        conexion.execute(
+        base_datos.en(conexion, 
             "INSERT INTO inscripciones_sociales (colegio_id, proyecto_id, estudiante_id, inscrito_en) VALUES (?, ?, ?, ?)",
             [colegio["id"], proyectos[inscripcion["proyecto"]], personas[inscripcion["estudiante"]], inscripcion["fecha"] + " 10:00"],
         )
@@ -833,7 +833,7 @@ def sembrar_horas():
         fechas = fechas_semanales(bloque["inicio"], len(cantidades))
         actividades = ACTIVIDADES_EJEMPLO[clave]
         for i in range(len(fechas)):
-            conexion.execute(
+            base_datos.en(conexion, 
                 "INSERT INTO horas_registradas (colegio_id, estudiante_id, tipo, proyecto_id, fecha, horas, actividad, evidencia, "
                 "estado, registrado_por, registrado_en, revisado_por, revisado_en, observacion) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'aprobada', ?, ?, ?, ?, '')",
@@ -846,7 +846,7 @@ def sembrar_horas():
         proyecto_id = None
         if pendiente["proyecto"] != "":
             proyecto_id = proyectos[pendiente["proyecto"]]
-        conexion.execute(
+        base_datos.en(conexion, 
             "INSERT INTO horas_registradas (colegio_id, estudiante_id, tipo, proyecto_id, fecha, horas, actividad, evidencia, "
             "estado, registrado_por, registrado_en) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pendiente', ?, ?)",
             [colegio["id"], personas[pendiente["estudiante"]], pendiente["tipo"], proyecto_id, pendiente["fecha"],
@@ -854,7 +854,7 @@ def sembrar_horas():
              pendiente["fecha"] + " 20:10"],
         )
 
-    conexion.execute(
+    base_datos.en(conexion, 
         "INSERT INTO horas_registradas (colegio_id, estudiante_id, tipo, proyecto_id, fecha, horas, actividad, evidencia, "
         "estado, registrado_por, registrado_en, revisado_por, revisado_en, observacion) "
         "VALUES (?, ?, 'social', ?, '2026-10-24', 6, 'Jornada de limpieza de la huerta', 'Ninguna', 'rechazada', ?, "

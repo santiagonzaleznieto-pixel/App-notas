@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 from flask import g, render_template, request, redirect, session, send_from_directory
 from werkzeug.security import check_password_hash, generate_password_hash
-from nucleo import app, NOMBRES_ROLES, menu_de, registrar, CON_DATOS_DE_EJEMPLO
+from nucleo import app, NOMBRES_ROLES, menu_de, registrar, CON_DATOS_DE_EJEMPLO, ZONA_COLOMBIA
 from datos import CLAVE_PRUEBA
 import base_datos
 
@@ -31,7 +31,7 @@ def accesos_rapidos():
 
 
 def intentos_fallidos_recientes(usuario):
-    desde = (datetime.now() - timedelta(minutes=15)).strftime("%Y-%m-%d %H:%M")
+    desde = (datetime.now(ZONA_COLOMBIA) - timedelta(minutes=15)).strftime("%Y-%m-%d %H:%M")
     fila = base_datos.consultar_uno(
         "SELECT COUNT(*) AS total FROM registro_accesos WHERE accion = 'Intento fallido de ingreso' AND detalle = ? AND fecha >= ?",
         [usuario, desde],

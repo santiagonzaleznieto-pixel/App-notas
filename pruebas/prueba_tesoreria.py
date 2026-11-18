@@ -19,7 +19,7 @@ def contar(sql, valores):
 
 
 def cobro_de(estudiante_id, descripcion):
-    return base_datos.consultar_uno("SELECT * FROM cobros WHERE estudiante_id = ? AND descripcion LIKE ?",
+    return base_datos.consultar_uno("SELECT * FROM cobros WHERE estudiante_id = ? AND descripcion LIKE ? ORDER BY id",
                                     [estudiante_id, descripcion + "%"])
 
 

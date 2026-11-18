@@ -15,6 +15,7 @@
 <meta name="theme-color" content="#1E3A5F">
 </head>
 <body>
+{% if aviso_demo %}<div class="aviso-demo" role="status">{{ aviso_demo }}</div>{% endif %}
 {% if yo %}
 <header class="barra">
   <a href="/inicio"><img class="escudo-barra" src="/static/escudo.png" alt="Escudo del colegio"></a>

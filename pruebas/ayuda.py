@@ -7,7 +7,17 @@ sys.path.insert(0, CARPETA_PROYECTO)
 
 import base_datos
 
-base_datos.ARCHIVO = os.path.join(tempfile.mkdtemp(), "prueba.db")
+URL_PRUEBAS = os.environ.get("URL_PRUEBAS_POSTGRES", "")
+if URL_PRUEBAS != "":
+    import psycopg
+    import secrets
+    nombre_base = "prueba_" + secrets.token_hex(4)
+    administrador = psycopg.connect(URL_PRUEBAS, autocommit=True)
+    administrador.execute("CREATE DATABASE " + nombre_base)
+    administrador.close()
+    base_datos.URL = URL_PRUEBAS[:URL_PRUEBAS.rfind("/") + 1] + nombre_base
+else:
+    base_datos.ARCHIVO = os.path.join(tempfile.mkdtemp(), "prueba.db")
 
 from nucleo import app
 

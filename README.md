@@ -55,6 +55,20 @@ py generar_demo.py
 
 El programa recorre la plataforma como cada usuario de prueba y guarda las páginas en la carpeta `docs`. Después sube los cambios a GitHub y la demo se actualiza sola en uno o dos minutos.
 
+## Cómo publicarla en Vercel con la base de datos en Supabase
+
+1. **Supabase:** crea un proyecto (por ejemplo `app-notas`, región East US) y guarda bien la contraseña de la base de datos. Luego entra a **Connect**, elige **Session pooler** y copia la cadena de conexión (empieza por `postgresql://`). Cambia `[YOUR-PASSWORD]` por tu contraseña.
+2. **Vercel:** importa el repositorio `App-notas` desde GitHub (Vercel reconoce Flask solo).
+3. En el proyecto de Vercel, ve a **Settings → Environment Variables** y agrega:
+   - `URL_BASE_DATOS`: la cadena de conexión de Supabase.
+   - `CLAVE_SECRETA`: una frase larga que nadie conozca.
+   - `MODO_PRUEBAS`: `1` (solo mientras sea demo, para ver los botones de acceso rápido).
+   - `AVISO_DEMO`: `Versión de demostración con datos de prueba.` (opcional).
+4. Vuelve a desplegar (**Deployments → Redeploy**). La primera vez que se abra la página se crean las tablas y los datos de prueba en Supabase.
+5. Para un colegio real: quita `MODO_PRUEBAS`, agrega `DATOS_DE_EJEMPLO` = `0` y crea el colegio con `crear_colegio.py` (ver abajo).
+
+Más adelante, el dominio propio se agrega en Vercel en **Settings → Domains**.
+
 ## Cómo publicarla de verdad en PythonAnywhere
 
 1. Crea una cuenta gratis en https://www.pythonanywhere.com (plan Beginner).

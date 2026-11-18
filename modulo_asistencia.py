@@ -667,12 +667,12 @@ def sembrar_asistencia():
                 estado = "presente"
                 if clave in novedades:
                     estado = novedades[clave]
-                conexion.execute(
+                base_datos.en(conexion, 
                     "INSERT INTO asistencia (colegio_id, fecha, asignacion_id, estudiante_id, estado, registrado_por, registrado_en) "
                     "VALUES (?, ?, ?, ?, ?, ?, ?)",
                     [1, fecha, asignacion["id"], estudiante["id"], estado, asignacion["docente_id"], fecha + horas[materia]],
                 )
-    conexion.execute(
+    base_datos.en(conexion, 
         "INSERT INTO excusas (colegio_id, estudiante_id, fecha_inicio, fecha_fin, motivo, enviada_por, enviada_en) "
         "VALUES (?, ?, ?, ?, ?, ?, ?)",
         [1, melany["id"], "2026-11-10", "2026-11-10",

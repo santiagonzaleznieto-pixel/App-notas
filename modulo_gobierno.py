@@ -278,21 +278,21 @@ def resultados(eleccion):
 
 def id_secreto(conexion):
     nuevo = secrets.randbelow(900000000000) + 100000000000
-    while conexion.execute("SELECT id FROM votos WHERE id = ?", [nuevo]).fetchone() is not None:
+    while base_datos.en(conexion, "SELECT id FROM votos WHERE id = ?", [nuevo]).fetchone() is not None:
         nuevo = secrets.randbelow(900000000000) + 100000000000
     return nuevo
 
 
 def emitir_voto(eleccion, usuario_id, candidato_id):
     conexion = base_datos.conectar()
-    cursor = conexion.execute(
+    cursor = base_datos.en(conexion, 
         "INSERT OR IGNORE INTO votantes (colegio_id, eleccion_id, usuario_id, votado_en) VALUES (?, ?, ?, ?)",
         [eleccion["colegio_id"], eleccion["id"], usuario_id, ahora()],
     )
     if cursor.rowcount != 1:
         conexion.close()
         return False
-    conexion.execute(
+    base_datos.en(conexion, 
         "INSERT INTO votos (id, colegio_id, eleccion_id, candidato_id) VALUES (?, ?, ?, ?)",
         [id_secreto(conexion), eleccion["colegio_id"], eleccion["id"], candidato_id],
     )
@@ -610,7 +610,7 @@ def resultados_eleccion(eleccion_id):
 
 def sembrar_votos(conexion, colegio_id, eleccion_id, candidato_id, cantidad):
     for vez in range(cantidad):
-        conexion.execute(
+        base_datos.en(conexion, 
             "INSERT INTO votos (id, colegio_id, eleccion_id, candidato_id) VALUES (?, ?, ?, ?)",
             [id_secreto(conexion), colegio_id, eleccion_id, candidato_id],
         )
@@ -673,7 +673,7 @@ def sembrar_gobierno():
             texto_minuto = str(minuto)
             if minuto < 10:
                 texto_minuto = "0" + texto_minuto
-            conexion.execute(
+            base_datos.en(conexion, 
                 "INSERT INTO votantes (colegio_id, eleccion_id, usuario_id, votado_en) VALUES (?, ?, ?, ?)",
                 [colegio["id"], personero, persona["id"], str(anio) + "-02-20 07:" + texto_minuto],
             )

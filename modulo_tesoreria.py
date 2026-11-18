@@ -750,12 +750,12 @@ def generar_cobros():
             conexion = base_datos.conectar()
             for destino in destinos:
                 for estudiante in base_datos.estudiantes_del_grupo(destino["id"]):
-                    existe = conexion.execute(
+                    existe = base_datos.en(conexion, 
                         "SELECT id FROM cobros WHERE colegio_id = ? AND concepto_id = ? AND estudiante_id = ? AND fecha_limite = ?",
                         [colegio_id, concepto["id"], estudiante["id"], valores["fecha_limite"]],
                     ).fetchone()
                     if existe is None:
-                        conexion.execute(
+                        base_datos.en(conexion, 
                             "INSERT INTO cobros (colegio_id, anio, estudiante_id, concepto_id, descripcion, valor, fecha_limite, creado_en) "
                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                             [colegio_id, concepto["anio"], estudiante["id"], concepto["id"], descripcion, concepto["valor"],
@@ -778,7 +778,7 @@ def generar_cobros():
         "SELECT cobros.descripcion, cobros.fecha_limite, cobros.valor, conceptos_cobro.nombre AS concepto, COUNT(*) AS cantidad, "
         "MAX(cobros.creado_en) AS creado FROM cobros JOIN conceptos_cobro ON conceptos_cobro.id = cobros.concepto_id "
         "WHERE cobros.colegio_id = ? AND cobros.estado != 'anulado' "
-        "GROUP BY cobros.concepto_id, cobros.descripcion, cobros.fecha_limite, cobros.valor ORDER BY creado DESC LIMIT 8",
+        "GROUP BY cobros.concepto_id, conceptos_cobro.nombre, cobros.descripcion, cobros.fecha_limite, cobros.valor ORDER BY creado DESC LIMIT 8",
         [colegio_id],
     )
 

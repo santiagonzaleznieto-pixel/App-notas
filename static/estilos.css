@@ -367,3 +367,5 @@ a { color: var(--azul); }
 .publico-simple .marca { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; text-decoration: none; }
 .publico-simple .marca img { width: 48px; height: 48px; }
 .publico-simple .marca strong { font-family: var(--titulos); color: var(--azul-oscuro); font-size: 1.15rem; }
+
+.aviso-demo { background: var(--dorado); color: var(--azul-oscuro); text-align: center; padding: 8px 16px; font-size: .85rem; font-weight: 600; }

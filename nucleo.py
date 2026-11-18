@@ -1,5 +1,5 @@
 import os
-from datetime import date, datetime
+from datetime import datetime, timedelta, timezone
 from flask import Flask, g, session, redirect, request, render_template
 import base_datos
 import semilla
@@ -13,6 +13,7 @@ if os.environ.get("CLAVE_SECRETA", "") != "":
 
 CON_DATOS_DE_EJEMPLO = os.environ.get("DATOS_DE_EJEMPLO", "1") == "1"
 
+base_datos.bloquear_preparacion()
 base_datos.crear_tablas(base_datos.TABLAS)
 if CON_DATOS_DE_EJEMPLO and base_datos.tabla_vacia("colegios"):
     semilla.sembrar()
@@ -66,12 +67,15 @@ def menu_de(yo):
     return opciones
 
 
+ZONA_COLOMBIA = timezone(timedelta(hours=-5))
+
+
 def hoy():
-    return date.today().isoformat()
+    return datetime.now(ZONA_COLOMBIA).date().isoformat()
 
 
 def ahora():
-    return datetime.now().strftime("%Y-%m-%d %H:%M")
+    return datetime.now(ZONA_COLOMBIA).strftime("%Y-%m-%d %H:%M")
 
 
 def cargar_usuario(usuario_id):
@@ -207,14 +211,24 @@ def numero(texto, minimo, maximo):
     return valor
 
 
+def dominio_de(direccion):
+    if direccion.startswith("https://"):
+        direccion = direccion[8:]
+    elif direccion.startswith("http://"):
+        direccion = direccion[7:]
+    barra = direccion.find("/")
+    if barra != -1:
+        direccion = direccion[:barra]
+    return direccion.lower()
+
+
 def viene_de_otro_sitio():
     origen = request.headers.get("Origin", "")
     if origen == "":
         origen = request.headers.get("Referer", "")
     if origen == "":
         return False
-    propio = request.host_url.rstrip("/")
-    return not (origen == propio or origen.startswith(propio + "/"))
+    return dominio_de(origen) != request.host.lower()
 
 
 @app.before_request
@@ -255,6 +269,7 @@ def datos_para_plantillas():
         "menu": menu_de(g.yo),
         "nombres_roles": NOMBRES_ROLES,
         "desempeno": desempeno,
+        "aviso_demo": os.environ.get("AVISO_DEMO", ""),
     }
 
 
