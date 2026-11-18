@@ -1,5 +1,6 @@
 from flask import g, render_template, request, redirect
-from nucleo import app, agregar_menu, tiene_rol, tiene_alguno, dicta_en_grupo, registrar, hoy, ahora, DIRECTIVOS
+from nucleo import (app, agregar_menu, tiene_rol, tiene_alguno, dicta_en_grupo, registrar, hoy, ahora, DIRECTIVOS,
+                    CON_DATOS_DE_EJEMPLO)
 from modulo_familias import fecha_valida, hora_valida, fecha_larga, hora_texto, entero, porcentaje, MESES_CORTOS
 import base_datos
 
@@ -41,7 +42,8 @@ CREATE TABLE IF NOT EXISTS eventos (
 
 base_datos.crear_tablas(TABLAS_CIRCULARES)
 
-TODOS_LOS_ROLES = ["administrador", "rector", "coordinador", "docente", "secretaria", "orientador", "estudiante", "acudiente"]
+TODOS_LOS_ROLES = ["administrador", "rector", "coordinador", "docente", "secretaria", "orientador", "estudiante", "acudiente",
+                   "tesoreria", "bibliotecario", "enfermeria", "porteria"]
 
 agregar_menu("circulares", "Circulares", "/circulares", TODOS_LOS_ROLES,
              "Comunicados del colegio y confirmación de lectura.")
@@ -530,5 +532,6 @@ def sembrar_agenda():
         )
 
 
-sembrar_circulares()
-sembrar_agenda()
+if CON_DATOS_DE_EJEMPLO:
+    sembrar_circulares()
+    sembrar_agenda()

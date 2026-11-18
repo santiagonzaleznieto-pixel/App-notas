@@ -92,3 +92,4 @@
   .encabezado-accion .boton, .formulario .acciones .boton { width: 100%; text-align: center; }
   .contador { flex: 1 1 140px; }
 }
+.cifra strong small { font-family: var(--texto); font-size: 1rem; font-weight: 500; color: var(--gris); }

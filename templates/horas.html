@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block titulo %}Horas sociales{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/horas.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Horas sociales {{ colegio.anio }}</h1>
+  <p>Servicio social estudiantil obligatorio ({{ horas_sociales }} horas, Resolución 4210 de 1996) y estudios constitucionales ({{ horas_constitucionales }} horas, Ley 107 de 1994). Los dos son requisito para el título de bachiller y se cumplen en 10° y 11°.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+{% if grupos %}
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Estudiantes de 10° y 11°</span>
+    <strong>{{ cifras.estudiantes }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Con las {{ horas_sociales }} horas sociales</span>
+    <strong>{{ cifras.sociales }}</strong>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Con las {{ horas_constitucionales }} constitucionales</span>
+    <strong>{{ cifras.constitucionales }}</strong>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>De último grado sin completar</span>
+    <strong>{{ alertas|length }}</strong>
+  </div>
+</div>
+{% endif %}
+
+{% if revisa %}
+<div class="tarjeta">
+  <div class="tarjeta-titulo">
+    <h2>Horas por aprobar</h2>
+    <span class="estado {% if pendientes %}atencion{% else %}bien{% endif %}">{{ pendientes|length }} pendientes</span>
+  </div>
+  {% if pendientes %}
+  <ul class="lista revisiones">
+    {% for registro in pendientes %}
+    <li>
+      <div>
+        <span class="etiqueta">{{ tipos[registro.tipo] }}</span>
+        <strong class="bloque-nombre">{{ registro.estudiante }}{% if registro.grupo %} <small class="gris">· {{ registro.grupo }}</small>{% endif %}</strong>
+        {% if registro.proyecto %}<small class="gris bloque">{{ registro.proyecto }}</small>{% endif %}
+        <p>{{ registro.actividad }}</p>
+        <p class="gris evidencia">Evidencia:
+          {% if registro.evidencia.startswith("https://") or registro.evidencia.startswith("http://") %}
+          <a href="{{ registro.evidencia }}" target="_blank" rel="noopener noreferrer">{{ registro.evidencia }}</a>
+          {% else %}{{ registro.evidencia }}{% endif %}
+        </p>
+        <span class="fecha">{{ registro.fecha }} · <strong>{{ registro.horas|cifra_horas }} horas</strong></span>
+      </div>
+      <form method="post" class="formulario revision-form">
+        <input type="hidden" name="accion" value="revisar">
+        <input type="hidden" name="registro_id" value="{{ registro.id }}">
+        <label for="observacion-{{ registro.id }}">Observación</label>
+        <input id="observacion-{{ registro.id }}" name="observacion" maxlength="300" placeholder="Obligatoria si rechazas">
+        <div class="acciones izquierda">
+          <button class="boton pequeno" type="submit" name="decision" value="aprobada">Aprobar</button>
+          <button class="boton pequeno peligro" type="submit" name="decision" value="rechazada">Rechazar</button>
+        </div>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="gris">No hay horas pendientes por revisar. ¡Todo al día!</p>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if alertas %}
+<div class="tarjeta">
+  <h2>Alertas de último grado</h2>
+  <p class="gris">Estos estudiantes terminan la Media este año y todavía no completan los requisitos para graduarse.</p>
+  <ul class="alertas">
+    {% for alerta in alertas %}
+    <li>
+      <a href="/horas/estudiante/{{ alerta.estudiante.id }}">{{ alerta.estudiante.nombre }} · {{ alerta.grupo }}</a>
+      <span>{{ alerta.texto }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% for item in grupos %}
+<div class="tarjeta">
+  <div class="tarjeta-titulo">
+    <h2>Grupo {{ item.grupo.nombre }} <small class="gris">{{ item.grupo.grado }}</small></h2>
+    <div class="reparto">
+      <span class="estado bien">Sociales: {{ item.sociales }} de {{ item.filas|length }}</span>
+      <span class="estado bien">Constitucionales: {{ item.constitucionales }} de {{ item.filas|length }}</span>
+    </div>
+  </div>
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th class="izq">Estudiante</th>
+          <th class="izq">Servicio social ({{ horas_sociales }} h)</th>
+          <th class="izq">Constitucionales ({{ horas_constitucionales }} h)</th>
+          <th>Pendientes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in item.filas %}
+        <tr>
+          <td class="izq"><a href="/horas/estudiante/{{ fila.estudiante.id }}">{{ fila.estudiante.nombre }}</a></td>
+          {% for clave in ["social", "constitucional"] %}
+          {% set datos = fila.resumen[clave] %}
+          <td class="izq celda-avance">
+            <div class="avance-linea">
+              <strong>{{ datos.aprobada|cifra_horas }}</strong><small class="gris">de {{ datos.meta }}</small>
+              {% if datos.cumplido %}<span class="estado bien">Cumplido</span>{% endif %}
+            </div>
+            <div class="barra-progreso {{ clave }}" role="progressbar" aria-label="{{ datos.titulo }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ datos.porcentaje }}"><div style="width: {{ datos.porcentaje }}%"></div></div>
+          </td>
+          {% endfor %}
+          <td>{% if fila.resumen.social.pendiente + fila.resumen.constitucional.pendiente > 0 %}<span class="estado atencion">{{ (fila.resumen.social.pendiente + fila.resumen.constitucional.pendiente)|cifra_horas }} h</span>{% else %}<span class="vacia">—</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endfor %}
+
+{% if proyectos or gestiona %}
+<div class="tarjeta">
+  <div class="tarjeta-titulo">
+    <h2>{% if gestiona or "rector" in yo.roles %}Proyectos de servicio social {{ colegio.anio }}{% else %}Mis proyectos a cargo{% endif %}</h2>
+  </div>
+  {% if proyectos %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th class="izq">Proyecto</th><th class="izq">Responsable</th><th class="izq">Lugar</th><th>Inscritos</th><th>Estado</th></tr>
+      </thead>
+      <tbody>
+        {% for proyecto in proyectos %}
+        <tr>
+          <td class="izq">
+            <a href="/horas/proyecto/{{ proyecto.id }}">{{ proyecto.nombre }}</a>
+            {% if proyecto.entidad_aliada %}<small class="gris bloque">{{ proyecto.entidad_aliada }}</small>{% endif %}
+          </td>
+          <td class="izq">{{ proyecto.responsable }}</td>
+          <td class="izq gris">{{ proyecto.lugar }}</td>
+          <td class="celda-cupos">
+            <strong>{{ proyecto.inscritos }}</strong> <small class="gris">de {{ proyecto.cupos }}</small>
+            <div class="barra-progreso cupos"><div style="width: {{ proyecto.porcentaje }}%"></div></div>
+          </td>
+          <td>{% if proyecto.activo %}<span class="estado bien">Activo</span>{% else %}<span class="estado neutro">Inactivo</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="gris">Todavía no hay proyectos de servicio social para {{ colegio.anio }}.</p>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if gestiona %}
+<form method="post" class="tarjeta formulario">
+  <h2>Nuevo proyecto pedagógico</h2>
+  <p class="gris">El servicio social se presta en un proyecto pedagógico con un docente responsable. Los estudiantes de 10° y 11° se inscriben desde "Mis horas sociales".</p>
+  <input type="hidden" name="accion" value="crear_proyecto">
+  <div class="rejilla">
+    <div>
+      <label for="nombre">Nombre del proyecto</label>
+      <input id="nombre" name="nombre" maxlength="120" value="{{ valores.nombre }}" required>
+    </div>
+    <div>
+      <label for="entidad_aliada">Entidad aliada (opcional)</label>
+      <input id="entidad_aliada" name="entidad_aliada" maxlength="150" value="{{ valores.entidad_aliada }}">
+    </div>
+    <div>
+      <label for="lugar">Lugar</label>
+      <input id="lugar" name="lugar" maxlength="150" value="{{ valores.lugar }}" required>
+    </div>
+    <div>
+      <label for="responsable_id">Docente responsable</label>
+      <select id="responsable_id" name="responsable_id" required>
+        <option value="">Elige un docente</option>
+        {% for docente in docentes %}
+        <option value="{{ docente.id }}" {% if valores.responsable_id == docente.id|string %}selected{% endif %}>{{ docente.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="cupos">Cupos</label>
+      <input id="cupos" name="cupos" type="number" min="1" max="200" step="1" value="{{ valores.cupos }}" required>
+    </div>
+  </div>
+  <label for="descripcion">Descripción del proyecto</label>
+  <textarea id="descripcion" name="descripcion" maxlength="1000" required>{{ valores.descripcion }}</textarea>
+  <div class="acciones"><button class="boton" type="submit">Crear proyecto</button></div>
+</form>
+{% endif %}
+
+{% if not revisa and not proyectos and not gestiona and not grupos %}
+<div class="tarjeta vacio">
+  <p>No tienes proyectos de servicio social a cargo ni grupos de 10° u 11° para revisar.</p>
+  <p>Si vas a dirigir un proyecto, pídele a coordinación que te asigne como responsable.</p>
+</div>
+{% endif %}
+{% endblock %}

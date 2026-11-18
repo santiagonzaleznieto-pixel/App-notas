@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block titulo %}Circulares{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/circulares.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado encabezado-accion">
+  <div>
+    <h1>Circulares</h1>
+    <p>Comunicados del colegio para ti. Las nuevas aparecen resaltadas.</p>
+  </div>
+  {% if puede_publicar %}<a class="boton" href="/circulares/nueva">Nueva circular</a>{% endif %}
+</div>
+
+<div class="contadores">
+  <div class="contador {% if sin_leer %}pendiente{% else %}al-dia{% endif %}">
+    <strong>{{ sin_leer }}</strong>
+    <span>{% if sin_leer == 1 %}circular sin leer{% else %}circulares sin leer{% endif %}</span>
+  </div>
+  {% if por_confirmar %}
+  <div class="contador pendiente">
+    <strong>{{ por_confirmar }}</strong>
+    <span>{% if por_confirmar == 1 %}pide confirmar la lectura{% else %}piden confirmar la lectura{% endif %}</span>
+  </div>
+  {% endif %}
+</div>
+
+<div class="tarjeta">
+  {% if lista %}
+  <ul class="lista circulares">
+    {% for item in lista %}
+    <li class="{% if item.nueva %}no-leida{% endif %}">
+      <a class="circular" href="/circulares/{{ item.circular.id }}">
+        <span class="circular-titulo">{% if item.nueva %}<span class="punto" aria-hidden="true"></span>{% endif %}{{ item.circular.titulo }}</span>
+        <span class="circular-resumen">{{ item.circular.cuerpo|truncate(140) }}</span>
+        <span class="circular-datos">
+          <span class="fecha">{{ fecha_larga(item.circular.publicada_en[:10])|capitalize }} · {{ item.circular.autor }}</span>
+          <span class="chip Pendiente">Para: {% if item.circular.destinatarios == "grupo" %}grupo {{ item.circular.grupo }}{% else %}{{ destinatarios[item.circular.destinatarios]|lower }}{% endif %}</span>
+          {% if item.nueva %}<span class="estado mal">Nueva</span>{% endif %}
+          {% if item.falta_confirmar %}<span class="estado atencion">Falta confirmar</span>
+          {% elif item.mia and item.circular.requiere_confirmacion %}<span class="estado bien">Confirmada</span>{% endif %}
+          {% if not item.mia %}<span class="estado neutro">Ver reporte de lectura</span>{% endif %}
+        </span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="vacio">Todavía no tienes circulares.</p>
+  {% endif %}
+</div>
+{% endblock %}

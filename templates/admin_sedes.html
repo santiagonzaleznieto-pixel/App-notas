@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block titulo %}Sedes{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/admin">← Administración</a>
+  <h1>Sedes</h1>
+  <p>Cada grupo pertenece a una sede. Si una misma sede tiene dos jornadas, créala una vez por jornada.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="tarjeta">
+  <h2>Sedes del colegio</h2>
+  {% for sede in sedes %}
+  <form method="post" class="formulario fila-edicion tres">
+    <input type="hidden" name="accion" value="editar">
+    <input type="hidden" name="sede_id" value="{{ sede.id }}">
+    <div>
+      <label for="nombre-{{ sede.id }}">Nombre</label>
+      <input id="nombre-{{ sede.id }}" name="nombre" value="{{ sede.nombre }}" maxlength="80" required>
+    </div>
+    <div>
+      <label for="jornada-{{ sede.id }}">Jornada</label>
+      <select id="jornada-{{ sede.id }}" name="jornada">
+        {% for jornada in jornadas %}<option value="{{ jornada }}" {% if jornada == sede.jornada %}selected{% endif %}>{{ jornada }}</option>{% endfor %}
+      </select>
+    </div>
+    <button class="boton secundario" type="submit">Guardar</button>
+    <p class="ayuda">{{ sede.grupos }} {% if sede.grupos == 1 %}grupo{% else %}grupos{% endif %} en {{ colegio.anio }}</p>
+  </form>
+  {% else %}
+  <p class="vacio">Todavía no hay sedes.</p>
+  {% endfor %}
+</div>
+
+<form method="post" class="tarjeta formulario">
+  <h2>Nueva sede</h2>
+  <input type="hidden" name="accion" value="crear">
+  <div class="rejilla">
+    <div>
+      <label for="nombre">Nombre</label>
+      <input id="nombre" name="nombre" value="{{ nueva.nombre }}" maxlength="80" placeholder="Sede Rural La Mina" required>
+    </div>
+    <div>
+      <label for="jornada">Jornada</label>
+      <select id="jornada" name="jornada">
+        {% for jornada in jornadas %}<option value="{{ jornada }}" {% if jornada == nueva.jornada %}selected{% endif %}>{{ jornada }}</option>{% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="acciones"><button class="boton" type="submit">Crear sede</button></div>
+</form>
+{% endblock %}

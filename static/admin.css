@@ -1,0 +1,65 @@
+.aviso.atencion { background: #F6E9CE; color: #855810; border-color: #E9CF9B; }
+
+.credencial { border-top: 5px solid var(--dorado); }
+.credencial-datos { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; align-items: center; margin: 12px 0; }
+.credencial-datos dt { font-size: .82rem; color: var(--gris); font-weight: 600; }
+.credencial-datos dd { margin: 0; }
+.clave-temporal {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  background: #F6E9CE;
+  color: #855810;
+  padding: 3px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.fila-edicion { display: grid; grid-template-columns: 2fr 1fr 1.4fr auto; gap: 0 12px; align-items: end; padding: 2px 0 14px; border-bottom: 1px solid #F0EBE1; }
+.fila-edicion.tres { grid-template-columns: 2fr 1.2fr auto; }
+.fila-edicion.dos { grid-template-columns: 1fr auto; }
+.fila-edicion:last-child { border-bottom: none; }
+.fila-edicion .ayuda { grid-column: 1 / -1; margin: 6px 0 0; }
+
+.grupo-casillas { border: none; padding: 0; margin: 14px 0 0; min-width: 0; }
+.grupo-casillas legend { font-size: .85rem; font-weight: 600; color: var(--azul-oscuro); padding: 0; margin-bottom: 5px; }
+.formulario .casillas label.apagada { color: var(--gris); opacity: .65; }
+
+.periodo-caja { border: 1px solid var(--borde); border-radius: 10px; padding: 4px 16px 14px; margin: 0 0 16px; min-width: 0; }
+.periodo-caja legend { font-family: var(--titulos); font-weight: 600; color: var(--azul-oscuro); padding: 0 6px; }
+
+.oculta { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+.filtros label { display: block; font-size: .85rem; font-weight: 600; color: var(--azul-oscuro); margin-bottom: 5px; }
+
+.acciones-fila { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; align-items: center; }
+.acciones-fila form { display: flex; gap: 6px; align-items: center; margin: 0; }
+.acciones form { margin: 0; }
+.campo-tabla.horas { width: 80px; }
+.campo-tabla.corto { width: auto; min-width: 90px; }
+
+.roles-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.roles-chips .etiqueta { margin-bottom: 0; }
+.fila-lista { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.datos-persona { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 10px 0 0; }
+.datos-persona dt { font-size: .82rem; color: var(--gris); font-weight: 600; }
+.datos-persona dd { margin: 0; }
+
+.cargue-texto { font-family: ui-monospace, Consolas, monospace; min-height: 220px; }
+.lista-simple { margin: 8px 0 0; padding-left: 18px; }
+.lista-simple li { margin-bottom: 4px; }
+.subtitulo-tarjeta { margin-top: 18px; }
+
+@media (max-width: 800px) {
+  .fila-edicion, .fila-edicion.tres, .fila-edicion.dos { grid-template-columns: 1fr; }
+  .acciones-fila { justify-content: flex-start; }
+  .credencial-datos, .datos-persona { grid-template-columns: 1fr; gap: 2px; }
+  .credencial-datos dd, .datos-persona dd { margin-bottom: 8px; }
+}
+
+@media print {
+  .no-imprimir, .aviso { display: none; }
+  .clave-temporal { background: none; color: #000; }
+  .credencial { border-top: none; }
+}

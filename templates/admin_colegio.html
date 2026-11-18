@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block titulo %}Datos del colegio{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/admin.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/admin">← Administración</a>
+  <h1>Datos del colegio</h1>
+  <p>Estos datos salen en la barra superior, en los boletines y en los certificados.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<form method="post" class="formulario">
+  <div class="tarjeta">
+    <h2>Identificación</h2>
+    <div class="rejilla">
+      <div>
+        <label for="nombre">Nombre completo</label>
+        <input id="nombre" name="nombre" value="{{ valores.nombre }}" maxlength="150" required>
+      </div>
+      <div>
+        <label for="nombre_corto">Nombre corto</label>
+        <input id="nombre_corto" name="nombre_corto" value="{{ valores.nombre_corto }}" maxlength="60" required>
+        <p class="ayuda">Se ve en la barra de arriba.</p>
+      </div>
+      <div>
+        <label for="municipio">Municipio</label>
+        <input id="municipio" name="municipio" value="{{ valores.municipio }}" maxlength="80" required>
+      </div>
+      <div>
+        <label for="departamento">Departamento</label>
+        <input id="departamento" name="departamento" value="{{ valores.departamento }}" maxlength="80" required>
+      </div>
+      <div>
+        <label for="codigo_dane">Código DANE</label>
+        <input id="codigo_dane" name="codigo_dane" value="{{ valores.codigo_dane }}" inputmode="numeric" maxlength="12">
+        <p class="ayuda">12 dígitos. Puedes dejarlo vacío por ahora.</p>
+      </div>
+    </div>
+    <label for="lema">Lema</label>
+    <input id="lema" name="lema" value="{{ valores.lema }}" maxlength="200">
+  </div>
+
+  <div class="tarjeta">
+    <h2>Escala de valoración</h2>
+    <p class="gris">Cada colegio define su escala en el SIEE (Decreto 1290 de 2009). Por debajo de «Desde Básico» el desempeño es Bajo.</p>
+    <div class="rejilla">
+      {% for parte in escala %}
+      <div>
+        <label for="{{ parte.campo }}">{{ parte.titulo }}</label>
+        <input id="{{ parte.campo }}" name="{{ parte.campo }}" value="{{ valores[parte.campo] }}" inputmode="decimal" maxlength="6" required>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="ayuda">Debe cumplirse: nota mínima &lt; Básico &lt; Alto &lt; Superior ≤ nota máxima.</p>
+  </div>
+
+  <div class="tarjeta">
+    <h2>Año escolar</h2>
+    <p>El año escolar actual es <strong>{{ colegio.anio }}</strong>. No se cambia aquí: el cierre de año (promoción de estudiantes y paso al año siguiente) llegará en una próxima versión.</p>
+  </div>
+
+  <div class="acciones"><button class="boton" type="submit">Guardar datos del colegio</button></div>
+</form>
+{% endblock %}

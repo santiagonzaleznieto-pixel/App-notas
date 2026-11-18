@@ -1,0 +1,41 @@
+<div class="tarjeta perfil horas-perfil">
+  <div class="perfil-nombre">
+    <span class="inicial">{{ ficha.estudiante.nombre[0] }}</span>
+    <div>
+      <h2>{{ ficha.estudiante.nombre }}</h2>
+      <p class="gris">{% if ficha.grupo %}Grupo {{ ficha.grupo.nombre }} · {{ ficha.grupo.grado }} · {{ colegio.anio }}{% else %}Sin matrícula activa en {{ colegio.anio }}{% endif %}</p>
+    </div>
+  </div>
+  {% if ficha.ultimo_grado and not (ficha.resumen.social.cumplido and ficha.resumen.constitucional.cumplido) %}
+  <p class="mensaje Bajo">Estás en el último grado: completa tus horas antes de terminar el año para poder graduarte.</p>
+  {% elif ficha.resumen.social.cumplido and ficha.resumen.constitucional.cumplido %}
+  <p class="mensaje Superior">¡Requisitos de horas completos para el título de bachiller!</p>
+  {% endif %}
+</div>
+
+<div class="requisitos">
+  {% for clave in ["social", "constitucional"] %}
+  {% set datos = ficha.resumen[clave] %}
+  <div class="tarjeta requisito {{ clave }}">
+    <span class="etiqueta">{{ datos.titulo }}</span>
+    <div class="requisito-cifra"><strong>{{ datos.aprobada|cifra_horas }}</strong><small> de {{ datos.meta }} horas aprobadas</small></div>
+    <div class="barra-progreso {{ clave }}" role="progressbar" aria-label="{{ datos.titulo }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ datos.porcentaje }}"><div style="width: {{ datos.porcentaje }}%"></div></div>
+    <p class="gris norma">{{ datos.norma }}</p>
+    {% if datos.pendiente > 0 %}<p><span class="estado atencion">{{ datos.pendiente|cifra_horas }} h pendientes de aprobación</span></p>{% endif %}
+    {% if datos.cumplido %}
+    <div class="cumplido">
+      <span class="estado bien">Requisito cumplido</span>
+      {% if ficha.certificados[clave] %}
+      <a href="/certificados/{{ ficha.certificados[clave] }}">Ver certificado →</a>
+      {% elif puede_emitir %}
+      <a href="/certificados?estudiante={{ ficha.estudiante.id }}">Emitir certificado →</a>
+      {% else %}
+      <a href="/certificados">Pedir el certificado →</a>
+      {% endif %}
+    </div>
+    {% else %}
+    <p>Faltan <strong>{{ datos.faltan|cifra_horas }}</strong> horas aprobadas.</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
