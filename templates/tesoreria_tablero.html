@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block titulo %}Tesorería{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/tesoreria.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Tesorería {{ colegio.anio }}</h1>
+  <p>Cobros, pagos, cartera y paz y salvo de los estudiantes. Los valores están en pesos colombianos.</p>
+</div>
+
+<div class="botonera">
+  {% if puede_generar %}<a class="boton" href="/tesoreria/generar">Generar cobros</a>{% endif %}
+  {% if puede_configurar %}<a class="boton secundario" href="/tesoreria/conceptos">Conceptos y tope de aumento</a>{% endif %}
+  <a class="boton secundario" href="/tesoreria/cartera">Cartera vencida</a>
+</div>
+
+<div class="cifras cifras-dinero">
+  <div class="tarjeta cifra">
+    <span>Total cobrado en {{ colegio.anio }}</span>
+    <strong class="dinero">{{ pesos(total.cobrado) }}</strong>
+    <small>Sin contar cobros anulados</small>
+  </div>
+  <div class="tarjeta cifra verde">
+    <span>Recaudado</span>
+    <strong class="dinero">{{ pesos(total.pagado) }}</strong>
+    <small>{% if porcentaje is none %}Todavía no hay cobros{% else %}{{ porcentaje }} % de lo cobrado{% endif %}</small>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Cartera vencida</span>
+    <strong class="dinero">{{ pesos(total.vencido) }}</strong>
+    <small>Saldo de cobros con la fecha límite pasada</small>
+  </div>
+  <div class="tarjeta cifra dorada">
+    <span>Familias en mora</span>
+    <strong>{{ familias }}</strong>
+    <small>{{ total.estudiantes_en_mora }} estudiante{% if total.estudiantes_en_mora != 1 %}s{% endif %} con saldo vencido</small>
+  </div>
+</div>
+
+<div class="tarjeta">
+  <h2>Cartera por grupo</h2>
+  {% if cartera %}
+  <div class="tabla-caja">
+    <table class="tabla simple">
+      <thead>
+        <tr><th class="izq">Grupo</th><th>Estudiantes</th><th class="dinero">Cobrado {{ colegio.anio }}</th><th class="dinero">Recaudado</th><th class="dinero">Por cobrar</th><th class="dinero">Vencido</th><th>En mora</th></tr>
+      </thead>
+      <tbody>
+        {% for fila in cartera %}
+        <tr>
+          <td class="izq"><a href="/tesoreria?grupo={{ fila.grupo.id }}">{{ fila.grupo.nombre }}</a> <small class="gris">{{ fila.grupo.grado }}</small></td>
+          <td>{{ fila.estudiantes }}</td>
+          <td class="dinero">{{ pesos(fila.cobrado) }}</td>
+          <td class="dinero">{{ pesos(fila.pagado) }}</td>
+          <td class="dinero">{{ pesos(fila.saldo) }}</td>
+          <td class="dinero">{% if fila.vencido > 0 %}<a href="/tesoreria/cartera?grupo={{ fila.grupo.id }}">{{ pesos(fila.vencido) }}</a>{% else %}{{ pesos(0) }}{% endif %}</td>
+          <td>{% if fila.en_mora > 0 %}<span class="estado mal">{{ fila.en_mora }}</span>{% else %}<span class="estado bien">0</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="vacio">Todavía no hay grupos creados para {{ colegio.anio }}.</p>
+  {% endif %}
+</div>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Estado de cuenta por estudiante</h2>
+    <form method="get" action="/tesoreria" class="filtros">
+      <div>
+        <label for="grupo" class="etiqueta">Grupo</label>
+        <select id="grupo" name="grupo">
+          {% for opcion in grupos %}
+          <option value="{{ opcion.id }}" {% if grupo and grupo.id == opcion.id %}selected{% endif %}>{{ opcion.nombre }} · {{ opcion.grado }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="buscar" class="etiqueta">O busca por nombre</label>
+        <input id="buscar" name="buscar" value="{{ buscar }}" placeholder="Ej.: Restrepo">
+      </div>
+      <button class="boton pequeno" type="submit">Ver</button>
+    </form>
+    {% if estudiantes %}
+    <div class="tabla-caja">
+      <table class="tabla simple">
+        <thead><tr><th class="izq">Estudiante</th><th class="dinero">Saldo</th><th>Estado</th></tr></thead>
+        <tbody>
+          {% for estudiante in estudiantes %}
+          <tr>
+            <td class="izq"><a href="/tesoreria/estudiante/{{ estudiante.id }}">{{ estudiante.nombre }}</a>{% if buscar %} <small class="gris">{{ estudiante.grupo.nombre }}</small>{% endif %}</td>
+            <td class="dinero">{{ pesos(estudiante.cuenta.saldo) }}</td>
+            <td>
+              {% if estudiante.cuenta.vencido > 0 %}<span class="estado mal">En mora · {{ estudiante.cuenta.dias_mora }} días</span>
+              {% elif estudiante.cuenta.saldo > 0 %}<span class="estado atencion">Al día, con saldo</span>
+              {% else %}<span class="estado bien">Paz y salvo</span>{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="vacio">No hay estudiantes que coincidan.</p>
+    {% endif %}
+  </div>
+
+  <div class="tarjeta">
+    <h2>Últimos pagos</h2>
+    {% if ultimos %}
+    <ul class="lista">
+      {% for pago in ultimos %}
+      <li>
+        <strong class="dinero">{{ pesos(pago.valor) }}</strong> · {{ pago.estudiante }}
+        <div class="gris">{{ pago.descripcion }} · {{ medios[pago.medio] }}</div>
+        <span class="fecha">{{ fecha_larga(pago.fecha) }} · <a href="/tesoreria/recibo/{{ pago.numero_recibo }}">Recibo {{ pago.numero_recibo }}</a></span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="vacio">Todavía no hay pagos registrados.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

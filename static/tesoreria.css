@@ -1,0 +1,80 @@
+.aviso.advertencia { background: #F6E9CE; color: #855810; border-color: #E8CF9C; }
+.aviso a { color: inherit; font-weight: 700; }
+
+.dinero { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tabla td.dinero, .tabla th.dinero { text-align: right; }
+.cifras-dinero .cifra strong { font-size: clamp(1.35rem, 3.4vw, 1.8rem); overflow-wrap: anywhere; }
+.cifra.verde { border-left-color: var(--verde); }
+.cifra.dorada { border-left-color: var(--dorado); }
+
+.botonera { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 20px; }
+
+.cobros { list-style: none; margin: 0; padding: 0; }
+.cobro { border: 1px solid var(--borde); border-left: 5px solid var(--azul); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; background: var(--blanco); }
+.cobro.mal { border-left-color: #A33227; }
+.cobro.bien { border-left-color: var(--verde); }
+.cobro.atencion { border-left-color: var(--dorado); }
+.cobro.neutro { border-left-color: #BDB5A7; background: #FCFAF5; }
+.cobro-cabeza { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+.cobro-cabeza strong { display: block; color: var(--azul-oscuro); }
+.cobro-cabeza small { color: var(--gris); font-size: .8rem; }
+.cobro-cifras { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0 0; }
+.cobro-cifras div { background: var(--crema); border-radius: 8px; padding: 6px 10px; }
+.cobro-cifras dt { font-size: .72rem; color: var(--gris); text-transform: uppercase; letter-spacing: .04em; }
+.cobro-cifras dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.cobro-cifras .saldo dd { color: var(--terracota); }
+.movimientos { list-style: none; margin: 10px 0 0; padding: 0; font-size: .85rem; }
+.movimientos li { padding: 6px 0; border-top: 1px dashed var(--borde); color: var(--carbon); }
+.movimientos .tipo { font-weight: 700; color: var(--verde-oscuro); }
+.movimientos .tipo.descuento { color: #855810; }
+.anulacion { margin: 10px 0 0; font-size: .85rem; color: var(--gris); }
+
+.resumen-cuenta { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.resumen-cuenta div { background: var(--blanco); border: 1px solid var(--borde); border-radius: 10px; padding: 12px 14px; }
+.resumen-cuenta span { display: block; font-size: .78rem; color: var(--gris); }
+.resumen-cuenta strong { font-family: var(--titulos); font-size: 1.35rem; color: var(--azul-oscuro); font-variant-numeric: tabular-nums; }
+.resumen-cuenta .rojo strong { color: #A33227; }
+
+.contactos { list-style: none; margin: 0; padding: 0; font-size: .85rem; }
+.contactos li { margin-bottom: 4px; }
+.contactos a { font-weight: 600; }
+
+.mensaje-sugerido { margin-top: 8px; text-align: left; }
+.mensaje-sugerido summary { cursor: pointer; font-weight: 600; font-size: .85rem; color: var(--azul); }
+.mensaje-sugerido textarea { width: 100%; min-height: 150px; margin-top: 8px; padding: 10px 12px; border: 1.5px solid var(--borde); border-radius: 8px; font: .88rem var(--texto); color: var(--carbon); background: var(--crema); resize: vertical; }
+.fila-mora { display: grid; grid-template-columns: 1.3fr 1fr 1.2fr; gap: 14px; align-items: start; padding: 14px 0; border-bottom: 1px solid #F0EBE1; }
+.fila-mora:last-child { border-bottom: none; }
+.fila-mora .nombre a { font-weight: 700; text-decoration: none; }
+.fila-mora .nombre small { display: block; color: var(--gris); }
+.fila-mora .deuda strong { display: block; font-family: var(--titulos); font-size: 1.3rem; color: #A33227; }
+
+.documento-tesoreria { max-width: 760px; margin: 0 auto 20px; border-top: 6px solid var(--dorado); padding: 32px 36px; }
+.documento-cabeza { display: flex; align-items: center; gap: 16px; padding-bottom: 16px; border-bottom: 2px solid var(--azul); margin-bottom: 20px; }
+.documento-cabeza img { width: 76px; height: 76px; object-fit: contain; }
+.documento-cabeza h1 { font-size: 1.3rem; margin: 0; }
+.documento-cabeza p { margin: 0; color: var(--gris); font-size: .85rem; }
+.documento-titulo { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.documento-titulo h2 { font-size: 1.4rem; letter-spacing: .04em; text-transform: uppercase; margin: 0; }
+.documento-titulo .consecutivo { font-weight: 700; color: var(--terracota); font-variant-numeric: tabular-nums; }
+.datos-documento { display: grid; grid-template-columns: 180px 1fr; gap: 8px 16px; margin: 0 0 20px; }
+.datos-documento dt { color: var(--gris); font-size: .85rem; }
+.datos-documento dd { margin: 0; font-weight: 600; }
+.datos-documento .grande { font-family: var(--titulos); font-size: 1.6rem; color: var(--azul-oscuro); }
+.texto-certificado { font-size: 1.02rem; line-height: 1.7; margin: 10px 0 20px; }
+.firma { margin-top: 56px; width: 280px; max-width: 100%; border-top: 1.5px solid var(--carbon); padding-top: 6px; font-size: .88rem; }
+.firma strong { display: block; }
+.pie-documento { margin-top: 24px; font-size: .75rem; color: var(--gris); }
+
+@media (max-width: 800px) {
+  .cobro-cifras { grid-template-columns: 1fr 1fr; }
+  .fila-mora { grid-template-columns: 1fr; gap: 8px; }
+  .documento-tesoreria { padding: 22px 18px; }
+  .datos-documento { grid-template-columns: 1fr; gap: 2px; }
+  .datos-documento dd { margin-bottom: 8px; }
+}
+
+@media print {
+  .no-imprimir, .encabezado { display: none; }
+  .documento-tesoreria { border: none; border-top: 6px solid var(--dorado); box-shadow: none; max-width: none; margin: 0; padding: 0; }
+  .contenedor { padding: 0; }
+}
