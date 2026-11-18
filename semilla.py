@@ -38,9 +38,12 @@ def sembrar():
     clave_cifrada = generate_password_hash(CLAVE_PRUEBA)
     usuarios = {}
     for persona in USUARIOS:
+        telefono = ""
+        if "telefono" in persona:
+            telefono = persona["telefono"]
         usuario_id = base_datos.ejecutar(
-            "INSERT INTO usuarios (colegio_id, usuario, clave, nombre) VALUES (?, ?, ?, ?)",
-            [colegio_id, persona["usuario"], clave_cifrada, persona["nombre"]],
+            "INSERT INTO usuarios (colegio_id, usuario, clave, nombre, telefono) VALUES (?, ?, ?, ?, ?)",
+            [colegio_id, persona["usuario"], clave_cifrada, persona["nombre"], telefono],
         )
         usuarios[persona["usuario"]] = usuario_id
         for rol in persona["roles"]:

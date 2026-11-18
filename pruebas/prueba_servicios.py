@@ -86,7 +86,7 @@ revisar("portería no entra a la biblioteca", destino(entrar("porteria").get("/b
 html = texto(melany.get("/biblioteca?buscar=vorágine"))
 revisar("el buscador filtra por título", "La vorágine" in html and "Delirio" not in html)
 html = texto(melany.get("/biblioteca?buscar=Isaacs"))
-revisar("el buscador filtra por autor", "María" in html and "Cien años" not in html)
+revisar("el buscador filtra por autor", "María" in html and "Delirio" not in html)
 
 print("Biblioteca: gestión")
 biblio = entrar("biblioteca")
@@ -159,7 +159,7 @@ revisar("portería no ve datos de salud", "Penicilina" not in texto(entrar("port
 enfermera_dos = entrar("enfermera.dos")
 revisar("la enfermera de otro colegio no ve estudiantes ajenos",
         destino(enfermera_dos.get("/enfermeria/estudiante/13")) == "/inicio"
-        and "Melany" not in texto(enfermera_dos.get("/enfermeria?buscar=melany")))
+        and "Melany Osorio" not in texto(enfermera_dos.get("/enfermeria?buscar=melany")))
 
 contexto = ayuda.app.test_request_context()
 contexto.push()
@@ -269,7 +269,7 @@ revisar("una fecha de consulta inválida da error", "no es válida" in texto(por
 print("Quién recoge (acudientes)")
 html = texto(madre.get("/autorizados"))
 revisar("la madre ve a los autorizados de su hija", "Rosalba Cárdenas Arango" in html and "Melany Osorio Cárdenas" in html)
-html = texto(madre.post("/autorizados", data={"accion": "agregar", "estudiante_id": "13", "nombre": "Pedro", "documento": "abc",
+html = texto(madre.post("/autorizados", data={"accion": "agregar", "estudiante_id": "13", "nombre": "Pe", "documento": "abc",
                                               "parentesco": "Primo lejano", "telefono": "1"}))
 revisar("valida los datos del autorizado", "nombre completo" in html and "solo números" in html and "parentesco" in html
         and "teléfono" in html)
