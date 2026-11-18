@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circulares · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/circulares.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="tesoreria--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Carlos Alberto Ramírez</strong>
+    <span>Tesorería</span>
+  </div>
+  <a class="boton-salir" href="tesoreria--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="tesoreria--inicio.html" class="">Inicio</a>
+    
+    <a href="tesoreria--circulares.html" class="activa">Circulares</a>
+    
+    <a href="tesoreria--agenda.html" class="">Agenda</a>
+    
+    <a href="tesoreria--tesoreria.html" class="">Tesorería</a>
+    
+  </nav>
+  
+<div class="encabezado encabezado-accion">
+  <div>
+    <h1>Circulares</h1>
+    <p>Comunicados del colegio para ti. Las nuevas aparecen resaltadas.</p>
+  </div>
+  
+</div>
+
+<div class="contadores">
+  <div class="contador pendiente">
+    <strong>1</strong>
+    <span>circular sin leer</span>
+  </div>
+  
+</div>
+
+<div class="tarjeta">
+  
+  <ul class="lista circulares">
+    
+    <li class="no-leida">
+      <a class="circular" href="tesoreria--circulares-1.html">
+        <span class="circular-titulo"><span class="punto" aria-hidden="true"></span>Entrega de boletines del cuarto período</span>
+        <span class="circular-resumen">Apreciada comunidad educativa:
+
+La Rectoría informa que la entrega de boletines del cuarto período y del informe final del año escolar...</span>
+        <span class="circular-datos">
+          <span class="fecha">Martes 10 de noviembre de 2026 · Martha Cecilia Vallejo</span>
+          <span class="chip Pendiente">Para: toda la comunidad</span>
+          <span class="estado mal">Nueva</span>
+          
+          
+        </span>
+      </a>
+    </li>
+    
+  </ul>
+  
+</div>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recibo R-2026-000023 · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/tesoreria.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="rectora--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Martha Cecilia Vallejo</strong>
+    <span>Rectoría</span>
+  </div>
+  <a class="boton-salir" href="rectora--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="rectora--inicio.html" class="">Inicio</a>
+    
+    <a href="rectora--grupos.html" class="">Grupos</a>
+    
+    <a href="rectora--indicadores.html" class="">Indicadores</a>
+    
+    <a href="rectora--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="rectora--circulares.html" class="">Circulares</a>
+    
+    <a href="rectora--agenda.html" class="">Agenda</a>
+    
+    <a href="rectora--asistencia.html" class="">Asistencia</a>
+    
+    <a href="rectora--observador.html" class="">Observador</a>
+    
+    <a href="rectora--convivencia.html" class="">Convivencia</a>
+    
+    <a href="rectora--horas.html" class="">Horas sociales</a>
+    
+    <a href="rectora--certificados.html" class="">Certificados</a>
+    
+    <a href="rectora--orientacion.html" class="">Orientación</a>
+    
+    <a href="rectora--elecciones.html" class="">Elecciones</a>
+    
+    <a href="rectora--tesoreria.html" class="activa">Tesorería</a>
+    
+    <a href="rectora--admin-registro.html" class="">Registro de actividad</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="rectora--tesoreria-estudiante-16.html">← Estado de cuenta</a>
+  <h1>Recibo de caja</h1>
+</div>
+
+<div class="tarjeta documento-tesoreria">
+  <div class="documento-cabeza">
+    <img src="static/escudo.png" alt="Escudo del colegio">
+    <div>
+      <h1>Institución Educativa Instituto Pijao</h1>
+      <p>Pijao, Quindío</p>
+    </div>
+  </div>
+  <div class="documento-titulo">
+    <h2>Recibo de caja</h2>
+    <span class="consecutivo">N.º R-2026-000023</span>
+  </div>
+  <dl class="datos-documento">
+    <dt>Estudiante</dt><dd>Valentina Arias Zuluaga</dd>
+    <dt>Grupo</dt><dd>10-A</dd>
+    <dt>Concepto</dt><dd>Salida pedagógica al Jardín Botánico</dd>
+    <dt>Valor recibido</dt><dd class="grande">$45.000</dd>
+    <dt>Medio de pago</dt><dd>Efectivo</dd>
+    <dt>Fecha del pago</dt><dd>15 de noviembre de 2026</dd>
+    <dt>Recibió</dt><dd>Carlos Alberto Ramírez</dd>
+    <dt>Saldo pendiente de este cobro</dt><dd>$0</dd>
+  </dl>
+  <div class="firma">
+    <strong>Carlos Alberto Ramírez</strong>
+    Tesorería
+  </div>
+  <p class="pie-documento">Registrado en la plataforma el 15 de noviembre de 2026 a las 11:19. Conserve este recibo como soporte de su pago.</p>
+  <div class="acciones no-imprimir">
+    <button class="boton" type="button" onclick="window.print()">Imprimir recibo</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

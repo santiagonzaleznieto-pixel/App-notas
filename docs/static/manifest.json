@@ -1,0 +1,15 @@
+{
+  "name": "Plataforma escolar",
+  "short_name": "Mi colegio",
+  "description": "Notas, asistencia, circulares y más del colegio.",
+  "lang": "es-CO",
+  "start_url": "/inicio",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FBF8F2",
+  "theme_color": "#1E3A5F",
+  "icons": [
+    {"src": "/static/icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "/static/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

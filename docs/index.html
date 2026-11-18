@@ -3,23 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notas Décimo · Instituto Pijao</title>
+<title>Iniciar sesión · I.E. Instituto Pijao</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="static/estilos.css">
+
 <link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
 </head>
 <body>
-<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero las notas no se guardan.</div>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
 
   
 <div class="login">
   <section class="login-hero">
-    <img class="escudo-login" src="static/escudo.png" alt="Escudo Instituto Pijao">
+    <img class="escudo-login" src="static/escudo.png" alt="Escudo del colegio">
     <h1>Institución Educativa Instituto Pijao</h1>
     <p class="lema">"Sapientiam a juventute dilexi et quaesivi"</p>
-    <p class="subtitulo">Plataforma de notas · Grado Décimo · 2026</p>
+    <p class="subtitulo">Plataforma escolar · Pijao, Quindío · 2026</p>
     <svg class="colinas" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,200 L0,120 L160,80 L340,130 L520,55 L720,115 L900,70 L1080,125 L1200,95 L1200,200 Z" fill="#3F6B4A" opacity="0.55"/>
       <path d="M0,200 L0,155 L220,115 L430,150 L640,95 L860,140 L1050,105 L1200,135 L1200,200 Z" fill="#2C4E35" opacity="0.8"/>
@@ -38,72 +42,122 @@
       <button class="boton" type="submit">Ingresar</button>
     </form>
 
+    
     <div class="accesos">
-      <p>Acceso rápido para la clase · contraseña <code>pijao2026</code></p>
+      <p>Acceso rápido para pruebas · contraseña <code>pijao2026</code></p>
       <div class="accesos-lista">
         
-        <form method="get" action="rectora--consolidado.html">
+        <form method="get" action="admin--inicio.html">
           
           <button type="submit" class="acceso">
-            <strong>
-              Rectora
-              
-            </strong>
+            <strong>Administración</strong>
+            <span>admin</span>
+          </button>
+        </form>
+        
+        <form method="get" action="rectora--inicio.html">
+          
+          <button type="submit" class="acceso">
+            <strong>Rectoría</strong>
             <span>rectora</span>
           </button>
         </form>
         
-        <form method="get" action="coordinadora--consolidado.html">
+        <form method="get" action="coordinadora--inicio.html">
           
           <button type="submit" class="acceso">
-            <strong>
-              Coordinadora
-              
-            </strong>
+            <strong>Coordinación</strong>
             <span>coordinadora</span>
           </button>
         </form>
         
-        <form method="get" action="h.aguirre--materias.html">
+        <form method="get" action="h.aguirre--inicio.html">
           
           <button type="submit" class="acceso">
-            <strong>
-              Director de grupo
-              
-            </strong>
+            <strong>Docente</strong>
             <span>h.aguirre</span>
           </button>
         </form>
         
-        <form method="get" action="c.munoz--materias.html">
+        <form method="get" action="secretaria--inicio.html">
           
           <button type="submit" class="acceso">
-            <strong>
-              Profesor
-              
-            </strong>
-            <span>c.munoz</span>
+            <strong>Secretaría académica</strong>
+            <span>secretaria</span>
           </button>
         </form>
         
-        <form method="get" action="melany.osorio--boletin-melany.osorio.html">
+        <form method="get" action="orientadora--inicio.html">
           
           <button type="submit" class="acceso">
-            <strong>
-              Estudiante
-            </strong>
+            <strong>Orientación escolar</strong>
+            <span>orientadora</span>
+          </button>
+        </form>
+        
+        <form method="get" action="melany.osorio--inicio.html">
+          
+          <button type="submit" class="acceso">
+            <strong>Estudiante</strong>
             <span>melany.osorio</span>
+          </button>
+        </form>
+        
+        <form method="get" action="gloria.cardenas--inicio.html">
+          
+          <button type="submit" class="acceso">
+            <strong>Acudiente</strong>
+            <span>gloria.cardenas</span>
+          </button>
+        </form>
+        
+        <form method="get" action="tesoreria--inicio.html">
+          
+          <button type="submit" class="acceso">
+            <strong>Tesorería</strong>
+            <span>tesoreria</span>
+          </button>
+        </form>
+        
+        <form method="get" action="biblioteca--inicio.html">
+          
+          <button type="submit" class="acceso">
+            <strong>Biblioteca</strong>
+            <span>biblioteca</span>
+          </button>
+        </form>
+        
+        <form method="get" action="enfermeria--inicio.html">
+          
+          <button type="submit" class="acceso">
+            <strong>Enfermería</strong>
+            <span>enfermeria</span>
+          </button>
+        </form>
+        
+        <form method="get" action="porteria--inicio.html">
+          
+          <button type="submit" class="acceso">
+            <strong>Portería</strong>
+            <span>porteria</span>
           </button>
         </form>
         
       </div>
     </div>
+    
+    <p class="pie-login"><a href="publico--privacidad.html">Tratamiento de datos personales</a></p>
   </section>
 </div>
 
 
 <script>
-var paginas = {"rectora": "rectora--consolidado.html", "coordinadora": "coordinadora--consolidado.html", "h.aguirre": "h.aguirre--materias.html", "c.munoz": "c.munoz--materias.html", "melany.osorio": "melany.osorio--boletin-melany.osorio.html", };
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+<script>
+var paginas = {"admin": "admin--inicio.html", "rectora": "rectora--inicio.html", "coordinadora": "coordinadora--inicio.html", "h.aguirre": "h.aguirre--inicio.html", "secretaria": "secretaria--inicio.html", "orientadora": "orientadora--inicio.html", "melany.osorio": "melany.osorio--inicio.html", "gloria.cardenas": "gloria.cardenas--inicio.html", "tesoreria": "tesoreria--inicio.html", "biblioteca": "biblioteca--inicio.html", "enfermeria": "enfermeria--inicio.html", "porteria": "porteria--inicio.html", };
 function entrarDemo(formulario) {
   var usuario = formulario.usuario.value.trim().toLowerCase();
   if (paginas[usuario] && formulario.clave.value === 'pijao2026') {

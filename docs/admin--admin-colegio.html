@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datos del colegio · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/admin.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="admin--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Paula Andrea Rincón</strong>
+    <span>Administración</span>
+  </div>
+  <a class="boton-salir" href="admin--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="admin--inicio.html" class="">Inicio</a>
+    
+    <a href="admin--grupos.html" class="">Grupos</a>
+    
+    <a href="admin--indicadores.html" class="">Indicadores</a>
+    
+    <a href="admin--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="admin--circulares.html" class="">Circulares</a>
+    
+    <a href="admin--agenda.html" class="">Agenda</a>
+    
+    <a href="admin--asistencia.html" class="">Asistencia</a>
+    
+    <a href="admin--observador.html" class="">Observador</a>
+    
+    <a href="admin--horas.html" class="">Horas sociales</a>
+    
+    <a href="admin--certificados.html" class="">Certificados</a>
+    
+    <a href="admin--elecciones.html" class="">Elecciones</a>
+    
+    <a href="admin--tesoreria.html" class="">Tesorería</a>
+    
+    <a href="admin--biblioteca.html" class="">Biblioteca</a>
+    
+    <a href="admin--porteria.html" class="">Portería</a>
+    
+    <a href="admin--admin.html" class="activa">Administración</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="admin--admin.html">← Administración</a>
+  <h1>Datos del colegio</h1>
+  <p>Estos datos salen en la barra superior, en los boletines y en los certificados.</p>
+</div>
+
+
+
+
+<form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario">
+  <div class="tarjeta">
+    <h2>Identificación</h2>
+    <div class="rejilla">
+      <div>
+        <label for="nombre">Nombre completo</label>
+        <input id="nombre" name="nombre" value="Institución Educativa Instituto Pijao" maxlength="150" required>
+      </div>
+      <div>
+        <label for="nombre_corto">Nombre corto</label>
+        <input id="nombre_corto" name="nombre_corto" value="I.E. Instituto Pijao" maxlength="60" required>
+        <p class="ayuda">Se ve en la barra de arriba.</p>
+      </div>
+      <div>
+        <label for="municipio">Municipio</label>
+        <input id="municipio" name="municipio" value="Pijao" maxlength="80" required>
+      </div>
+      <div>
+        <label for="departamento">Departamento</label>
+        <input id="departamento" name="departamento" value="Quindío" maxlength="80" required>
+      </div>
+      <div>
+        <label for="codigo_dane">Código DANE</label>
+        <input id="codigo_dane" name="codigo_dane" value="" inputmode="numeric" maxlength="12">
+        <p class="ayuda">12 dígitos. Puedes dejarlo vacío por ahora.</p>
+      </div>
+    </div>
+    <label for="lema">Lema</label>
+    <input id="lema" name="lema" value="Sapientiam a juventute dilexi et quaesivi" maxlength="200">
+  </div>
+
+  <div class="tarjeta">
+    <h2>Escala de valoración</h2>
+    <p class="gris">Cada colegio define su escala en el SIEE (Decreto 1290 de 2009). Por debajo de «Desde Básico» el desempeño es Bajo.</p>
+    <div class="rejilla">
+      
+      <div>
+        <label for="nota_minima">Nota mínima</label>
+        <input id="nota_minima" name="nota_minima" value="1.0" inputmode="decimal" maxlength="6" required>
+      </div>
+      
+      <div>
+        <label for="limite_basico">Desde Básico</label>
+        <input id="limite_basico" name="limite_basico" value="3.0" inputmode="decimal" maxlength="6" required>
+      </div>
+      
+      <div>
+        <label for="limite_alto">Desde Alto</label>
+        <input id="limite_alto" name="limite_alto" value="4.0" inputmode="decimal" maxlength="6" required>
+      </div>
+      
+      <div>
+        <label for="limite_superior">Desde Superior</label>
+        <input id="limite_superior" name="limite_superior" value="4.6" inputmode="decimal" maxlength="6" required>
+      </div>
+      
+      <div>
+        <label for="nota_maxima">Nota máxima</label>
+        <input id="nota_maxima" name="nota_maxima" value="5.0" inputmode="decimal" maxlength="6" required>
+      </div>
+      
+    </div>
+    <p class="ayuda">Debe cumplirse: nota mínima &lt; Básico &lt; Alto &lt; Superior ≤ nota máxima.</p>
+  </div>
+
+  <div class="tarjeta">
+    <h2>Año escolar</h2>
+    <p>El año escolar actual es <strong>2026</strong>. No se cambia aquí: el cierre de año (promoción de estudiantes y paso al año siguiente) llegará en una próxima versión.</p>
+  </div>
+
+  <div class="acciones"><button class="boton" type="submit">Guardar datos del colegio</button></div>
+</form>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

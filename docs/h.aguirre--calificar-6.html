@@ -3,29 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notas Décimo · Instituto Pijao</title>
+<title>Calificar Filosofía · I.E. Instituto Pijao</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="static/estilos.css">
+
 <link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
 </head>
 <body>
-<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero las notas no se guardan.</div>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
 
 <header class="barra">
-  <img class="escudo-barra" src="static/escudo.png" alt="Escudo">
+  <a href="h.aguirre--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
   <div class="barra-colegio">
     <strong>I.E. Instituto Pijao</strong>
-    <span>Grado Décimo · 2026</span>
+    <span>Pijao · Año escolar 2026</span>
   </div>
   <div class="barra-usuario">
     <strong>Hernán Darío Aguirre</strong>
-    <span>
-      Docente · Director de grupo
-      
-    </span>
+    <span>Docente · Director de grupo</span>
   </div>
+  <a class="boton-salir" href="h.aguirre--mi-cuenta.html">Mi cuenta</a>
   <a class="boton-salir" href="index.html">Salir</a>
 </header>
 <svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
@@ -34,41 +36,53 @@
 </svg>
 <main class="contenedor">
   <nav class="pestanas">
+    <a href="h.aguirre--inicio.html" class="">Inicio</a>
     
+    <a href="h.aguirre--mis-clases.html" class="activa">Mis clases</a>
     
-      <a href="h.aguirre--materias.html" class="activa">Mis materias</a>
+    <a href="h.aguirre--grupos-1.html" class="">Grupos</a>
     
+    <a href="h.aguirre--circulares.html" class="">Circulares</a>
     
-      <a href="h.aguirre--consolidado.html" class="">Mi grupo</a>
+    <a href="h.aguirre--agenda.html" class="">Agenda</a>
     
+    <a href="h.aguirre--asistencia.html" class="">Asistencia</a>
+    
+    <a href="h.aguirre--observador.html" class="">Observador</a>
+    
+    <a href="h.aguirre--horas.html" class="">Horas sociales</a>
+    
+    <a href="h.aguirre--piar.html" class="">PIAR</a>
+    
+    <a href="h.aguirre--biblioteca.html" class="">Biblioteca</a>
     
   </nav>
   
 <div class="encabezado">
-  <a class="volver" href="h.aguirre--materias.html">← Mis materias</a>
-  <h1>Filosofía</h1>
-  <p>Notas de 1.0 a 5.0. Deja la casilla vacía si aún no hay nota.</p>
+  <a class="volver" href="h.aguirre--mis-clases.html">← Mis clases</a>
+  <h1>Filosofía · 10-A</h1>
+  <p>Notas de 1.0 a 5.0. Deja la casilla vacía si aún no hay nota. Los períodos cerrados no se pueden cambiar.</p>
 </div>
 
 
 
 
 <div class="escala">
-  <span class="chip Bajo">Bajo 1.0 – 2.9</span>
-  <span class="chip Básico">Básico 3.0 – 3.9</span>
-  <span class="chip Alto">Alto 4.0 – 4.5</span>
-  <span class="chip Superior">Superior 4.6 – 5.0</span>
+  <span class="chip Bajo">Bajo menos de 3.0</span>
+  <span class="chip Básico">Básico desde 3.0</span>
+  <span class="chip Alto">Alto desde 4.0</span>
+  <span class="chip Superior">Superior desde 4.6</span>
 </div>
 
-<form class="tarjeta" onsubmit="alert('En la demo no se guardan las notas.'); return false;">
+<form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="tarjeta">
   <div class="tabla-caja">
     <table class="tabla">
       <thead>
         <tr>
           <th>#</th>
           <th class="izq">Estudiante</th>
-          <th>P1</th><th>P2</th><th>P3</th><th>P4</th>
-          <th>Promedio</th>
+          <th title="Primer período · 25.0 %">P1 🔒</th><th title="Segundo período · 25.0 %">P2 🔒</th><th title="Tercer período · 25.0 %">P3 🔒</th><th title="Cuarto período · 25.0 %">P4</th>
+          <th>Final</th>
           <th>Desempeño</th>
         </tr>
       </thead>
@@ -76,158 +90,36 @@
         
         <tr>
           <td class="numero">1</td>
-          <td class="izq">Melany Osorio Cárdenas</td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="melany.osorio-1"
-                   value="4.9">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="melany.osorio-2"
-                   value="4.5">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="melany.osorio-3"
-                   value="4.9">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="melany.osorio-4"
-                   value="">
-          </td>
-          
-          <td><span class="nota Superior">4.8</span></td>
-          <td><span class="chip Superior">Superior</span></td>
-        </tr>
-        
-        <tr>
-          <td class="numero">2</td>
-          <td class="izq">Juan Pablo Restrepo</td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="juan.restrepo-1"
-                   value="3.5">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="juan.restrepo-2"
-                   value="3.0">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="juan.restrepo-3"
-                   value="3.1">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="juan.restrepo-4"
-                   value="">
-          </td>
-          
-          <td><span class="nota Básico">3.2</span></td>
-          <td><span class="chip Básico">Básico</span></td>
-        </tr>
-        
-        <tr>
-          <td class="numero">3</td>
-          <td class="izq">Sharon Daniela Loaiza</td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="sharon.loaiza-1"
-                   value="4.6">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="sharon.loaiza-2"
-                   value="4.7">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="sharon.loaiza-3"
-                   value="4.3">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="sharon.loaiza-4"
-                   value="">
-          </td>
-          
-          <td><span class="nota Alto">4.5</span></td>
-          <td><span class="chip Alto">Alto</span></td>
-        </tr>
-        
-        <tr>
-          <td class="numero">4</td>
-          <td class="izq">Valentina Arias Zuluaga</td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="valentina.arias-1"
-                   value="4.6">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="valentina.arias-2"
-                   value="4.6">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="valentina.arias-3"
-                   value="4.9">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="valentina.arias-4"
-                   value="">
-          </td>
-          
-          <td><span class="nota Superior">4.7</span></td>
-          <td><span class="chip Superior">Superior</span></td>
-        </tr>
-        
-        <tr>
-          <td class="numero">5</td>
           <td class="izq">David Santiago Giraldo</td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="david.giraldo-1"
-                   value="3.4">
+            
+            
+            <span class="nota Básico">3.4</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="david.giraldo-2"
-                   value="3.3">
+            
+            
+            <span class="nota Básico">3.3</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="david.giraldo-3"
-                   value="3.2">
+            
+            
+            <span class="nota Básico">3.2</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="david.giraldo-4"
+            
+            
+            <input class="casilla" type="number" step="0.1" min="1.0" max="5.0"
+                   name="nota-17-4" aria-label="David Santiago Giraldo, Cuarto período"
                    value="">
+            
           </td>
           
           <td><span class="nota Básico">3.3</span></td>
@@ -235,31 +127,189 @@
         </tr>
         
         <tr>
+          <td class="numero">2</td>
+          <td class="izq">Isabella Mejía Toro</td>
+          
+          <td>
+            
+            
+            <span class="nota Básico">3.7</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <span class="nota Básico">3.6</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <span class="nota Básico">3.4</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <input class="casilla" type="number" step="0.1" min="1.0" max="5.0"
+                   name="nota-22-4" aria-label="Isabella Mejía Toro, Cuarto período"
+                   value="">
+            
+          </td>
+          
+          <td><span class="nota Básico">3.6</span></td>
+          <td><span class="chip Básico">Básico</span></td>
+        </tr>
+        
+        <tr>
+          <td class="numero">3</td>
+          <td class="izq">Jhon Alexander Castaño</td>
+          
+          <td>
+            
+            
+            <span class="nota Básico">3.0</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <span class="nota Básico">3.3</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <span class="nota Básico">3.1</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <input class="casilla" type="number" step="0.1" min="1.0" max="5.0"
+                   name="nota-21-4" aria-label="Jhon Alexander Castaño, Cuarto período"
+                   value="">
+            
+          </td>
+          
+          <td><span class="nota Básico">3.1</span></td>
+          <td><span class="chip Básico">Básico</span></td>
+        </tr>
+        
+        <tr>
+          <td class="numero">4</td>
+          <td class="izq">Juan Pablo Restrepo</td>
+          
+          <td>
+            
+            
+            <span class="nota Básico">3.5</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <span class="nota Básico">3.0</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <span class="nota Básico">3.1</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <input class="casilla" type="number" step="0.1" min="1.0" max="5.0"
+                   name="nota-14-4" aria-label="Juan Pablo Restrepo, Cuarto período"
+                   value="">
+            
+          </td>
+          
+          <td><span class="nota Básico">3.2</span></td>
+          <td><span class="chip Básico">Básico</span></td>
+        </tr>
+        
+        <tr>
+          <td class="numero">5</td>
+          <td class="izq">Laura Sofía Patiño</td>
+          
+          <td>
+            
+            
+            <span class="nota Superior">4.6</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <span class="nota Superior">5.0</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <span class="nota Superior">5.0</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <input class="casilla" type="number" step="0.1" min="1.0" max="5.0"
+                   name="nota-20-4" aria-label="Laura Sofía Patiño, Cuarto período"
+                   value="">
+            
+          </td>
+          
+          <td><span class="nota Superior">4.9</span></td>
+          <td><span class="chip Superior">Superior</span></td>
+        </tr>
+        
+        <tr>
           <td class="numero">6</td>
           <td class="izq">Mariana Henao Ríos</td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="mariana.henao-1"
-                   value="3.9">
+            
+            
+            <span class="nota Básico">3.9</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="mariana.henao-2"
-                   value="3.9">
+            
+            
+            <span class="nota Básico">3.9</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="mariana.henao-3"
-                   value="4.0">
+            
+            
+            <span class="nota Alto">4.0</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="mariana.henao-4"
+            
+            
+            <input class="casilla" type="number" step="0.1" min="1.0" max="5.0"
+                   name="nota-18-4" aria-label="Mariana Henao Ríos, Cuarto período"
                    value="">
+            
           </td>
           
           <td><span class="nota Básico">3.9</span></td>
@@ -268,30 +318,74 @@
         
         <tr>
           <td class="numero">7</td>
+          <td class="izq">Melany Osorio Cárdenas</td>
+          
+          <td>
+            
+            
+            <span class="nota Superior">4.9</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <span class="nota Alto">4.5</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <span class="nota Superior">4.9</span>
+            
+          </td>
+          
+          <td>
+            
+            
+            <input class="casilla" type="number" step="0.1" min="1.0" max="5.0"
+                   name="nota-13-4" aria-label="Melany Osorio Cárdenas, Cuarto período"
+                   value="">
+            
+          </td>
+          
+          <td><span class="nota Superior">4.8</span></td>
+          <td><span class="chip Superior">Superior</span></td>
+        </tr>
+        
+        <tr>
+          <td class="numero">8</td>
           <td class="izq">Samuel Ocampo Marín</td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="samuel.ocampo-1"
-                   value="2.1">
+            
+            
+            <span class="nota Bajo">2.1</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="samuel.ocampo-2"
-                   value="2.6">
+            
+            
+            <span class="nota Bajo">2.6</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="samuel.ocampo-3"
-                   value="2.4">
+            
+            
+            <span class="nota Bajo">2.4</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="samuel.ocampo-4"
+            
+            
+            <input class="casilla" type="number" step="0.1" min="1.0" max="5.0"
+                   name="nota-19-4" aria-label="Samuel Ocampo Marín, Cuarto período"
                    value="">
+            
           </td>
           
           <td><span class="nota Bajo">2.4</span></td>
@@ -299,99 +393,79 @@
         </tr>
         
         <tr>
-          <td class="numero">8</td>
-          <td class="izq">Laura Sofía Patiño</td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="laura.patino-1"
-                   value="4.6">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="laura.patino-2"
-                   value="5.0">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="laura.patino-3"
-                   value="5.0">
-          </td>
-          
-          <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="laura.patino-4"
-                   value="">
-          </td>
-          
-          <td><span class="nota Superior">4.9</span></td>
-          <td><span class="chip Superior">Superior</span></td>
-        </tr>
-        
-        <tr>
           <td class="numero">9</td>
-          <td class="izq">Jhon Alexander Castaño</td>
+          <td class="izq">Sharon Daniela Loaiza</td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="jhon.castano-1"
-                   value="3.0">
+            
+            
+            <span class="nota Superior">4.6</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="jhon.castano-2"
-                   value="3.3">
+            
+            
+            <span class="nota Superior">4.7</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="jhon.castano-3"
-                   value="3.1">
+            
+            
+            <span class="nota Alto">4.3</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="jhon.castano-4"
+            
+            
+            <input class="casilla" type="number" step="0.1" min="1.0" max="5.0"
+                   name="nota-15-4" aria-label="Sharon Daniela Loaiza, Cuarto período"
                    value="">
+            
           </td>
           
-          <td><span class="nota Básico">3.1</span></td>
-          <td><span class="chip Básico">Básico</span></td>
+          <td><span class="nota Alto">4.5</span></td>
+          <td><span class="chip Alto">Alto</span></td>
         </tr>
         
         <tr>
           <td class="numero">10</td>
-          <td class="izq">Isabella Mejía Toro</td>
+          <td class="izq">Valentina Arias Zuluaga</td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="isabella.mejia-1"
-                   value="3.7">
+            
+            
+            <span class="nota Superior">4.6</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="isabella.mejia-2"
-                   value="3.6">
+            
+            
+            <span class="nota Superior">4.6</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="isabella.mejia-3"
-                   value="3.4">
+            
+            
+            <span class="nota Superior">4.9</span>
+            
           </td>
           
           <td>
-            <input class="casilla" type="number" step="0.1" min="1" max="5"
-                   name="isabella.mejia-4"
+            
+            
+            <input class="casilla" type="number" step="0.1" min="1.0" max="5.0"
+                   name="nota-16-4" aria-label="Valentina Arias Zuluaga, Cuarto período"
                    value="">
+            
           </td>
           
-          <td><span class="nota Básico">3.6</span></td>
-          <td><span class="chip Básico">Básico</span></td>
+          <td><span class="nota Superior">4.7</span></td>
+          <td><span class="chip Superior">Superior</span></td>
         </tr>
         
       </tbody>
@@ -404,5 +478,10 @@
 
 </main>
 
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
 </body>
 </html>

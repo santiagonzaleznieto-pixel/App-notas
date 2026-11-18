@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elecciones · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/gobierno.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="rectora--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Martha Cecilia Vallejo</strong>
+    <span>Rectoría</span>
+  </div>
+  <a class="boton-salir" href="rectora--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="rectora--inicio.html" class="">Inicio</a>
+    
+    <a href="rectora--grupos.html" class="">Grupos</a>
+    
+    <a href="rectora--indicadores.html" class="">Indicadores</a>
+    
+    <a href="rectora--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="rectora--circulares.html" class="">Circulares</a>
+    
+    <a href="rectora--agenda.html" class="">Agenda</a>
+    
+    <a href="rectora--asistencia.html" class="">Asistencia</a>
+    
+    <a href="rectora--observador.html" class="">Observador</a>
+    
+    <a href="rectora--convivencia.html" class="">Convivencia</a>
+    
+    <a href="rectora--horas.html" class="">Horas sociales</a>
+    
+    <a href="rectora--certificados.html" class="">Certificados</a>
+    
+    <a href="rectora--orientacion.html" class="">Orientación</a>
+    
+    <a href="rectora--elecciones.html" class="activa">Elecciones</a>
+    
+    <a href="rectora--tesoreria.html" class="">Tesorería</a>
+    
+    <a href="rectora--admin-registro.html" class="">Registro de actividad</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <h1>Gobierno escolar 2026</h1>
+  <p>Personero, contralor y representantes de grupo (Decreto 1860 de 1994). El voto es secreto: la plataforma guarda que votaste, nunca por quién.</p>
+</div>
+
+
+
+
+
+
+
+<form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="tarjeta formulario">
+  <h2>Nueva elección</h2>
+  <input type="hidden" name="accion" value="crear">
+  <div class="rejilla">
+    <div>
+      <label for="cargo">Cargo</label>
+      <select id="cargo" name="cargo" required>
+        
+        <option value="personero" selected>Personero estudiantil</option>
+        
+        <option value="contralor" >Contralor estudiantil</option>
+        
+        <option value="representante" >Representante de grupo</option>
+        
+      </select>
+    </div>
+    <div>
+      <label for="titulo">Título</label>
+      <input id="titulo" name="titulo" maxlength="120" value="" placeholder="Ej.: Personero estudiantil 2026" required>
+    </div>
+    <div>
+      <label for="grupo_id">Grupo (solo representante)</label>
+      <select id="grupo_id" name="grupo_id">
+        <option value="">Toda la institución</option>
+        
+        <option value="1" >10-A · Décimo</option>
+        
+        <option value="2" >11-A · Once</option>
+        
+      </select>
+    </div>
+    <div>
+      <label for="apertura">Apertura</label>
+      <input id="apertura" name="apertura" type="datetime-local" value="" required>
+    </div>
+    <div>
+      <label for="cierre">Cierre</label>
+      <input id="cierre" name="cierre" type="datetime-local" value="" required>
+    </div>
+  </div>
+  <p class="ayuda">Personero y contralor: se postulan estudiantes del último grado y votan todos los matriculados. Representante: solo el grupo elegido. La votación se abre y se cierra con los botones de cada elección.</p>
+  <div class="acciones"><button class="boton" type="submit">Crear elección</button></div>
+</form>
+
+
+
+<article class="tarjeta gestion preparacion">
+  <div class="tarjeta-titulo">
+    <div>
+      <span class="etiqueta">Representante de grupo · 10-A · 2026</span>
+      <h2>Representante de grupo 10-A</h2>
+      <p class="fecha">Programada: 2026-11-27 07:00 a 2026-11-27 09:00</p>
+    </div>
+    <span class="estado neutro">En preparación</span>
+  </div>
+  
+
+  <div class="participacion">
+    <span>Participación</span>
+    <span><strong>0</strong> de 10 habilitados (0 %)</span>
+    <div class="barra-progreso"><div style="width: 0%"></div></div>
+  </div>
+  <p class="ayuda gris">Solo se postulan y votan los estudiantes del grupo 10-A.</p>
+
+  <h3>Candidatos</h3>
+  
+  <ul class="lista candidatos">
+    
+    <li>
+      <span class="inicial mediana">L</span>
+      <div>
+        <strong>N.º 1 · Laura Sofía Patiño</strong> <small class="gris">10-A</small>
+        <p class="texto-largo">Grupos de estudio antes de cada evaluación y llevar las inquietudes del curso al consejo de estudiantes.</p>
+      </div>
+      
+      <form onsubmit="alert('En la demo no se guarda nada.'); return false;">
+        <input type="hidden" name="accion" value="quitar_candidato">
+        <input type="hidden" name="candidato_id" value="4">
+        <button class="boton peligro pequeno" type="submit">Quitar</button>
+      </form>
+      
+    </li>
+    
+    <li>
+      <span class="inicial mediana">D</span>
+      <div>
+        <strong>N.º 2 · David Santiago Giraldo</strong> <small class="gris">10-A</small>
+        <p class="texto-largo">Una salida pedagógica al Paisaje Cultural Cafetero y un fondo común de fotocopias para el curso.</p>
+      </div>
+      
+      <form onsubmit="alert('En la demo no se guarda nada.'); return false;">
+        <input type="hidden" name="accion" value="quitar_candidato">
+        <input type="hidden" name="candidato_id" value="5">
+        <button class="boton peligro pequeno" type="submit">Quitar</button>
+      </form>
+      
+    </li>
+    
+  </ul>
+  
+
+  
+  <form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="formulario agregar">
+    <h3>Agregar candidato</h3>
+    <input type="hidden" name="accion" value="agregar_candidato">
+    <input type="hidden" name="eleccion_id" value="2">
+    
+    <div class="rejilla">
+      <div>
+        <label for="estudiante-2">Estudiante</label>
+        <select id="estudiante-2" name="estudiante_id" required>
+          <option value="">Elige al estudiante</option>
+          
+          <option value="22">Isabella Mejía Toro · 10-A</option>
+          
+          <option value="21">Jhon Alexander Castaño · 10-A</option>
+          
+          <option value="14">Juan Pablo Restrepo · 10-A</option>
+          
+          <option value="18">Mariana Henao Ríos · 10-A</option>
+          
+          <option value="13">Melany Osorio Cárdenas · 10-A</option>
+          
+          <option value="19">Samuel Ocampo Marín · 10-A</option>
+          
+          <option value="15">Sharon Daniela Loaiza · 10-A</option>
+          
+          <option value="16">Valentina Arias Zuluaga · 10-A</option>
+          
+        </select>
+      </div>
+      <div>
+        <label for="numero-2">Número en el tarjetón</label>
+        <input id="numero-2" name="numero" type="number" min="1" max="99" value="3" required>
+      </div>
+    </div>
+    <label for="propuesta-2">Propuesta</label>
+    <textarea id="propuesta-2" name="propuesta" maxlength="600" required></textarea>
+    <div class="acciones izquierda"><button class="boton secundario" type="submit">Agregar candidato</button></div>
+    
+  </form>
+  
+
+  <div class="botones-estado">
+    
+    <form onsubmit="alert('En la demo no se guarda nada.'); return false;">
+      <input type="hidden" name="accion" value="abrir">
+      <input type="hidden" name="eleccion_id" value="2">
+      <button class="boton" type="submit">Abrir votación</button>
+    </form>
+    
+    <a class="boton secundario" href="rectora--elecciones-2.html">Ver resultados</a>
+  </div>
+</article>
+
+
+<article class="tarjeta gestion cerrada">
+  <div class="tarjeta-titulo">
+    <div>
+      <span class="etiqueta">Personero estudiantil · 2026</span>
+      <h2>Personero estudiantil 2026</h2>
+      <p class="fecha">Programada: 2026-02-20 07:00 a 2026-02-20 12:00</p>
+    </div>
+    <span class="estado atencion">Cerrada</span>
+  </div>
+  
+
+  <div class="participacion">
+    <span>Participación</span>
+    <span><strong>13</strong> de 16 habilitados (81 %)</span>
+    <div class="barra-progreso"><div style="width: 81%"></div></div>
+  </div>
+  <p class="ayuda gris">Se postulan estudiantes de Once y votan todos los estudiantes matriculados.</p>
+
+  <h3>Candidatos</h3>
+  
+  <ul class="lista candidatos">
+    
+    <li>
+      <span class="inicial mediana">E</span>
+      <div>
+        <strong>N.º 1 · Esteban Ramírez Gómez</strong> <small class="gris">11-A</small>
+        <p class="texto-largo">Torneo intercursos de fútbol y microfútbol, buzón de sugerencias en cada salón y jornadas de reciclaje con el comité ambiental.</p>
+      </div>
+      
+    </li>
+    
+    <li>
+      <span class="inicial mediana">L</span>
+      <div>
+        <strong>N.º 2 · Luisa Fernanda Montoya</strong> <small class="gris">11-A</small>
+        <p class="texto-largo">Mesas de escucha cada mes, monitorías entre estudiantes para reforzar materias y una semana cultural con la música y la historia de Pijao.</p>
+      </div>
+      
+    </li>
+    
+    <li>
+      <span class="inicial mediana">D</span>
+      <div>
+        <strong>N.º 3 · Daniela Cardona López</strong> <small class="gris">11-A</small>
+        <p class="texto-largo">Opciones saludables en la tienda escolar, arreglo de los baños con la asociación de padres y un club de lectura.</p>
+      </div>
+      
+    </li>
+    
+  </ul>
+  
+
+  
+
+  <div class="botones-estado">
+    
+    <a class="boton secundario" href="rectora--elecciones-1.html">Ver resultados</a>
+  </div>
+</article>
+
+
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

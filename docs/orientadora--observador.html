@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Observador · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/observador.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="orientadora--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Natalia Giraldo Ruiz</strong>
+    <span>Orientación escolar</span>
+  </div>
+  <a class="boton-salir" href="orientadora--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="orientadora--inicio.html" class="">Inicio</a>
+    
+    <a href="orientadora--grupos.html" class="">Grupos</a>
+    
+    <a href="orientadora--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="orientadora--circulares.html" class="">Circulares</a>
+    
+    <a href="orientadora--agenda.html" class="">Agenda</a>
+    
+    <a href="orientadora--asistencia.html" class="">Asistencia</a>
+    
+    <a href="orientadora--observador.html" class="activa">Observador</a>
+    
+    <a href="orientadora--convivencia.html" class="">Convivencia</a>
+    
+    <a href="orientadora--horas.html" class="">Horas sociales</a>
+    
+    <a href="orientadora--orientacion.html" class="">Orientación</a>
+    
+    <a href="orientadora--piar.html" class="">PIAR</a>
+    
+    <a href="orientadora--elecciones.html" class="">Elecciones</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <h1>Observador del estudiante</h1>
+  <p>Busca a un estudiante para ver su observador o escribir una anotación. Las situaciones de convivencia siguen la Ley 1620 de 2013 y el Decreto 1965 de 2013.</p>
+</div>
+
+<form method="get" class="tarjeta filtros formulario">
+  <div>
+    <label for="q">Nombre del estudiante</label>
+    <input id="q" name="q" value="" placeholder="Ej.: Melany">
+  </div>
+  <div>
+    <label for="grupo">Grupo</label>
+    <select id="grupo" name="grupo">
+      <option value="">Todos mis grupos</option>
+      
+      <option value="1">10-A</option>
+      
+      <option value="2">11-A</option>
+      
+    </select>
+  </div>
+  <button class="boton" type="submit">Buscar</button>
+</form>
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Estudiantes</h2>
+    
+    <div class="tabla-caja">
+      <table class="tabla simple">
+        <thead><tr><th class="izq">Estudiante</th><th>Grupo</th></tr></thead>
+        <tbody>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-17.html">David Santiago Giraldo</a></td>
+            <td>10-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-22.html">Isabella Mejía Toro</a></td>
+            <td>10-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-21.html">Jhon Alexander Castaño</a></td>
+            <td>10-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-14.html">Juan Pablo Restrepo</a></td>
+            <td>10-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-20.html">Laura Sofía Patiño</a></td>
+            <td>10-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-18.html">Mariana Henao Ríos</a></td>
+            <td>10-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-13.html">Melany Osorio Cárdenas</a></td>
+            <td>10-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-19.html">Samuel Ocampo Marín</a></td>
+            <td>10-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-15.html">Sharon Daniela Loaiza</a></td>
+            <td>10-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-16.html">Valentina Arias Zuluaga</a></td>
+            <td>10-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-25.html">Andrés Felipe Quintero</a></td>
+            <td>11-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-24.html">Daniela Cardona López</a></td>
+            <td>11-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-23.html">Esteban Ramírez Gómez</a></td>
+            <td>11-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-27.html">Kevin Stiven Largo</a></td>
+            <td>11-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-26.html">Luisa Fernanda Montoya</a></td>
+            <td>11-A</td>
+          </tr>
+          
+          <tr>
+            <td class="izq"><a href="orientadora--observador-estudiante-28.html">María José Valencia</a></td>
+            <td>11-A</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    
+  </div>
+
+  <div class="tarjeta">
+    <h2>Últimas anotaciones</h2>
+    
+    <ul class="lista">
+      
+      <li>
+        <div class="anotacion-cabeza">
+          <span class="chip-tipo situacion-2">Situación tipo II</span>
+          <span class="estado mal">Confidencial</span>
+          <span class="fecha">2026-11-12</span>
+        </div>
+        <a class="enlace-fuerte" href="orientadora--observador-estudiante-23.html">Esteban Ramírez Gómez</a>
+        <p class="resumen-texto">Esteban cuenta que desde hace tres semanas recibe mensajes y memes burlones de forma repetida en un grupo de WhatsApp de compañeros....</p>
+        <span class="fecha">Por Natalia Giraldo Ruiz · <a href="orientadora--observador-caso-4.html">Ver caso</a></span>
+      </li>
+      
+      <li>
+        <div class="anotacion-cabeza">
+          <span class="chip-tipo situacion-1">Situación tipo I</span>
+          
+          <span class="fecha">2026-11-10</span>
+        </div>
+        <a class="enlace-fuerte" href="orientadora--observador-estudiante-14.html">Juan Pablo Restrepo</a>
+        <p class="resumen-texto">Durante el partido de microfútbol en Educación Física, Juan Pablo y un compañero discutieron por una falta y se empujaron. Nadie resultó...</p>
+        <span class="fecha">Por Wilmar Tapasco · <a href="orientadora--observador-caso-3.html">Ver caso</a></span>
+      </li>
+      
+      <li>
+        <div class="anotacion-cabeza">
+          <span class="chip-tipo por-mejorar">Por mejorar</span>
+          
+          <span class="fecha">2026-11-06</span>
+        </div>
+        <a class="enlace-fuerte" href="orientadora--observador-estudiante-25.html">Andrés Felipe Quintero</a>
+        <p class="resumen-texto">No ha entregado los tres últimos talleres de Matemáticas y se distrae con el celular durante las explicaciones.</p>
+        <span class="fecha">Por Claudia Isabel Muñoz</span>
+      </li>
+      
+      <li>
+        <div class="anotacion-cabeza">
+          <span class="chip-tipo positiva">Positiva</span>
+          
+          <span class="fecha">2026-10-23</span>
+        </div>
+        <a class="enlace-fuerte" href="orientadora--observador-estudiante-13.html">Melany Osorio Cárdenas</a>
+        <p class="resumen-texto">Lideró con su equipo la jornada de limpieza del río Lejos y presentó al grupo un informe muy completo sobre el cuidado del agua en el...</p>
+        <span class="fecha">Por Hernán Darío Aguirre</span>
+      </li>
+      
+    </ul>
+    
+  </div>
+</div>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

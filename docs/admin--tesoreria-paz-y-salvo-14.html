@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paz y salvo de Juan Pablo Restrepo · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/tesoreria.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="admin--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Paula Andrea Rincón</strong>
+    <span>Administración</span>
+  </div>
+  <a class="boton-salir" href="admin--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="admin--inicio.html" class="">Inicio</a>
+    
+    <a href="admin--grupos.html" class="">Grupos</a>
+    
+    <a href="admin--indicadores.html" class="">Indicadores</a>
+    
+    <a href="admin--escuela-familias.html" class="">Escuela para familias</a>
+    
+    <a href="admin--circulares.html" class="">Circulares</a>
+    
+    <a href="admin--agenda.html" class="">Agenda</a>
+    
+    <a href="admin--asistencia.html" class="">Asistencia</a>
+    
+    <a href="admin--observador.html" class="">Observador</a>
+    
+    <a href="admin--horas.html" class="">Horas sociales</a>
+    
+    <a href="admin--certificados.html" class="">Certificados</a>
+    
+    <a href="admin--elecciones.html" class="">Elecciones</a>
+    
+    <a href="admin--tesoreria.html" class="activa">Tesorería</a>
+    
+    <a href="admin--biblioteca.html" class="">Biblioteca</a>
+    
+    <a href="admin--porteria.html" class="">Portería</a>
+    
+    <a href="admin--admin.html" class="">Administración</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="admin--tesoreria-estudiante-14.html">← Estado de cuenta</a>
+  <h1>Paz y salvo</h1>
+  <p>Juan Pablo Restrepo · Grupo 10-A</p>
+</div>
+
+
+<div class="aviso error">Todavía no se puede expedir el paz y salvo: hay un saldo pendiente de $685.000, de los cuales $320.000 están vencidos.</div>
+<div class="tarjeta">
+  <h2>Lo que falta por pagar</h2>
+  <div class="tabla-caja">
+    <table class="tabla simple">
+      <thead><tr><th class="izq">Cobro</th><th>Fecha límite</th><th class="dinero">Saldo</th><th>Estado</th></tr></thead>
+      <tbody>
+        
+        <tr>
+          <td class="izq">Pensión de octubre 2026</td>
+          <td>20 de octubre de 2026</td>
+          <td class="dinero">$320.000</td>
+          <td><span class="estado mal">Vencido · 29 días</span></td>
+        </tr>
+        
+        <tr>
+          <td class="izq">Pensión de noviembre 2026</td>
+          <td>20 de noviembre de 2026</td>
+          <td class="dinero">$320.000</td>
+          <td><span class="estado atencion">Por vencer</span></td>
+        </tr>
+        
+        <tr>
+          <td class="izq">Salida pedagógica al Jardín Botánico</td>
+          <td>25 de noviembre de 2026</td>
+          <td class="dinero">$45.000</td>
+          <td><span class="estado atencion">Por vencer</span></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  <p class="gris">Cuando se registren estos pagos en la tesorería, el paz y salvo aparecerá aquí automáticamente.</p>
+</div>
+
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

@@ -10,7 +10,8 @@ from app import app
 from datos import CLAVE_PRUEBA
 
 CARPETA_DEMO = os.path.join(base_datos.CARPETA_PROYECTO, "docs")
-MAXIMO_POR_USUARIO = 150
+MAXIMO_POR_USUARIO = 400
+PAGINAS_PUBLICAS = ["/privacidad", "/verificar"]
 
 AVISO = (
     '<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;'
@@ -40,12 +41,15 @@ def enlaces_internos(html):
     return enlaces
 
 
-def adaptar(html, usuario, enlaces):
+def adaptar(html, usuario, enlaces, alias):
     html = html.replace('href="/static/', 'href="static/')
     html = html.replace('src="/static/', 'src="static/')
     for ruta in enlaces:
         original = ruta.replace("&", "&amp;")
-        html = html.replace('href="' + original + '"', 'href="' + nombre_archivo(usuario, ruta) + '"')
+        destino = ruta
+        if ruta in alias:
+            destino = alias[ruta]
+        html = html.replace('href="' + original + '"', 'href="' + nombre_archivo(usuario, destino) + '"')
     html = html.replace('<form method="post"', '<form onsubmit="alert(\'En la demo no se guarda nada.\'); return false;"')
     html = html.replace("<body>", "<body>\n" + AVISO, 1)
     return html
@@ -57,31 +61,52 @@ def guardar(nombre, html):
     archivo.close()
 
 
+def ruta_de(direccion):
+    if direccion.startswith("http://localhost"):
+        return direccion[len("http://localhost"):]
+    return direccion
+
+
 def recorrer(usuario):
     cliente = app.test_client()
     cliente.post("/", data={"usuario": usuario, "clave": CLAVE_PRUEBA})
     pendientes = ["/inicio"]
     hechas = []
-    guardadas = 0
-    while len(pendientes) > 0 and guardadas < MAXIMO_POR_USUARIO:
+    paginas = {}
+    alias = {}
+    while len(pendientes) > 0 and len(paginas) < MAXIMO_POR_USUARIO:
         ruta = pendientes.pop(0)
         if ruta not in hechas and ruta != "/" and ruta != "/salir":
             hechas.append(ruta)
             respuesta = cliente.get(ruta)
-            if respuesta.status_code == 200:
+            if respuesta.status_code == 302:
+                destino = ruta_de(respuesta.headers.get("Location", "/inicio"))
+                alias[ruta] = destino
+                pendientes.append(destino)
+            elif respuesta.status_code == 200:
                 html = respuesta.get_data(as_text=True)
-                enlaces = enlaces_internos(html)
-                for enlace in enlaces:
+                paginas[ruta] = html
+                for enlace in enlaces_internos(html):
                     pendientes.append(enlace)
-                guardar(nombre_archivo(usuario, ruta), adaptar(html, usuario, enlaces))
-                guardadas = guardadas + 1
-    print(usuario + ": " + str(guardadas) + " páginas")
+    for ruta in paginas:
+        html = paginas[ruta]
+        guardar(nombre_archivo(usuario, ruta), adaptar(html, usuario, enlaces_internos(html), alias))
+    print(usuario + ": " + str(len(paginas)) + " páginas")
     return nombre_archivo(usuario, "/inicio")
+
+
+def paginas_publicas():
+    cliente = app.test_client()
+    for ruta in PAGINAS_PUBLICAS:
+        html = cliente.get(ruta).get_data(as_text=True)
+        guardar(nombre_archivo("publico", ruta), adaptar(html, "publico", enlaces_internos(html), {}))
 
 
 def pagina_de_entrada(primeras):
     cliente = app.test_client()
     html = cliente.get("/").get_data(as_text=True)
+    for ruta in PAGINAS_PUBLICAS:
+        html = html.replace('href="' + ruta + '"', 'href="' + nombre_archivo("publico", ruta) + '"')
     html = html.replace('href="/static/', 'href="static/').replace('src="/static/', 'src="static/')
     html = html.replace("<body>", "<body>\n" + AVISO, 1)
     for usuario in primeras:
@@ -135,6 +160,7 @@ for usuario in usuarios_de_acceso_rapido():
 if "h.aguirre" not in primeras:
     primeras["h.aguirre"] = recorrer("h.aguirre")
 
+paginas_publicas()
 pagina_de_entrada(primeras)
 os.remove(base_datos.ARCHIVO)
 print("Demo lista en la carpeta docs")

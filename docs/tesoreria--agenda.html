@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/circulares.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="tesoreria--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Carlos Alberto Ramírez</strong>
+    <span>Tesorería</span>
+  </div>
+  <a class="boton-salir" href="tesoreria--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="tesoreria--inicio.html" class="">Inicio</a>
+    
+    <a href="tesoreria--circulares.html" class="">Circulares</a>
+    
+    <a href="tesoreria--agenda.html" class="activa">Agenda</a>
+    
+    <a href="tesoreria--tesoreria.html" class="">Tesorería</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <h1>Agenda 2026</h1>
+  <p>Fechas importantes del año escolar.</p>
+</div>
+
+
+
+
+
+
+<div class="dos-columnas">
+  <section class="tarjeta">
+    <h2>Próximos eventos</h2>
+    
+    <ul class="lista eventos">
+      
+      <li>
+        <div class="fecha-evento "><strong>27</strong><span>nov</span></div>
+        <div class="evento-cuerpo">
+          <strong>Cierre del cuarto período</strong>
+          <span class="fecha bloque">Viernes 27 de noviembre de 2026</span>
+          
+          <p class="texto-largo">Último día de clases del cuarto período. Los docentes deben dejar las notas registradas en la plataforma.</p>
+          <span class="chip para-todos">Toda la comunidad</span>
+          
+        </div>
+      </li>
+      
+      <li>
+        <div class="fecha-evento "><strong>4</strong><span>dic</span></div>
+        <div class="evento-cuerpo">
+          <strong>Entrega de boletines del cuarto período</strong>
+          <span class="fecha bloque">Viernes 4 de diciembre de 2026 · 7:00 a. m.</span>
+          <span class="fecha bloque">Aula de cada grupo, sede principal</span>
+          <p class="texto-largo">Entrega del boletín del cuarto período y del informe final del año. Ese día no hay clases.</p>
+          <span class="chip para-todos">Toda la comunidad</span>
+          
+        </div>
+      </li>
+      
+      <li>
+        <div class="fecha-evento "><strong>5</strong><span>dic</span></div>
+        <div class="evento-cuerpo">
+          <strong>Ceremonia de grado de 11°</strong>
+          <span class="fecha bloque">Sábado 5 de diciembre de 2026 · 9:00 a. m.</span>
+          <span class="fecha bloque">Auditorio de la sede principal</span>
+          <p class="texto-largo">Ceremonia de graduación de los bachilleres 2026. Los graduandos llegan a las 8:00 a. m.</p>
+          <span class="chip para-todos">Toda la comunidad</span>
+          
+        </div>
+      </li>
+      
+    </ul>
+    
+  </section>
+
+  <section class="tarjeta">
+    <h2>Ya pasaron este año</h2>
+    
+    <p class="gris">Todavía no hay eventos pasados este año.</p>
+    
+  </section>
+</div>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartera vencida · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/tesoreria.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="tesoreria--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Carlos Alberto Ramírez</strong>
+    <span>Tesorería</span>
+  </div>
+  <a class="boton-salir" href="tesoreria--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="tesoreria--inicio.html" class="">Inicio</a>
+    
+    <a href="tesoreria--circulares.html" class="">Circulares</a>
+    
+    <a href="tesoreria--agenda.html" class="">Agenda</a>
+    
+    <a href="tesoreria--tesoreria.html" class="activa">Tesorería</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="tesoreria--tesoreria.html">← Tesorería</a>
+  <h1>Cartera vencida</h1>
+  <p>Estudiantes con cobros cuya fecha límite ya pasó, ordenados de más a menos días de mora.</p>
+</div>
+
+<div class="tarjeta">
+  <form method="get" action="/tesoreria/cartera" class="filtros">
+    <div>
+      <label for="grupo">Grupo</label>
+      <select id="grupo" name="grupo">
+        <option value="">Todos los grupos</option>
+        
+        <option value="1" >10-A · Décimo</option>
+        
+        <option value="2" >11-A · Once</option>
+        
+      </select>
+    </div>
+    <button class="boton pequeno" type="submit">Filtrar</button>
+  </form>
+
+  <div class="cifras cifras-dinero">
+    <div class="tarjeta cifra alerta">
+      <span>Saldo vencido</span>
+      <strong class="dinero">$320.000</strong>
+      <small>1 estudiante en mora</small>
+    </div>
+  </div>
+
+  
+  
+  <div class="fila-mora">
+    <div class="nombre">
+      <a href="tesoreria--tesoreria-estudiante-14.html">Juan Pablo Restrepo</a>
+      <small>Grupo 10-A</small>
+      <small>Pensión de octubre 2026</small>
+    </div>
+    <div class="deuda">
+      <strong class="dinero">$320.000</strong>
+      <span class="estado atencion">29 días de mora</span>
+    </div>
+    <div>
+      
+      <ul class="contactos">
+        
+        <li><strong>Jorge Iván Restrepo</strong> (Padre) · <a href="tel:300 000 0002">300 000 0002</a></li>
+        
+      </ul>
+      
+      <details class="mensaje-sugerido">
+        <summary>Mensaje de recordatorio sugerido</summary>
+        <label for="mensaje-14" class="gris">Puedes ajustarlo antes de copiarlo.</label>
+        <textarea id="mensaje-14">Cordial saludo, Jorge Iván Restrepo. Le escribimos de la tesorería de Institución Educativa Instituto Pijao. De manera respetuosa le recordamos que, a la fecha, la cuenta de Juan Pablo Restrepo registra un saldo vencido de $320.000 por: Pensión de octubre 2026 ($320.000, fecha límite 20 de octubre de 2026). Si ya realizó el pago, le agradecemos enviarnos el comprobante para actualizar el registro y le ofrecemos excusas por la molestia. Si necesita un acuerdo de pago, con gusto le atendemos en la tesorería del colegio. Muchas gracias por su atención.</textarea>
+      </details>
+      <button class="boton pequeno secundario" type="button" onclick="copiarMensaje('mensaje-14', this)">Copiar recordatorio</button>
+    </div>
+  </div>
+  
+  
+</div>
+
+<div class="tarjeta">
+  <h2>Antes de enviar un recordatorio</h2>
+  <ul>
+    <li>Escríbele solo al acudiente responsable, nunca al estudiante, y no compartas la deuda en grupos de WhatsApp ni ante otras familias.</li>
+    <li>El mensaje sugerido es respetuoso: no tiene amenazas, lenguaje ofensivo ni presiones, como pide la Ley 1266 de 2008 sobre el manejo de datos financieros. Envíalo en días y horarios hábiles y sin insistir varias veces el mismo día.</li>
+    <li>La deuda se cobra al acudiente: no se puede impedir que el estudiante asista a clases o presente evaluaciones por falta de pago.</li>
+  </ul>
+</div>
+
+<script>
+function copiarMensaje(id, boton) {
+  var caja = document.getElementById(id);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(caja.value);
+  } else {
+    caja.select();
+    document.execCommand("copy");
+  }
+  boton.textContent = "Mensaje copiado";
+}
+</script>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista de Ciencias Sociales · I.E. Instituto Pijao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/estilos.css">
+<link rel="stylesheet" href="static/asistencia.css">
+<link rel="icon" href="static/escudo.png">
+<link rel="manifest" href="static/manifest.json">
+<link rel="apple-touch-icon" href="static/icono-192.png">
+<meta name="theme-color" content="#1E3A5F">
+</head>
+<body>
+<div style="background:#C98A2B;color:#122844;text-align:center;padding:8px 16px;font:500 14px Inter,sans-serif;">Demo de solo lectura con datos de prueba: puedes recorrer las páginas, pero nada se guarda.</div>
+
+<header class="barra">
+  <a href="h.aguirre--inicio.html"><img class="escudo-barra" src="static/escudo.png" alt="Escudo del colegio"></a>
+  <div class="barra-colegio">
+    <strong>I.E. Instituto Pijao</strong>
+    <span>Pijao · Año escolar 2026</span>
+  </div>
+  <div class="barra-usuario">
+    <strong>Hernán Darío Aguirre</strong>
+    <span>Docente · Director de grupo</span>
+  </div>
+  <a class="boton-salir" href="h.aguirre--mi-cuenta.html">Mi cuenta</a>
+  <a class="boton-salir" href="index.html">Salir</a>
+</header>
+<svg class="franja" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,0 L1200,0 L1200,14 L1040,28 L860,12 L660,30 L470,10 L280,26 L120,12 L0,22 Z" fill="#3F6B4A"/>
+  <path d="M0,0 L1200,0 L1200,6 L980,16 L760,4 L560,18 L360,4 L170,15 L0,6 Z" fill="#1E3A5F"/>
+</svg>
+<main class="contenedor">
+  <nav class="pestanas">
+    <a href="h.aguirre--inicio.html" class="">Inicio</a>
+    
+    <a href="h.aguirre--mis-clases.html" class="">Mis clases</a>
+    
+    <a href="h.aguirre--grupos-1.html" class="">Grupos</a>
+    
+    <a href="h.aguirre--circulares.html" class="">Circulares</a>
+    
+    <a href="h.aguirre--agenda.html" class="">Agenda</a>
+    
+    <a href="h.aguirre--asistencia.html" class="activa">Asistencia</a>
+    
+    <a href="h.aguirre--observador.html" class="">Observador</a>
+    
+    <a href="h.aguirre--horas.html" class="">Horas sociales</a>
+    
+    <a href="h.aguirre--piar.html" class="">PIAR</a>
+    
+    <a href="h.aguirre--biblioteca.html" class="">Biblioteca</a>
+    
+  </nav>
+  
+<div class="encabezado">
+  <a class="volver" href="h.aguirre--asistencia.html">← Asistencia</a>
+  <h1>Lista · Ciencias Sociales · 11-A</h1>
+  <p>Todos quedan en Presente por defecto: marca solo las fallas y los retardos. Si el estudiante tiene excusa aprobada ese día, la falla se guarda como falla con excusa.</p>
+</div>
+
+<form method="get" class="tarjeta filtros formulario">
+  <div>
+    <label for="fecha">Fecha de la clase</label>
+    <input id="fecha" name="fecha" type="date" value="2026-11-18" min="2026-01-26" max="2026-11-18" required>
+  </div>
+  <button class="boton secundario" type="submit">Cambiar fecha</button>
+</form>
+
+
+
+
+
+
+
+<form onsubmit="alert('En la demo no se guarda nada.'); return false;" class="tarjeta">
+  <input type="hidden" name="fecha" value="2026-11-18">
+  <div class="tarjeta-titulo">
+    <h2>2026-11-18 <span class="estado neutro">Sin tomar</span></h2>
+    <button class="boton secundario pequeno" type="submit" name="accion" value="todos">Todos presentes</button>
+  </div>
+  
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr><th>#</th><th class="izq">Estudiante</th><th>Asistencia</th></tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td class="numero">1</td>
+          <td class="izq">
+            Andrés Felipe Quintero
+            
+          </td>
+          <td>
+            <div class="opciones-lista" role="radiogroup" aria-label="Asistencia de Andrés Felipe Quintero">
+              <label class="opcion presente"><input type="radio" name="estado-25" value="presente" checked><span>Presente</span></label>
+              <label class="opcion falla"><input type="radio" name="estado-25" value="falla"><span>Falla</span></label>
+              <label class="opcion retardo"><input type="radio" name="estado-25" value="retardo"><span>Retardo</span></label>
+            </div>
+          </td>
+        </tr>
+        
+        <tr>
+          <td class="numero">2</td>
+          <td class="izq">
+            Daniela Cardona López
+            
+          </td>
+          <td>
+            <div class="opciones-lista" role="radiogroup" aria-label="Asistencia de Daniela Cardona López">
+              <label class="opcion presente"><input type="radio" name="estado-24" value="presente" checked><span>Presente</span></label>
+              <label class="opcion falla"><input type="radio" name="estado-24" value="falla"><span>Falla</span></label>
+              <label class="opcion retardo"><input type="radio" name="estado-24" value="retardo"><span>Retardo</span></label>
+            </div>
+          </td>
+        </tr>
+        
+        <tr>
+          <td class="numero">3</td>
+          <td class="izq">
+            Esteban Ramírez Gómez
+            
+          </td>
+          <td>
+            <div class="opciones-lista" role="radiogroup" aria-label="Asistencia de Esteban Ramírez Gómez">
+              <label class="opcion presente"><input type="radio" name="estado-23" value="presente" checked><span>Presente</span></label>
+              <label class="opcion falla"><input type="radio" name="estado-23" value="falla"><span>Falla</span></label>
+              <label class="opcion retardo"><input type="radio" name="estado-23" value="retardo"><span>Retardo</span></label>
+            </div>
+          </td>
+        </tr>
+        
+        <tr>
+          <td class="numero">4</td>
+          <td class="izq">
+            Kevin Stiven Largo
+            
+          </td>
+          <td>
+            <div class="opciones-lista" role="radiogroup" aria-label="Asistencia de Kevin Stiven Largo">
+              <label class="opcion presente"><input type="radio" name="estado-27" value="presente" checked><span>Presente</span></label>
+              <label class="opcion falla"><input type="radio" name="estado-27" value="falla"><span>Falla</span></label>
+              <label class="opcion retardo"><input type="radio" name="estado-27" value="retardo"><span>Retardo</span></label>
+            </div>
+          </td>
+        </tr>
+        
+        <tr>
+          <td class="numero">5</td>
+          <td class="izq">
+            Luisa Fernanda Montoya
+            
+          </td>
+          <td>
+            <div class="opciones-lista" role="radiogroup" aria-label="Asistencia de Luisa Fernanda Montoya">
+              <label class="opcion presente"><input type="radio" name="estado-26" value="presente" checked><span>Presente</span></label>
+              <label class="opcion falla"><input type="radio" name="estado-26" value="falla"><span>Falla</span></label>
+              <label class="opcion retardo"><input type="radio" name="estado-26" value="retardo"><span>Retardo</span></label>
+            </div>
+          </td>
+        </tr>
+        
+        <tr>
+          <td class="numero">6</td>
+          <td class="izq">
+            María José Valencia
+            
+          </td>
+          <td>
+            <div class="opciones-lista" role="radiogroup" aria-label="Asistencia de María José Valencia">
+              <label class="opcion presente"><input type="radio" name="estado-28" value="presente" checked><span>Presente</span></label>
+              <label class="opcion falla"><input type="radio" name="estado-28" value="falla"><span>Falla</span></label>
+              <label class="opcion retardo"><input type="radio" name="estado-28" value="retardo"><span>Retardo</span></label>
+            </div>
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  <div class="acciones">
+    <button class="boton secundario" type="submit" name="accion" value="todos">Todos presentes</button>
+    <button class="boton" type="submit" name="accion" value="guardar">Guardar lista</button>
+  </div>
+  
+</form>
+
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  navigator.serviceWorker.register("/sw.js").catch(function () {});
+}
+</script>
+</body>
+</html>
