@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block titulo %}Cartera vencida{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/tesoreria.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/tesoreria">← Tesorería</a>
+  <h1>Cartera vencida</h1>
+  <p>Estudiantes con cobros cuya fecha límite ya pasó, ordenados de más a menos días de mora.</p>
+</div>
+
+<div class="tarjeta">
+  <form method="get" action="/tesoreria/cartera" class="filtros">
+    <div>
+      <label for="grupo">Grupo</label>
+      <select id="grupo" name="grupo">
+        <option value="">Todos los grupos</option>
+        {% for opcion in grupos %}
+        <option value="{{ opcion.id }}" {% if grupo and grupo.id == opcion.id %}selected{% endif %}>{{ opcion.nombre }} · {{ opcion.grado }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="boton pequeno" type="submit">Filtrar</button>
+  </form>
+
+  <div class="cifras cifras-dinero">
+    <div class="tarjeta cifra alerta">
+      <span>Saldo vencido{% if grupo %} en {{ grupo.nombre }}{% endif %}</span>
+      <strong class="dinero">{{ pesos(total) }}</strong>
+      <small>{{ filas|length }} estudiante{% if filas|length != 1 %}s{% endif %} en mora</small>
+    </div>
+  </div>
+
+  {% if filas %}
+  {% for fila in filas %}
+  <div class="fila-mora">
+    <div class="nombre">
+      <a href="/tesoreria/estudiante/{{ fila.estudiante.id }}">{{ fila.estudiante.nombre }}</a>
+      <small>Grupo {{ fila.estudiante.grupo.nombre }}</small>
+      <small>{% for cobro in fila.cuenta.vencidos %}{{ cobro.descripcion }}{% if not loop.last %} · {% endif %}{% endfor %}</small>
+    </div>
+    <div class="deuda">
+      <strong class="dinero">{{ pesos(fila.cuenta.vencido) }}</strong>
+      <span class="estado {% if fila.cuenta.dias_mora > 60 %}mal{% else %}atencion{% endif %}">{{ fila.cuenta.dias_mora }} día{% if fila.cuenta.dias_mora != 1 %}s{% endif %} de mora</span>
+    </div>
+    <div>
+      {% if fila.acudientes %}
+      <ul class="contactos">
+        {% for acudiente in fila.acudientes %}
+        <li><strong>{{ acudiente.nombre }}</strong> ({{ acudiente.parentesco }}) · {% if acudiente.telefono %}<a href="tel:{{ acudiente.telefono }}">{{ acudiente.telefono }}</a>{% else %}<span class="gris">sin teléfono registrado</span>{% endif %}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="gris">Sin acudientes registrados.</p>
+      {% endif %}
+      <details class="mensaje-sugerido">
+        <summary>Mensaje de recordatorio sugerido</summary>
+        <label for="mensaje-{{ fila.estudiante.id }}" class="gris">Puedes ajustarlo antes de copiarlo.</label>
+        <textarea id="mensaje-{{ fila.estudiante.id }}">{{ fila.mensaje }}</textarea>
+      </details>
+      <button class="boton pequeno secundario" type="button" onclick="copiarMensaje('mensaje-{{ fila.estudiante.id }}', this)">Copiar recordatorio</button>
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <p class="vacio">No hay estudiantes con saldo vencido{% if grupo %} en {{ grupo.nombre }}{% endif %}. ¡Muy bien!</p>
+  {% endif %}
+</div>
+
+<div class="tarjeta">
+  <h2>Antes de enviar un recordatorio</h2>
+  <ul>
+    <li>Escríbele solo al acudiente responsable, nunca al estudiante, y no compartas la deuda en grupos de WhatsApp ni ante otras familias.</li>
+    <li>El mensaje sugerido es respetuoso: no tiene amenazas, lenguaje ofensivo ni presiones, como pide la Ley 1266 de 2008 sobre el manejo de datos financieros. Envíalo en días y horarios hábiles y sin insistir varias veces el mismo día.</li>
+    <li>La deuda se cobra al acudiente: no se puede impedir que el estudiante asista a clases o presente evaluaciones por falta de pago.</li>
+  </ul>
+</div>
+
+<script>
+function copiarMensaje(id, boton) {
+  var caja = document.getElementById(id);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(caja.value);
+  } else {
+    caja.select();
+    document.execCommand("copy");
+  }
+  boton.textContent = "Mensaje copiado";
+}
+</script>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block titulo %}Enfermería · {{ estudiante.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/servicios.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/enfermeria">← Enfermería</a>
+  <h1>{{ estudiante.nombre }}</h1>
+  <p>{% if grupo %}Grupo {{ grupo.nombre }} · Director de grupo: {{ grupo.director or "sin asignar" }}{% else %}Sin matrícula activa este año{% endif %}</p>
+</div>
+
+{% if alerta %}<div class="alerta-salud" role="alert">{{ alerta }}</div>{% endif %}
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+{% if enviado_a_casa %}
+<div class="tarjeta llamar">
+  <h2>Envío a casa registrado</h2>
+  <p>Confirma con el acudiente quién viene por {{ estudiante.nombre.split(" ")[0] }} y avisa en portería: solo puede salir con un acudiente o con una persona autorizada.</p>
+  <ul class="contactos">
+    {% for acudiente in acudientes %}
+    <li><strong>{{ acudiente.nombre }}</strong> · {{ acudiente.parentesco }} · {% if acudiente.telefono %}<a class="telefono" href="tel:{{ acudiente.telefono }}">{{ acudiente.telefono }}</a>{% else %}<span class="gris">sin teléfono en su cuenta</span>{% endif %}</li>
+    {% endfor %}
+    {% if ficha and ficha.telefono_emergencia %}
+    <li><strong>{{ ficha.contacto_emergencia }}</strong> · Contacto de emergencia · <a class="telefono" href="tel:{{ ficha.telefono_emergencia }}">{{ ficha.telefono_emergencia }}</a></li>
+    {% endif %}
+  </ul>
+</div>
+{% endif %}
+
+<div class="dos-columnas">
+  <div class="tarjeta">
+    <h2>Ficha de salud</h2>
+    {% if ficha %}
+    <dl class="ficha">
+      <div><dt>EPS</dt><dd>{{ ficha.eps or "Sin dato" }}</dd></div>
+      <div><dt>Tipo de sangre</dt><dd>{{ ficha.tipo_sangre or "Sin dato" }}</dd></div>
+      <div class="ancho"><dt>Alergias</dt><dd>{{ ficha.alergias or "Ninguna registrada" }}</dd></div>
+      <div class="ancho"><dt>Condiciones de salud</dt><dd>{{ ficha.condiciones or "Ninguna registrada" }}</dd></div>
+      <div class="ancho"><dt>Medicamentos</dt><dd>{{ ficha.medicamentos or "Ninguno registrado" }}</dd></div>
+      <div><dt>Contacto de emergencia</dt><dd>{{ ficha.contacto_emergencia }}</dd></div>
+      <div><dt>Teléfono</dt><dd><a class="telefono" href="tel:{{ ficha.telefono_emergencia }}">{{ ficha.telefono_emergencia }}</a></dd></div>
+    </dl>
+    <p class="fecha espacio-arriba">Actualizada el {{ fecha_corta(ficha.actualizado_en[0:10]) }}{% if ficha.quien_actualizo %} por {{ ficha.quien_actualizo }}{% endif %}.</p>
+    {% else %}
+    <p class="gris">El acudiente todavía no ha llenado la ficha de salud. Puedes registrarla con los datos que te dé.</p>
+    {% endif %}
+
+    <details class="historial" {% if abrir_ficha or not ficha %}open{% endif %}>
+      <summary>{% if ficha %}Actualizar ficha{% else %}Registrar ficha{% endif %}</summary>
+      <form method="post" class="formulario">
+        <input type="hidden" name="accion" value="ficha">
+        <div class="rejilla">
+          <div>
+            <label for="eps">EPS</label>
+            <input id="eps" name="eps" value="{{ datos_ficha.eps }}" maxlength="80">
+          </div>
+          <div>
+            <label for="tipo_sangre">Tipo de sangre</label>
+            <select id="tipo_sangre" name="tipo_sangre">
+              <option value="">Sin dato</option>
+              {% for tipo in tipos_sangre %}<option value="{{ tipo }}" {% if datos_ficha.tipo_sangre == tipo %}selected{% endif %}>{{ tipo }}</option>{% endfor %}
+            </select>
+          </div>
+        </div>
+        <label for="alergias">Alergias</label>
+        <input id="alergias" name="alergias" value="{{ datos_ficha.alergias }}" maxlength="500">
+        <label for="condiciones">Condiciones de salud</label>
+        <input id="condiciones" name="condiciones" value="{{ datos_ficha.condiciones }}" maxlength="500">
+        <label for="medicamentos">Medicamentos</label>
+        <input id="medicamentos" name="medicamentos" value="{{ datos_ficha.medicamentos }}" maxlength="500">
+        <div class="rejilla">
+          <div>
+            <label for="contacto_emergencia">Contacto de emergencia</label>
+            <input id="contacto_emergencia" name="contacto_emergencia" value="{{ datos_ficha.contacto_emergencia }}" maxlength="120" required>
+          </div>
+          <div>
+            <label for="telefono_emergencia">Teléfono de emergencia</label>
+            <input id="telefono_emergencia" name="telefono_emergencia" type="tel" value="{{ datos_ficha.telefono_emergencia }}" maxlength="20" required>
+          </div>
+        </div>
+        <div class="acciones"><button class="boton secundario" type="submit">Guardar ficha</button></div>
+      </form>
+    </details>
+  </div>
+
+  <form method="post" class="tarjeta formulario">
+    <h2>Registrar atención</h2>
+    <input type="hidden" name="accion" value="atencion">
+    <label for="motivo">Motivo de la consulta</label>
+    <input id="motivo" name="motivo" value="{{ nueva.motivo }}" maxlength="300" placeholder="Ej.: Dolor de cabeza" required>
+    <label for="atencion">Atención que se le dio</label>
+    <textarea id="atencion" name="atencion" maxlength="1000" required>{{ nueva.atencion }}</textarea>
+    <div class="casillas">
+      <label><input type="checkbox" name="envio_a_casa" value="1" {% if nueva.envio_a_casa %}checked{% endif %}> Se envía a casa</label>
+      <label><input type="checkbox" name="acudiente_avisado" value="1" {% if nueva.acudiente_avisado %}checked{% endif %}> Avisé al acudiente</label>
+    </div>
+    <div class="caja-contactos">
+      <span class="etiqueta">Teléfonos para avisar</span>
+      <ul class="contactos">
+        {% for acudiente in acudientes %}
+        <li>{{ acudiente.nombre }} ({{ acudiente.parentesco }}): {% if acudiente.telefono %}<a class="telefono" href="tel:{{ acudiente.telefono }}">{{ acudiente.telefono }}</a>{% else %}<span class="gris">sin teléfono en su cuenta</span>{% endif %}</li>
+        {% endfor %}
+        {% if ficha and ficha.telefono_emergencia %}
+        <li>{{ ficha.contacto_emergencia }}: <a class="telefono" href="tel:{{ ficha.telefono_emergencia }}">{{ ficha.telefono_emergencia }}</a></li>
+        {% endif %}
+        {% if not acudientes and not ficha %}<li class="gris">No hay acudientes ni contacto de emergencia registrados. Pide los datos a secretaría.</li>{% endif %}
+      </ul>
+    </div>
+    <div class="acciones"><button class="boton" type="submit">Registrar atención</button></div>
+  </form>
+</div>
+
+<div class="tarjeta">
+  <h2>Atenciones anteriores</h2>
+  {% if atenciones %}
+  <ul class="lista">
+    {% for atencion in atenciones %}
+    <li>
+      <span class="fecha">{{ fecha_corta(atencion.fecha) }} · {{ atencion.hora }}{% if atencion.atendio %} · {{ atencion.atendio }}{% endif %}</span>
+      <strong class="bloque-titulo">{{ atencion.motivo }}</strong>
+      <p>{{ atencion.atencion }}</p>
+      {% if atencion.envio_a_casa %}<span class="estado atencion">Enviado a casa</span>{% endif %}
+      {% if atencion.acudiente_avisado %}<span class="estado bien">Acudiente avisado</span>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="gris">No tiene atenciones de enfermería registradas.</p>
+  {% endif %}
+</div>
+{% endblock %}

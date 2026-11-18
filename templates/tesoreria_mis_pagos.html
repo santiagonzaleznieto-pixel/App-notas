@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block titulo %}Pagos{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/tesoreria.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Pagos</h1>
+  <p>Estado de cuenta de tus hijos en {{ colegio.nombre }}. Para pagar o aclarar un valor, comunícate con la tesorería del colegio.</p>
+</div>
+
+{% if hijos %}
+{% for hijo in hijos %}
+<div class="tarjeta">
+  <div class="tarjeta-titulo">
+    <div>
+      <h2>{{ hijo.estudiante.nombre }}</h2>
+      <p class="gris">{% if hijo.grupo %}Grupo {{ hijo.grupo.nombre }}{% else %}Sin matrícula activa este año{% endif %} · {{ hijo.estudiante.parentesco }}</p>
+    </div>
+    {% if hijo.cuenta.vencido > 0 %}<span class="estado mal">Saldo vencido {{ pesos(hijo.cuenta.vencido) }}</span>
+    {% elif hijo.cuenta.saldo > 0 %}<span class="estado atencion">Saldo por pagar {{ pesos(hijo.cuenta.saldo) }}</span>
+    {% else %}<span class="estado bien">A paz y salvo</span>{% endif %}
+  </div>
+
+  <div class="resumen-cuenta">
+    <div><span>Total cobrado</span><strong>{{ pesos(hijo.cuenta.cobrado) }}</strong></div>
+    <div><span>Pagado</span><strong>{{ pesos(hijo.cuenta.pagado) }}</strong></div>
+    <div><span>Descuentos</span><strong>{{ pesos(hijo.cuenta.descontado) }}</strong></div>
+    <div class="{% if hijo.cuenta.saldo > 0 %}rojo{% endif %}"><span>Saldo pendiente</span><strong>{{ pesos(hijo.cuenta.saldo) }}</strong></div>
+  </div>
+
+  {% set cobros = hijo.cobros %}
+  {% include "tesoreria_cobros.html" %}
+
+  <div class="acciones izquierda">
+    <a class="boton secundario" href="/tesoreria/estudiante/{{ hijo.estudiante.id }}">Ver estado de cuenta</a>
+    {% if hijo.cuenta.saldo == 0 %}<a class="boton" href="/tesoreria/paz-y-salvo/{{ hijo.estudiante.id }}">Ver e imprimir paz y salvo</a>{% endif %}
+  </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="tarjeta vacio">
+  <p>No tienes estudiantes a cargo registrados en este colegio. Si es un error, habla con la secretaría.</p>
+</div>
+{% endif %}
+{% endblock %}

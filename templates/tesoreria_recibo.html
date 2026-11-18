@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}Recibo {{ pago.numero_recibo }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/tesoreria.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/tesoreria/estudiante/{{ estudiante.id }}">← Estado de cuenta</a>
+  <h1>Recibo de caja</h1>
+</div>
+
+<div class="tarjeta documento-tesoreria">
+  <div class="documento-cabeza">
+    <img src="/static/escudo.png" alt="Escudo del colegio">
+    <div>
+      <h1>{{ colegio.nombre }}</h1>
+      <p>{{ colegio.municipio }}, {{ colegio.departamento }}{% if colegio.codigo_dane %} · DANE {{ colegio.codigo_dane }}{% endif %}</p>
+    </div>
+  </div>
+  <div class="documento-titulo">
+    <h2>Recibo de caja</h2>
+    <span class="consecutivo">N.º {{ pago.numero_recibo }}</span>
+  </div>
+  <dl class="datos-documento">
+    <dt>Estudiante</dt><dd>{{ estudiante.nombre }}{% if estudiante.documento %} · Doc. {{ estudiante.documento }}{% endif %}</dd>
+    <dt>Grupo</dt><dd>{% if grupo %}{{ grupo.nombre }}{% else %}Sin matrícula activa{% endif %}</dd>
+    <dt>Concepto</dt><dd>{{ pago.descripcion }}{% if pago.concepto != pago.descripcion %} <span class="gris">({{ pago.concepto }})</span>{% endif %}</dd>
+    <dt>Valor recibido</dt><dd class="grande">{{ pesos(pago.valor) }}</dd>
+    <dt>Medio de pago</dt><dd>{{ medios[pago.medio] }}{% if pago.referencia %} · {{ pago.referencia }}{% endif %}</dd>
+    <dt>Fecha del pago</dt><dd>{{ fecha_larga(pago.fecha) }}</dd>
+    <dt>Recibió</dt><dd>{{ pago.recibio }}</dd>
+    {% if cobro %}<dt>Saldo pendiente de este cobro</dt><dd>{{ pesos(cobro.saldo) }}</dd>{% endif %}
+  </dl>
+  <div class="firma">
+    <strong>{{ pago.recibio }}</strong>
+    Tesorería
+  </div>
+  <p class="pie-documento">Registrado en la plataforma el {{ fecha_larga(pago.registrado_en) }} a las {{ pago.registrado_en[11:16] }}. Conserve este recibo como soporte de su pago.</p>
+  <div class="acciones no-imprimir">
+    <button class="boton" type="button" onclick="window.print()">Imprimir recibo</button>
+  </div>
+</div>
+{% endblock %}

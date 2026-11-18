@@ -69,7 +69,7 @@
     <h2>Estado de cuenta por estudiante</h2>
     <form method="get" action="/tesoreria" class="filtros">
       <div>
-        <label for="grupo" class="etiqueta">Grupo</label>
+        <label for="grupo">Grupo</label>
         <select id="grupo" name="grupo">
           {% for opcion in grupos %}
           <option value="{{ opcion.id }}" {% if grupo and grupo.id == opcion.id %}selected{% endif %}>{{ opcion.nombre }} · {{ opcion.grado }}</option>
@@ -77,7 +77,7 @@
         </select>
       </div>
       <div>
-        <label for="buscar" class="etiqueta">O busca por nombre</label>
+        <label for="buscar">O busca por nombre</label>
         <input id="buscar" name="buscar" value="{{ buscar }}" placeholder="Ej.: Restrepo">
       </div>
       <button class="boton pequeno" type="submit">Ver</button>

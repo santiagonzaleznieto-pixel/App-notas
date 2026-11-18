@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block titulo %}Elecciones{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/gobierno.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Gobierno escolar {{ colegio.anio }}</h1>
+  <p>Personero, contralor y representantes de grupo (Decreto 1860 de 1994). El voto es secreto: la plataforma guarda que votaste, nunca por quién.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+{% if mis_elecciones is not none %}
+<h2 class="titulo-seccion">Tus elecciones</h2>
+{% if mis_elecciones %}
+<div class="elecciones">
+  {% for item in mis_elecciones %}
+  <article class="tarjeta eleccion">
+    <span class="etiqueta">{{ nombres_cargos[item.eleccion.cargo] }}{% if item.eleccion.grupo %} · {{ item.eleccion.grupo }}{% endif %}</span>
+    <h2>{{ item.eleccion.titulo }}</h2>
+    <p class="fecha">{{ item.eleccion.apertura }} a {{ item.eleccion.cierre }}</p>
+    <div class="estados">
+      <span class="estado {{ item.clase }}">{{ item.texto }}</span>
+      {% if item.votaste and item.eleccion.estado == "cerrada" %}<span class="estado bien">Votaste</span>{% endif %}
+    </div>
+    {% if item.puede_votar %}<a class="boton" href="/elecciones/{{ item.eleccion.id }}/votar">Votar</a>{% endif %}
+    {% if item.resultado %}
+    <div class="ganador-mini">
+      {% if item.resultado.ganador %}Ganó <strong>{{ item.resultado.ganador.nombre }}</strong> con {{ item.resultado.ganador.votos }} votos.
+      {% elif item.resultado.empate %}Hubo empate entre los primeros candidatos.
+      {% else %}No hubo votos por candidatos.{% endif %}
+    </div>
+    <a href="/elecciones/{{ item.eleccion.id }}">Ver resultados →</a>
+    {% endif %}
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="tarjeta vacio"><p>No hay elecciones para ti este año.</p></div>
+{% endif %}
+{% endif %}
+
+{% if organiza %}
+<form method="post" class="tarjeta formulario">
+  <h2>Nueva elección</h2>
+  <input type="hidden" name="accion" value="crear">
+  <div class="rejilla">
+    <div>
+      <label for="cargo">Cargo</label>
+      <select id="cargo" name="cargo" required>
+        {% for cargo in cargos %}
+        <option value="{{ cargo.clave }}" {% if formulario.cargo == cargo.clave %}selected{% endif %}>{{ cargo.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="titulo">Título</label>
+      <input id="titulo" name="titulo" maxlength="120" value="{{ formulario.titulo }}" placeholder="Ej.: Personero estudiantil {{ colegio.anio }}" required>
+    </div>
+    <div>
+      <label for="grupo_id">Grupo (solo representante)</label>
+      <select id="grupo_id" name="grupo_id">
+        <option value="">Toda la institución</option>
+        {% for grupo in grupos %}
+        <option value="{{ grupo.id }}" {% if formulario.grupo_id == grupo.id|string %}selected{% endif %}>{{ grupo.nombre }} · {{ grupo.grado }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="apertura">Apertura</label>
+      <input id="apertura" name="apertura" type="datetime-local" value="{{ formulario.apertura }}" required>
+    </div>
+    <div>
+      <label for="cierre">Cierre</label>
+      <input id="cierre" name="cierre" type="datetime-local" value="{{ formulario.cierre }}" required>
+    </div>
+  </div>
+  <p class="ayuda">Personero y contralor: se postulan estudiantes del último grado y votan todos los matriculados. Representante: solo el grupo elegido. La votación se abre y se cierra con los botones de cada elección.</p>
+  <div class="acciones"><button class="boton" type="submit">Crear elección</button></div>
+</form>
+
+{% for item in gestion %}
+{% set eleccion = item.eleccion %}
+<article class="tarjeta gestion {{ eleccion.estado }}">
+  <div class="tarjeta-titulo">
+    <div>
+      <span class="etiqueta">{{ nombres_cargos[eleccion.cargo] }}{% if eleccion.grupo %} · {{ eleccion.grupo }}{% endif %} · {{ eleccion.anio }}</span>
+      <h2>{{ eleccion.titulo }}</h2>
+      <p class="fecha">Programada: {{ eleccion.apertura }} a {{ eleccion.cierre }}</p>
+    </div>
+    <span class="estado {{ estados[eleccion.estado].clase }}">{{ estados[eleccion.estado].texto }}</span>
+  </div>
+  {% if item.vencida %}<div class="aviso error">Ya pasó la hora de cierre programada. Cierra la votación.</div>{% endif %}
+
+  <div class="participacion">
+    <span>Participación</span>
+    <span><strong>{{ item.participacion.votantes }}</strong> de {{ item.participacion.habilitados }} habilitados ({{ item.participacion.porcentaje }} %)</span>
+    <div class="barra-progreso"><div style="width: {{ item.participacion.porcentaje }}%"></div></div>
+  </div>
+  <p class="ayuda gris">{{ item.regla }}</p>
+
+  <h3>Candidatos</h3>
+  {% if item.candidatos %}
+  <ul class="lista candidatos">
+    {% for candidato in item.candidatos %}
+    <li>
+      <span class="inicial mediana">{{ candidato.nombre[0] }}</span>
+      <div>
+        <strong>N.º {{ candidato.numero }} · {{ candidato.nombre }}</strong> <small class="gris">{{ candidato.grupo }}</small>
+        <p class="texto-largo">{{ candidato.propuesta }}</p>
+      </div>
+      {% if eleccion.estado == "preparacion" %}
+      <form method="post">
+        <input type="hidden" name="accion" value="quitar_candidato">
+        <input type="hidden" name="candidato_id" value="{{ candidato.id }}">
+        <button class="boton peligro pequeno" type="submit">Quitar</button>
+      </form>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="gris">Aún no hay candidatos.</p>
+  {% endif %}
+
+  {% if eleccion.estado == "preparacion" %}
+  <form method="post" class="formulario agregar">
+    <h3>Agregar candidato</h3>
+    <input type="hidden" name="accion" value="agregar_candidato">
+    <input type="hidden" name="eleccion_id" value="{{ eleccion.id }}">
+    {% if item.opciones %}
+    <div class="rejilla">
+      <div>
+        <label for="estudiante-{{ eleccion.id }}">Estudiante</label>
+        <select id="estudiante-{{ eleccion.id }}" name="estudiante_id" required>
+          <option value="">Elige al estudiante</option>
+          {% for opcion in item.opciones %}
+          <option value="{{ opcion.id }}">{{ opcion.nombre }} · {{ opcion.grupo }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="numero-{{ eleccion.id }}">Número en el tarjetón</label>
+        <input id="numero-{{ eleccion.id }}" name="numero" type="number" min="1" max="99" value="{{ item.siguiente }}" required>
+      </div>
+    </div>
+    <label for="propuesta-{{ eleccion.id }}">Propuesta</label>
+    <textarea id="propuesta-{{ eleccion.id }}" name="propuesta" maxlength="600" required></textarea>
+    <div class="acciones izquierda"><button class="boton secundario" type="submit">Agregar candidato</button></div>
+    {% else %}
+    <p class="gris">No quedan estudiantes que puedan postularse a esta elección.</p>
+    {% endif %}
+  </form>
+  {% endif %}
+
+  <div class="botones-estado">
+    {% if eleccion.estado == "preparacion" %}
+    <form method="post">
+      <input type="hidden" name="accion" value="abrir">
+      <input type="hidden" name="eleccion_id" value="{{ eleccion.id }}">
+      <button class="boton" type="submit">Abrir votación</button>
+    </form>
+    {% elif eleccion.estado == "abierta" %}
+    <form method="post">
+      <input type="hidden" name="accion" value="cerrar">
+      <input type="hidden" name="eleccion_id" value="{{ eleccion.id }}">
+      <button class="boton peligro" type="submit">Cerrar votación</button>
+    </form>
+    {% endif %}
+    <a class="boton secundario" href="/elecciones/{{ eleccion.id }}">Ver resultados</a>
+  </div>
+</article>
+{% else %}
+<div class="tarjeta vacio"><p>Todavía no hay elecciones. Crea la primera con el formulario de arriba.</p></div>
+{% endfor %}
+{% endif %}
+{% endblock %}

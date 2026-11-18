@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block titulo %}Paz y salvo de {{ estudiante.nombre }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/tesoreria.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  {% if ve_tesoreria %}<a class="volver" href="/tesoreria/estudiante/{{ estudiante.id }}">← Estado de cuenta</a>{% else %}<a class="volver" href="/mis-pagos">← Pagos</a>{% endif %}
+  <h1>Paz y salvo</h1>
+  <p>{{ estudiante.nombre }}{% if grupo %} · Grupo {{ grupo.nombre }}{% endif %}</p>
+</div>
+
+{% if cuenta.saldo == 0 %}
+<div class="tarjeta documento-tesoreria">
+  <div class="documento-cabeza">
+    <img src="/static/escudo.png" alt="Escudo del colegio">
+    <div>
+      <h1>{{ colegio.nombre }}</h1>
+      <p>{{ colegio.municipio }}, {{ colegio.departamento }}{% if colegio.codigo_dane %} · DANE {{ colegio.codigo_dane }}{% endif %}</p>
+    </div>
+  </div>
+  <div class="documento-titulo">
+    <h2>Paz y salvo</h2>
+    <span class="estado bien">Sin saldos pendientes</span>
+  </div>
+  <p class="texto-certificado">
+    La tesorería de {{ colegio.nombre }} hace constar que el estudiante <strong>{{ estudiante.nombre }}</strong>{% if estudiante.documento %}, identificado con documento {{ estudiante.documento }}{% endif %}{% if grupo %}, del grupo {{ grupo.nombre }} ({{ grupo.grado }}){% endif %},
+    se encuentra <strong>a paz y salvo</strong> por todos los conceptos registrados en la plataforma (matrícula, pensiones y otros cobros) a la fecha.
+  </p>
+  <p>Se expide en {{ colegio.municipio }} el {{ fecha_larga(hoy) }}.</p>
+  <div class="firma">
+    {% if tesorero %}<strong>{{ tesorero.nombre }}</strong>{% endif %}
+    Tesorería
+  </div>
+  <p class="pie-documento">Este paz y salvo refleja los cobros registrados en la plataforma hasta el {{ fecha_larga(hoy) }}. Cobros generados después de esta fecha no están incluidos.</p>
+  <div class="acciones no-imprimir">
+    <button class="boton" type="button" onclick="window.print()">Imprimir paz y salvo</button>
+  </div>
+</div>
+{% else %}
+<div class="aviso error">Todavía no se puede expedir el paz y salvo: hay un saldo pendiente de {{ pesos(cuenta.saldo) }}{% if cuenta.vencido > 0 %}, de los cuales {{ pesos(cuenta.vencido) }} están vencidos{% endif %}.</div>
+<div class="tarjeta">
+  <h2>Lo que falta por pagar</h2>
+  <div class="tabla-caja">
+    <table class="tabla simple">
+      <thead><tr><th class="izq">Cobro</th><th>Fecha límite</th><th class="dinero">Saldo</th><th>Estado</th></tr></thead>
+      <tbody>
+        {% for cobro in cuenta.pendientes %}
+        <tr>
+          <td class="izq">{{ cobro.descripcion }}</td>
+          <td>{{ fecha_larga(cobro.fecha_limite) }}</td>
+          <td class="dinero">{{ pesos(cobro.saldo) }}</td>
+          <td>{% if cobro.vencido %}<span class="estado mal">Vencido · {{ cobro.dias_mora }} días</span>{% else %}<span class="estado atencion">Por vencer</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="gris">Cuando se registren estos pagos en la tesorería, el paz y salvo aparecerá aquí automáticamente.</p>
+</div>
+{% endif %}
+{% endblock %}

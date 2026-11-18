@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block titulo %}Biblioteca{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/servicios.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <h1>Biblioteca</h1>
+  {% if gestiona %}
+  <p>Catálogo, préstamos y devoluciones. El plazo normal de un préstamo es de {{ dias_prestamo }} días.</p>
+  {% else %}
+  <p>Busca libros en el catálogo y revisa cuándo debes devolver los que tienes prestados.</p>
+  {% endif %}
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+
+{% if gestiona %}
+<div class="acciones izquierda barra-acciones">
+  <a class="boton" href="/biblioteca/prestar">Prestar un libro</a>
+  <a class="boton secundario" href="/biblioteca/libro/nuevo">Agregar libro</a>
+</div>
+
+<div class="cifras">
+  <div class="tarjeta cifra">
+    <span>Títulos en el catálogo</span>
+    <strong>{{ cifras.titulos }}</strong>
+    <small>{{ cifras.ejemplares }} ejemplares</small>
+  </div>
+  <div class="tarjeta cifra">
+    <span>Prestados ahora</span>
+    <strong>{{ cifras.prestados }}</strong>
+    <small>{{ al_dia|length }} al día</small>
+  </div>
+  <div class="tarjeta cifra alerta">
+    <span>Préstamos vencidos</span>
+    <strong>{{ vencidos|length }}</strong>
+  </div>
+</div>
+
+<div class="tarjeta">
+  <h2>Préstamos vencidos</h2>
+  {% if vencidos %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead><tr><th class="izq">Persona</th><th class="izq">Libro</th><th>Debía devolverlo</th><th>Días de retraso</th><th></th></tr></thead>
+      <tbody>
+        {% for prestamo in vencidos %}
+        <tr class="fila-vencida">
+          <td class="izq"><strong>{{ prestamo.persona }}</strong>{% if prestamo.grupo %} <small class="gris">{{ prestamo.grupo }}</small>{% endif %}</td>
+          <td class="izq">{{ prestamo.titulo }}</td>
+          <td>{{ fecha_corta(prestamo.fecha_devolucion) }}</td>
+          <td><span class="estado mal">{{ prestamo.dias_retraso }} día{% if prestamo.dias_retraso != 1 %}s{% endif %}</span></td>
+          <td>
+            <form method="post" action="/biblioteca/devolver/{{ prestamo.id }}" class="en-linea">
+              <button class="boton pequeno" type="submit">Recibir</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="gris">No hay préstamos vencidos. ¡Todo al día!</p>
+  {% endif %}
+</div>
+
+<div class="tarjeta">
+  <h2>Préstamos al día</h2>
+  {% if al_dia %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead><tr><th class="izq">Persona</th><th class="izq">Libro</th><th>Prestado</th><th>Devolver antes del</th><th></th></tr></thead>
+      <tbody>
+        {% for prestamo in al_dia %}
+        <tr>
+          <td class="izq"><strong>{{ prestamo.persona }}</strong>{% if prestamo.grupo %} <small class="gris">{{ prestamo.grupo }}</small>{% endif %}</td>
+          <td class="izq">{{ prestamo.titulo }}</td>
+          <td>{{ fecha_corta(prestamo.prestado_en) }}</td>
+          <td>{{ fecha_corta(prestamo.fecha_devolucion) }}{% if prestamo.dias_restantes <= 2 %} <span class="estado atencion">{% if prestamo.dias_restantes == 0 %}hoy{% else %}en {{ prestamo.dias_restantes }} d{% endif %}</span>{% endif %}</td>
+          <td>
+            <form method="post" action="/biblioteca/devolver/{{ prestamo.id }}" class="en-linea">
+              <button class="boton pequeno secundario" type="submit">Recibir</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="gris">No hay otros libros prestados en este momento.</p>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if mostrar_mios %}
+<div class="tarjeta">
+  <h2>Mis préstamos</h2>
+  {% if mis_prestamos %}
+  <ul class="lista">
+    {% for prestamo in mis_prestamos %}
+    <li class="prestamo{% if prestamo.vencido %} fila-vencida{% endif %}">
+      <div>
+        <strong>{{ prestamo.titulo }}</strong>
+        <span class="gris bloque">{{ prestamo.autor }} · prestado el {{ fecha_corta(prestamo.prestado_en) }}</span>
+      </div>
+      <div class="prestamo-estado">
+        <span class="fecha">Devolver antes del {{ fecha_corta(prestamo.fecha_devolucion) }}</span>
+        {% if prestamo.vencido %}
+        <span class="estado mal">Vencido hace {{ prestamo.dias_retraso }} día{% if prestamo.dias_retraso != 1 %}s{% endif %}</span>
+        {% elif prestamo.dias_restantes == 0 %}
+        <span class="estado atencion">Vence hoy</span>
+        {% elif prestamo.dias_restantes <= 2 %}
+        <span class="estado atencion">Faltan {{ prestamo.dias_restantes }} días</span>
+        {% else %}
+        <span class="estado bien">Faltan {{ prestamo.dias_restantes }} días</span>
+        {% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% if mis_prestamos|selectattr("vencido")|list %}
+  <p class="aviso error espacio-arriba">Tienes libros vencidos. Devuélvelos en la biblioteca para poder pedir otros.</p>
+  {% endif %}
+  {% else %}
+  <p class="gris">No tienes libros prestados.</p>
+  {% endif %}
+  {% if mis_devueltos %}
+  <details class="historial">
+    <summary>Devueltos recientemente</summary>
+    <ul class="lista">
+      {% for prestamo in mis_devueltos %}
+      <li>{{ prestamo.titulo }} <span class="fecha">· devuelto el {{ fecha_corta(prestamo.devuelto_en) }}</span></li>
+      {% endfor %}
+    </ul>
+  </details>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="tarjeta">
+  <h2>Catálogo</h2>
+  <form method="get" action="/biblioteca" class="filtros" role="search">
+    <div>
+      <label for="buscar">Buscar por título o autor</label>
+      <input id="buscar" name="buscar" value="{{ buscar }}" placeholder="Ej.: García Márquez">
+    </div>
+    <button class="boton" type="submit">Buscar</button>
+    {% if buscar %}<a class="boton secundario" href="/biblioteca">Ver todo</a>{% endif %}
+  </form>
+  {% if libros %}
+  <div class="tabla-caja">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th class="izq">Libro</th>
+          <th class="izq">Ubicación</th>
+          <th>Disponibles</th>
+          {% if gestiona %}<th></th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for libro in libros %}
+        <tr>
+          <td class="izq">
+            <strong>{{ libro.titulo }}</strong>
+            <small class="gris bloque">{{ libro.autor }}{% if libro.editorial %} · {{ libro.editorial }}{% endif %}</small>
+          </td>
+          <td class="izq gris">{{ libro.ubicacion }}</td>
+          <td>
+            {% if not libro.activo %}<span class="estado neutro">Retirado</span>
+            {% elif libro.disponibles > 0 %}<span class="estado bien">{{ libro.disponibles }} de {{ libro.ejemplares }}</span>
+            {% else %}<span class="estado mal">Agotado</span>{% endif %}
+          </td>
+          {% if gestiona %}
+          <td class="celda-acciones">
+            <a class="boton pequeno secundario" href="/biblioteca/libro/{{ libro.id }}">Editar</a>
+            {% if libro.activo and libro.disponibles > 0 %}<a class="boton pequeno" href="/biblioteca/prestar?libro={{ libro.id }}">Prestar</a>{% endif %}
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="vacio">{% if buscar %}No encontramos libros con «{{ buscar }}».{% else %}El catálogo todavía está vacío.{% endif %}</p>
+  {% endif %}
+</div>
+{% endblock %}

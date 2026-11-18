@@ -1,6 +1,7 @@
 .aviso.advertencia { background: #F6E9CE; color: #855810; border-color: #E8CF9C; }
 .aviso a { color: inherit; font-weight: 700; }
 
+.filtros label { display: block; font-size: .85rem; font-weight: 600; color: var(--azul-oscuro); margin-bottom: 5px; }
 .dinero { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tabla td.dinero, .tabla th.dinero { text-align: right; }
 .cifras-dinero .cifra strong { font-size: clamp(1.35rem, 3.4vw, 1.8rem); overflow-wrap: anywhere; }

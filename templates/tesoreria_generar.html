@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block titulo %}Generar cobros{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/tesoreria.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/tesoreria">← Tesorería</a>
+  <h1>Generar cobros</h1>
+  <p>Crea el mismo cobro para todos los estudiantes de un grupo o de todo el colegio, con su fecha límite de pago.</p>
+</div>
+
+{% if mensaje %}<div class="aviso exito">{{ mensaje }}</div>{% endif %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+
+<div class="dos-columnas">
+  <form method="post" action="/tesoreria/generar" class="tarjeta formulario">
+    <h2>Nuevo lote de cobros</h2>
+    {% if conceptos %}
+    <label for="concepto_id">Concepto</label>
+    <select id="concepto_id" name="concepto_id" required>
+      <option value="">Elige un concepto</option>
+      {% for concepto in conceptos %}
+      <option value="{{ concepto.id }}" {% if valores.concepto_id == concepto.id|string %}selected{% endif %}>{{ concepto.nombre }} ({{ concepto.anio }}) · {{ pesos(concepto.valor) }}</option>
+      {% endfor %}
+    </select>
+    <label for="grupo">Para quién</label>
+    <select id="grupo" name="grupo" required>
+      <option value="todos" {% if valores.grupo == "todos" %}selected{% endif %}>Todo el colegio</option>
+      {% for grupo in grupos %}
+      <option value="{{ grupo.id }}" {% if valores.grupo == grupo.id|string %}selected{% endif %}>Grupo {{ grupo.nombre }} · {{ grupo.grado }}</option>
+      {% endfor %}
+    </select>
+    <label for="descripcion">Descripción que verá la familia (opcional)</label>
+    <input id="descripcion" name="descripcion" value="{{ valores.descripcion }}" maxlength="120" placeholder="Ej.: Pensión de diciembre {{ colegio.anio }}">
+    <p class="ayuda">Si la dejas vacía se usa el nombre del concepto.</p>
+    <label for="fecha_limite">Fecha límite de pago</label>
+    <input id="fecha_limite" name="fecha_limite" type="date" value="{{ valores.fecha_limite }}" min="{{ hoy }}" required>
+    <p class="ayuda">No se crean cobros repetidos: si un estudiante ya tiene un cobro del mismo concepto con la misma fecha límite, se omite.</p>
+    <div class="acciones"><button class="boton" type="submit">Generar cobros</button></div>
+    {% else %}
+    <p class="vacio">No hay conceptos activos. <a href="/tesoreria/conceptos">Crea un concepto de cobro</a> primero.</p>
+    {% endif %}
+  </form>
+
+  <div class="tarjeta">
+    <h2>Lotes recientes</h2>
+    {% if lotes %}
+    <ul class="lista">
+      {% for lote in lotes %}
+      <li>
+        <strong>{{ lote.descripcion }}</strong>
+        <div class="gris">{{ lote.cantidad }} cobro{% if lote.cantidad != 1 %}s{% endif %} de <span class="dinero">{{ pesos(lote.valor) }}</span></div>
+        <span class="fecha">Fecha límite: {{ fecha_larga(lote.fecha_limite) }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="vacio">Todavía no se han generado cobros.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

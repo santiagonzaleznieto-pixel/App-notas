@@ -1,0 +1,37 @@
+{% if cobros %}
+<ul class="cobros">
+  {% for cobro in cobros %}
+  <li class="cobro {{ cobro.clase }}">
+    <div class="cobro-cabeza">
+      <div>
+        <strong>{{ cobro.descripcion }}</strong>
+        <small>{{ cobro.concepto }} · fecha límite {{ fecha_larga(cobro.fecha_limite) }}</small>
+      </div>
+      <span class="estado {{ cobro.clase }}">{{ cobro.situacion }}{% if cobro.vencido %} · {{ cobro.dias_mora }} día{% if cobro.dias_mora != 1 %}s{% endif %} de mora{% endif %}</span>
+    </div>
+    {% if cobro.estado == "anulado" %}
+    <p class="anulacion">Valor original {{ pesos(cobro.valor) }}. Anulado: {{ cobro.motivo_anulacion }}</p>
+    {% else %}
+    <dl class="cobro-cifras">
+      <div><dt>Valor</dt><dd>{{ pesos(cobro.valor) }}</dd></div>
+      <div><dt>Pagado</dt><dd>{{ pesos(cobro.pagado) }}</dd></div>
+      <div><dt>Descuentos</dt><dd>{{ pesos(cobro.descontado) }}</dd></div>
+      <div class="saldo"><dt>Saldo</dt><dd>{{ pesos(cobro.saldo) }}</dd></div>
+    </dl>
+    {% endif %}
+    {% if cobro.pagos or cobro.descuentos %}
+    <ul class="movimientos">
+      {% for pago in cobro.pagos %}
+      <li><span class="tipo">Pago {{ pesos(pago.valor) }}</span> · {{ fecha_larga(pago.fecha) }} · {{ medios[pago.medio] }} · <a href="/tesoreria/recibo/{{ pago.numero_recibo }}">Recibo {{ pago.numero_recibo }}</a></li>
+      {% endfor %}
+      {% for descuento in cobro.descuentos %}
+      <li><span class="tipo descuento">Descuento {{ pesos(descuento.valor) }}</span> · {{ fecha_larga(descuento.fecha) }} · {{ descuento.motivo }} <small class="gris">(autorizó {{ descuento.autorizo }})</small></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="vacio">No hay cobros registrados.</p>
+{% endif %}

@@ -643,7 +643,7 @@ def tesoreria():
 
 
 @app.route("/tesoreria/conceptos", methods=["GET", "POST"])
-def conceptos():
+def conceptos_de_cobro():
     if not tiene_alguno(g.yo, CONFIGURAN):
         return redirect("/inicio")
 
@@ -828,7 +828,7 @@ def estado_de_cuenta(estudiante_id):
 
 
 @app.route("/tesoreria/recibo/<numero_recibo>")
-def recibo(numero_recibo):
+def recibo_de_pago(numero_recibo):
     if g.yo is None:
         return redirect("/")
     pago = base_datos.consultar_uno(
@@ -864,7 +864,7 @@ def esta_a_paz_y_salvo(colegio_id, estudiante_id):
 
 
 @app.route("/tesoreria/paz-y-salvo/<int:estudiante_id>")
-def paz_y_salvo(estudiante_id):
+def paz_y_salvo_del_estudiante(estudiante_id):
     estudiante = estudiante_del_colegio(estudiante_id)
     if not puede_ver_cuenta(g.yo, estudiante):
         return redirect("/inicio")
@@ -875,7 +875,7 @@ def paz_y_salvo(estudiante_id):
 
 
 @app.route("/tesoreria/cartera")
-def cartera():
+def cartera_vencida():
     if not tiene_alguno(g.yo, VEN_TESORERIA):
         return redirect("/inicio")
 
@@ -906,9 +906,12 @@ def mis_pagos():
     for hijo in base_datos.estudiantes_a_cargo(g.yo["id"]):
         if hijo["colegio_id"] == g.colegio["id"]:
             cobros = cobros_del_estudiante(hijo["id"])
+            for cobro in cobros:
+                movimientos(cobro)
             hijos.append({"estudiante": hijo, "grupo": grupo_del_estudiante(hijo["id"]), "cobros": cobros,
                           "cuenta": resumen_cuenta(cobros, g.colegio["anio"])})
-    return render_template("tesoreria_mis_pagos.html", activo="pagos", hijos=hijos, pesos=formato_pesos, fecha_larga=fecha_larga)
+    return render_template("tesoreria_mis_pagos.html", activo="pagos", hijos=hijos, medios=MEDIOS,
+                           pesos=formato_pesos, fecha_larga=fecha_larga)
 
 
 def crear_cobro_semilla(colegio_id, anio, estudiante_id, concepto_id, descripcion, valor, fecha_limite, creado_en):

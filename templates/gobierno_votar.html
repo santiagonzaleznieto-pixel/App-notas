@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block titulo %}Votar · {{ eleccion.titulo }}{% endblock %}
+{% block estilos %}<link rel="stylesheet" href="/static/gobierno.css">{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+  <a class="volver" href="/elecciones">← Elecciones</a>
+  <span class="etiqueta">{{ nombres_cargos[eleccion.cargo] }}{% if eleccion.grupo %} · {{ eleccion.grupo }}{% endif %}</span>
+  <h1>{{ eleccion.titulo }}</h1>
+  <p>Tu voto es secreto: la plataforma registra que votaste, pero no por quién.</p>
+</div>
+
+{% if paso == "listo" %}
+<div class="tarjeta confirmacion">
+  <span class="sello" aria-hidden="true">✓</span>
+  <h2>Tu voto fue registrado</h2>
+  <p>Gracias por participar en la democracia escolar. Los resultados se publican cuando se cierre la votación.</p>
+  <div class="acciones"><a class="boton" href="/elecciones">Volver a elecciones</a></div>
+</div>
+{% elif paso == "ya_voto" %}
+<div class="tarjeta confirmacion">
+  <span class="sello" aria-hidden="true">✓</span>
+  <h2>Ya votaste en esta elección</h2>
+  <p>Cada estudiante vota una sola vez y el voto no se puede cambiar.</p>
+  <div class="acciones"><a class="boton secundario" href="/elecciones">Volver a elecciones</a></div>
+</div>
+{% elif paso == "no_abierta" %}
+<div class="tarjeta confirmacion">
+  <span class="sello aviso-sello" aria-hidden="true">!</span>
+  <h2>La votación no está abierta</h2>
+  <p>{% if eleccion.estado == "cerrada" %}Esta elección ya se cerró.{% else %}La votación aún no ha comenzado. Programada: {{ eleccion.apertura }}.{% endif %}</p>
+  <div class="acciones">
+    {% if eleccion.estado == "cerrada" %}<a class="boton" href="/elecciones/{{ eleccion.id }}">Ver resultados</a>{% endif %}
+    <a class="boton secundario" href="/elecciones">Volver a elecciones</a>
+  </div>
+</div>
+{% elif paso == "confirmar" %}
+<form method="post" class="tarjeta confirmacion">
+  <h2>Confirma tu voto</h2>
+  <div class="elegido">
+    {% if elegido.blanco %}
+    <span class="inicial blanco">B</span>
+    <strong>Voto en blanco</strong>
+    {% else %}
+    <span class="inicial">{{ elegido.nombre[0] }}</span>
+    <span class="numero-candidato">{{ elegido.numero }}</span>
+    <strong>{{ elegido.nombre }}</strong>
+    <small class="gris">{{ elegido.grupo }}</small>
+    {% endif %}
+  </div>
+  <p class="gris">Después de confirmar no podrás cambiar tu voto.</p>
+  <input type="hidden" name="paso" value="votar">
+  <input type="hidden" name="opcion" value="{{ elegido.opcion }}">
+  <div class="acciones">
+    <a class="boton secundario" href="/elecciones/{{ eleccion.id }}/votar">Cambiar</a>
+    <button class="boton" type="submit">Confirmar mi voto</button>
+  </div>
+</form>
+{% else %}
+{% if errores %}<div class="aviso error">{% for error in errores %}<div>{{ error }}</div>{% endfor %}</div>{% endif %}
+<form method="post">
+  <input type="hidden" name="paso" value="confirmar">
+  <fieldset class="tarjeton-caja">
+    <legend>Marca una sola opción</legend>
+    <div class="tarjeton">
+      {% for candidato in candidatos %}
+      <label class="opcion-voto" for="opcion-{{ candidato.id }}">
+        <input type="radio" id="opcion-{{ candidato.id }}" name="opcion" value="{{ candidato.id }}" required>
+        <span class="opcion-contenido">
+          <span class="inicial">{{ candidato.nombre[0] }}</span>
+          <span class="numero-candidato">{{ candidato.numero }}</span>
+          <strong>{{ candidato.nombre }}</strong>
+          <small class="gris">{{ candidato.grupo }}</small>
+          <span class="propuesta texto-largo">{{ candidato.propuesta }}</span>
+        </span>
+      </label>
+      {% endfor %}
+      <label class="opcion-voto" for="opcion-blanco">
+        <input type="radio" id="opcion-blanco" name="opcion" value="blanco" required>
+        <span class="opcion-contenido">
+          <span class="inicial blanco">B</span>
+          <span class="numero-candidato">&nbsp;</span>
+          <strong>Voto en blanco</strong>
+          <span class="propuesta">No apoyas a ningún candidato, pero participas.</span>
+        </span>
+      </label>
+    </div>
+  </fieldset>
+  <div class="acciones"><button class="boton" type="submit">Continuar</button></div>
+</form>
+{% endif %}
+{% endblock %}
