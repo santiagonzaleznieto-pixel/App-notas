@@ -2,7 +2,7 @@ from datetime import date, timedelta
 from flask import g, render_template, request, redirect
 from nucleo import (app, agregar_menu, tiene_rol, tiene_alguno, numero, hoy, ahora, registrar,
                     puede_ver_grupo, puede_ver_estudiante, estudiante_del_colegio, grupo_del_estudiante,
-                    DIRECTIVOS)
+                    DIRECTIVOS, CON_DATOS_DE_EJEMPLO)
 import base_datos
 
 HORAS_SOCIALES = 80
@@ -866,4 +866,5 @@ def sembrar_horas():
     conexion.close()
 
 
-sembrar_horas()
+if CON_DATOS_DE_EJEMPLO:
+    sembrar_horas()
