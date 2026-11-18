@@ -1,6 +1,6 @@
 from flask import g, render_template, request, redirect
 from nucleo import (app, agregar_menu, tiene_rol, tiene_alguno, dicta_en_grupo, grupo_del_estudiante,
-                    estudiante_del_colegio, registrar, hoy, ahora)
+                    estudiante_del_colegio, registrar, hoy, ahora, CON_DATOS_DE_EJEMPLO)
 import base_datos
 
 TABLAS_ORIENTACION = """
@@ -785,4 +785,5 @@ def sembrar_orientacion():
     )
 
 
-sembrar_orientacion()
+if CON_DATOS_DE_EJEMPLO:
+    sembrar_orientacion()

@@ -1,0 +1,30 @@
+<h2>Verificar un certificado</h2>
+<p class="gris verificar-ayuda">Escribe el código de {{ largo }} caracteres que aparece al pie del certificado.</p>
+<form method="post" action="/verificar">
+  <label for="codigo">Código de verificación</label>
+  <input id="codigo" name="codigo" value="{{ codigo }}" maxlength="40" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Ej.: K7M2Q9XA4T" required>
+  <button class="boton" type="submit">Verificar</button>
+</form>
+
+{% if estado == "valido" %}
+<div class="resultado valido" role="status">
+  <span class="estado bien">Certificado válido</span>
+  <p>El código <strong class="codigo">{{ codigo }}</strong> corresponde a un documento auténtico y vigente.</p>
+  <dl>
+    <dt>Tipo</dt><dd>{{ datos.tipo }}</dd>
+    <dt>Estudiante</dt><dd>{{ datos.estudiante }}</dd>
+    <dt>Colegio</dt><dd>{{ datos.colegio }} · {{ datos.lugar }}</dd>
+    <dt>Fecha de emisión</dt><dd>{{ datos.fecha }}</dd>
+  </dl>
+</div>
+{% elif estado == "anulado" %}
+<div class="resultado anulado" role="status">
+  <span class="estado mal">Certificado anulado</span>
+  <p>El código <strong class="codigo">{{ codigo }}</strong> corresponde a un certificado que fue anulado el {{ datos.anulado_en }}. No tiene validez.</p>
+</div>
+{% elif estado == "inexistente" %}
+<div class="resultado inexistente" role="status">
+  <span class="estado neutro">Código no encontrado</span>
+  <p>No existe ningún certificado con el código <strong class="codigo">{{ codigo }}</strong>. Revisa que esté bien escrito.</p>
+</div>
+{% endif %}
